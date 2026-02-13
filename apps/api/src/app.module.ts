@@ -16,6 +16,9 @@ import { AuditModule } from './modules/audit/audit.module';
 import { BackupModule } from './modules/backup/backup.module';
 import { BillingModule } from './modules/billing/billing.module';
 import { CalendarModule } from './modules/calendar/calendar.module';
+import { OnboardingModule } from './modules/onboarding/onboarding.module';
+import { SearchModule } from './modules/search/search.module';
+import { SpecialtyTemplatesModule } from './modules/specialty-templates/specialty-templates.module';
 import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
@@ -50,6 +53,9 @@ import { PrismaModule } from './prisma/prisma.module';
     BackupModule,
     BillingModule,
     CalendarModule,
+    OnboardingModule,
+    SearchModule,
+    SpecialtyTemplatesModule,
   ],
 })
 export class AppModule {}
