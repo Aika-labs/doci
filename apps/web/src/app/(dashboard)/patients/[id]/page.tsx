@@ -26,7 +26,9 @@ import {
   Loader2,
   ChevronRight,
   Download,
+  Plus,
 } from 'lucide-react';
+import { FileUpload } from '@/components/files';
 
 type TabType = 'overview' | 'consultations' | 'prescriptions' | 'files' | 'appointments';
 
@@ -398,7 +400,7 @@ export default function PatientDetailPage() {
                 <PrescriptionsTab prescriptions={prescriptions} />
               )}
               {activeTab === 'files' && (
-                <FilesTab files={files} />
+                <FilesTab files={files} patientId={patientId} onUploadComplete={() => fetchTabData('files')} />
               )}
               {activeTab === 'appointments' && (
                 <AppointmentsTab appointments={appointments} patientId={patientId} />
@@ -670,18 +672,8 @@ function PrescriptionsTab({ prescriptions }: { prescriptions: Prescription[] }) 
   );
 }
 
-function FilesTab({ files }: { files: PatientFile[] }) {
-  if (files.length === 0) {
-    return (
-      <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
-        <FolderOpen className="h-12 w-12 mx-auto text-gray-300 mb-3" />
-        <p className="text-gray-500 mb-4">No hay archivos subidos</p>
-        <p className="text-sm text-gray-400">
-          Los archivos se pueden subir desde la consulta o desde la API
-        </p>
-      </div>
-    );
-  }
+function FilesTab({ files, patientId, onUploadComplete }: { files: PatientFile[]; patientId: string; onUploadComplete: () => void }) {
+  const [showUpload, setShowUpload] = useState(false);
 
   const getFileIcon = (type: string) => {
     if (type === 'IMAGE') return '🖼️';
@@ -692,31 +684,60 @@ function FilesTab({ files }: { files: PatientFile[] }) {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {files.map((file) => (
-        <div
-          key={file.id}
-          className="bg-white rounded-lg border border-gray-200 p-4 flex items-center gap-4"
+    <div className="space-y-4">
+      {/* Upload Button / Component */}
+      {showUpload ? (
+        <FileUpload
+          patientId={patientId}
+          onUploadComplete={() => {
+            onUploadComplete();
+          }}
+          onClose={() => setShowUpload(false)}
+        />
+      ) : (
+        <button
+          onClick={() => setShowUpload(true)}
+          className="w-full flex items-center justify-center gap-2 p-4 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-blue-500 hover:text-blue-600 transition-colors"
         >
-          <span className="text-2xl">{getFileIcon(file.type)}</span>
-          <div className="flex-1 min-w-0">
-            <p className="font-medium text-gray-900 truncate">{file.name}</p>
-            <p className="text-sm text-gray-500">
-              {format(new Date(file.createdAt), "d MMM yyyy", { locale: es })} • {file.sizeMb.toFixed(2)} MB
-            </p>
-          </div>
-          {file.storageUrl && (
-            <a
-              href={file.storageUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
-            >
-              <Download className="h-4 w-4" />
-            </a>
-          )}
+          <Plus className="h-5 w-5" />
+          Subir archivos
+        </button>
+      )}
+
+      {/* Files List */}
+      {files.length === 0 ? (
+        <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
+          <FolderOpen className="h-12 w-12 mx-auto text-gray-300 mb-3" />
+          <p className="text-gray-500">No hay archivos subidos</p>
         </div>
-      ))}
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {files.map((file) => (
+            <div
+              key={file.id}
+              className="bg-white rounded-lg border border-gray-200 p-4 flex items-center gap-4"
+            >
+              <span className="text-2xl">{getFileIcon(file.type)}</span>
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-gray-900 truncate">{file.name}</p>
+                <p className="text-sm text-gray-500">
+                  {format(new Date(file.createdAt), "d MMM yyyy", { locale: es })} • {file.sizeMb.toFixed(2)} MB
+                </p>
+              </div>
+              {file.storageUrl && (
+                <a
+                  href={file.storageUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
+                >
+                  <Download className="h-4 w-4" />
+                </a>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
