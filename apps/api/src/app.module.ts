@@ -14,6 +14,7 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
 import { VademecumModule } from './modules/vademecum/vademecum.module';
 import { AuditModule } from './modules/audit/audit.module';
 import { BackupModule } from './modules/backup/backup.module';
+import { BillingModule } from './modules/billing/billing.module';
 import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
@@ -46,6 +47,7 @@ import { PrismaModule } from './prisma/prisma.module';
     VademecumModule,
     AuditModule,
     BackupModule,
+    BillingModule,
   ],
 })
 export class AppModule {}
