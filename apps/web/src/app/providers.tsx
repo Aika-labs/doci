@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { ClerkProvider } from '@clerk/nextjs';
 import { esES } from '@clerk/localizations';
 import { ToastProvider } from '@/components/ui';
+import { OfflineIndicator, InstallPrompt } from '@/components/pwa';
 
 interface ProvidersProps {
   children: React.ReactNode;
@@ -51,6 +52,8 @@ export function Providers({ children }: ProvidersProps) {
         {children}
       </ToastProvider>
       <ServiceWorkerRegistration />
+      <OfflineIndicator />
+      <InstallPrompt />
     </ClerkProvider>
   );
 }
