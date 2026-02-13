@@ -63,9 +63,9 @@ export class AIService {
     // Get patient context for better AI results
     let patientContext = '';
     if (options?.includeHistory !== false) {
-      const patient = await this.patientsService.getPatientContext(ctx, patientId);
-      if (patient) {
-        patientContext = this.buildPatientContext(patient);
+      const patientData = await this.patientsService.getPatientContext(ctx, patientId);
+      if (patientData) {
+        patientContext = this.buildPatientContextFromSummary(patientData);
       }
     }
 
@@ -123,12 +123,12 @@ Responde SOLO en formato JSON con esta estructura:
     ctx: TenantContext,
     patientId: string,
   ): Promise<string> {
-    const patient = await this.patientsService.getPatientContext(ctx, patientId);
-    if (!patient) {
+    const patientData = await this.patientsService.getPatientContext(ctx, patientId);
+    if (!patientData) {
       throw new Error('Patient not found');
     }
 
-    const patientContext = this.buildPatientContext(patient);
+    const patientContext = this.buildPatientContextFromSummary(patientData);
 
     const response = await this.openai.chat.completions.create({
       model: 'gpt-4o',
@@ -154,33 +154,32 @@ Sé conciso pero completo. Usa viñetas para facilitar la lectura.`,
   }
 
   /**
-   * Build patient context string for AI prompts
+   * Build patient context string from the summary returned by getPatientContext
    */
-  private buildPatientContext(patient: {
-    firstName: string;
-    lastName: string;
-    birthDate?: Date | null;
-    gender?: string | null;
-    bloodType?: string | null;
-    allergies?: unknown;
-    chronicConditions?: unknown;
-    currentMedications?: unknown;
-    consultations?: Array<{
-      startedAt: Date;
-      clinicalData: unknown;
-      soapNotes?: unknown;
-      diagnoses?: unknown;
-      vitalSigns?: unknown;
+  private buildPatientContextFromSummary(data: {
+    patient: {
+      id: string;
+      name: string;
+      age: number | null;
+      gender: string | null;
+      bloodType: string | null;
+      allergies: unknown;
+      chronicConditions: unknown;
+      currentMedications: unknown;
+    };
+    recentConsultations: Array<{
+      date: Date;
+      diagnoses: unknown;
+      vitalSigns: unknown;
+      soapNotes: unknown;
     }>;
   }): string {
     const lines: string[] = [];
+    const { patient, recentConsultations } = data;
 
-    lines.push(`Paciente: ${patient.firstName} ${patient.lastName}`);
-    if (patient.birthDate) {
-      const age = Math.floor(
-        (Date.now() - new Date(patient.birthDate).getTime()) / (365.25 * 24 * 60 * 60 * 1000),
-      );
-      lines.push(`Edad: ${age} años`);
+    lines.push(`Paciente: ${patient.name}`);
+    if (patient.age !== null) {
+      lines.push(`Edad: ${patient.age} años`);
     }
     if (patient.gender) lines.push(`Género: ${patient.gender}`);
     if (patient.bloodType) lines.push(`Tipo de sangre: ${patient.bloodType}`);
@@ -209,10 +208,10 @@ Sé conciso pero completo. Usa viñetas para facilitar la lectura.`,
       }
     }
 
-    if (patient.consultations && patient.consultations.length > 0) {
-      lines.push(`\nÚltimas ${patient.consultations.length} consultas:`);
-      for (const consultation of patient.consultations) {
-        const date = new Date(consultation.startedAt).toLocaleDateString('es');
+    if (recentConsultations && recentConsultations.length > 0) {
+      lines.push(`\nÚltimas ${recentConsultations.length} consultas:`);
+      for (const consultation of recentConsultations) {
+        const date = new Date(consultation.date).toLocaleDateString('es');
         const soap = consultation.soapNotes as { assessment?: string } | null;
         lines.push(`- ${date}: ${soap?.assessment || 'Sin diagnóstico registrado'}`);
       }
