@@ -16,6 +16,7 @@ import {
   ChevronLeft,
   FileStack,
   HardDrive,
+  BarChart3,
 } from 'lucide-react';
 
 export default function DashboardLayout({
@@ -36,6 +37,7 @@ export default function DashboardLayout({
   ];
 
   const secondaryNavigation = [
+    { name: 'Reportes', href: '/reports', icon: BarChart3 },
     { name: 'Almacenamiento', href: '/storage', icon: HardDrive },
     { name: 'Configuración', href: '/settings', icon: Settings },
   ];
