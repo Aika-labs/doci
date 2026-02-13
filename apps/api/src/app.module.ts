@@ -8,6 +8,7 @@ import { ConsultationsModule } from './modules/consultations/consultations.modul
 import { AppointmentsModule } from './modules/appointments/appointments.module';
 import { TemplatesModule } from './modules/templates/templates.module';
 import { PrescriptionsModule } from './modules/prescriptions/prescriptions.module';
+import { StorageModule } from './modules/storage/storage.module';
 import { FilesModule } from './modules/files/files.module';
 import { PrismaModule } from './prisma/prisma.module';
 
@@ -35,6 +36,7 @@ import { PrismaModule } from './prisma/prisma.module';
     AppointmentsModule,
     TemplatesModule,
     PrescriptionsModule,
+    StorageModule,
     FilesModule,
   ],
 })

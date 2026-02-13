@@ -1,12 +1,172 @@
-import { Calendar, Users, FileText, Clock } from 'lucide-react';
+'use client';
+
+import { useState, useEffect, useCallback } from 'react';
+import { useAuth, useUser } from '@clerk/nextjs';
+import Link from 'next/link';
+import { format, startOfDay, endOfDay } from 'date-fns';
+import { es } from 'date-fns/locale';
+import { Calendar, Users, FileText, Clock, Mic, UserPlus, CalendarPlus, TrendingUp, TrendingDown, Loader2 } from 'lucide-react';
+
+interface DashboardStats {
+  todayAppointments: number;
+  totalPatients: number;
+  weekConsultations: number;
+  nextAppointment: {
+    time: string;
+    patientName: string;
+  } | null;
+}
+
+interface TodayAppointment {
+  id: string;
+  startTime: string;
+  patient: {
+    firstName: string;
+    lastName: string;
+  };
+  type: string;
+  status: string;
+}
 
 export default function DashboardPage() {
+  const { getToken } = useAuth();
+  const { user } = useUser();
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [appointments, setAppointments] = useState<TodayAppointment[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchDashboardData = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const token = await getToken();
+      if (!token) return;
+
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+
+      // Fetch today's appointments
+      const today = new Date();
+      const appointmentsRes = await fetch(
+        `${apiUrl}/appointments?startDate=${startOfDay(today).toISOString()}&endDate=${endOfDay(today).toISOString()}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      // Fetch patients count
+      const patientsRes = await fetch(`${apiUrl}/patients?limit=1`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      // Fetch consultations this week
+      const consultationsRes = await fetch(`${apiUrl}/consultations?limit=100`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      let todayAppointments: TodayAppointment[] = [];
+      let totalPatients = 0;
+      let weekConsultations = 0;
+
+      if (appointmentsRes.ok) {
+        const data = await appointmentsRes.json();
+        todayAppointments = data.data || data || [];
+      }
+
+      if (patientsRes.ok) {
+        const data = await patientsRes.json();
+        totalPatients = data.total || data.data?.length || 0;
+      }
+
+      if (consultationsRes.ok) {
+        const data = await consultationsRes.json();
+        weekConsultations = data.data?.length || 0;
+      }
+
+      // Find next upcoming appointment
+      const now = new Date();
+      const upcomingAppointments = todayAppointments
+        .filter((apt) => new Date(apt.startTime) > now && apt.status !== 'CANCELLED')
+        .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
+
+      const nextAppointment = upcomingAppointments[0]
+        ? {
+            time: format(new Date(upcomingAppointments[0].startTime), 'HH:mm'),
+            patientName: `${upcomingAppointments[0].patient.firstName} ${upcomingAppointments[0].patient.lastName}`,
+          }
+        : null;
+
+      setStats({
+        todayAppointments: todayAppointments.filter((a) => a.status !== 'CANCELLED').length,
+        totalPatients,
+        weekConsultations,
+        nextAppointment,
+      });
+
+      setAppointments(todayAppointments.slice(0, 5));
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error);
+      // Set default stats on error
+      setStats({
+        todayAppointments: 0,
+        totalPatients: 0,
+        weekConsultations: 0,
+        nextAppointment: null,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }, [getToken]);
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, [fetchDashboardData]);
+
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Buenos días';
+    if (hour < 18) return 'Buenas tardes';
+    return 'Buenas noches';
+  };
+
+  const getStatusStyle = (status: string) => {
+    const styles: Record<string, string> = {
+      COMPLETED: 'bg-green-100 text-green-700',
+      CONFIRMED: 'bg-blue-100 text-blue-700',
+      SCHEDULED: 'bg-slate-100 text-slate-700',
+      CANCELLED: 'bg-red-100 text-red-700',
+      NO_SHOW: 'bg-yellow-100 text-yellow-700',
+    };
+    return styles[status] || 'bg-slate-100 text-slate-700';
+  };
+
+  const getStatusLabel = (status: string) => {
+    const labels: Record<string, string> = {
+      COMPLETED: 'Completada',
+      CONFIRMED: 'Confirmada',
+      SCHEDULED: 'Programada',
+      CANCELLED: 'Cancelada',
+      NO_SHOW: 'No asistió',
+    };
+    return labels[status] || status;
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Buenos días, Doctor</h1>
-        <p className="text-slate-500">Aquí está el resumen de tu día</p>
+        <h1 className="text-2xl font-bold text-slate-900">
+          {getGreeting()}, {user?.firstName || 'Doctor'}
+        </h1>
+        <p className="text-slate-500">
+          {format(new Date(), "EEEE, d 'de' MMMM", { locale: es })}
+        </p>
       </div>
 
       {/* Stats */}
@@ -14,82 +174,102 @@ export default function DashboardPage() {
         <StatCard
           icon={Calendar}
           label="Citas hoy"
-          value="8"
-          change="+2 vs ayer"
-          positive
+          value={stats?.todayAppointments.toString() || '0'}
+          trend={(stats?.todayAppointments ?? 0) > 0 ? 'up' : undefined}
         />
         <StatCard
           icon={Users}
           label="Pacientes totales"
-          value="156"
-          change="+12 este mes"
-          positive
+          value={stats?.totalPatients.toString() || '0'}
+          trend="up"
         />
         <StatCard
           icon={FileText}
           label="Consultas esta semana"
-          value="32"
-          change="-5 vs semana pasada"
-          positive={false}
+          value={stats?.weekConsultations.toString() || '0'}
         />
         <StatCard
           icon={Clock}
           label="Próxima cita"
-          value="10:30"
-          change="Juan Pérez"
+          value={stats?.nextAppointment?.time || '--:--'}
+          subtitle={stats?.nextAppointment?.patientName || 'Sin citas pendientes'}
         />
       </div>
 
       {/* Today's appointments */}
       <div className="rounded-xl border bg-white p-6">
-        <h2 className="text-lg font-semibold text-slate-900">Citas de hoy</h2>
-        <div className="mt-4 space-y-3">
-          <AppointmentRow
-            time="09:00"
-            patient="María García"
-            type="Consulta general"
-            status="completed"
-          />
-          <AppointmentRow
-            time="10:30"
-            patient="Juan Pérez"
-            type="Seguimiento"
-            status="upcoming"
-          />
-          <AppointmentRow
-            time="11:30"
-            patient="Ana López"
-            type="Primera consulta"
-            status="scheduled"
-          />
-          <AppointmentRow
-            time="12:30"
-            patient="Carlos Ruiz"
-            type="Telemedicina"
-            status="scheduled"
-          />
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-slate-900">Citas de hoy</h2>
+          <Link
+            href="/appointments"
+            className="text-sm text-blue-600 hover:text-blue-700"
+          >
+            Ver todas
+          </Link>
         </div>
+        
+        {appointments.length === 0 ? (
+          <div className="text-center py-8 text-slate-500">
+            <Calendar className="h-12 w-12 mx-auto mb-3 text-slate-300" />
+            <p>No hay citas programadas para hoy</p>
+            <Link
+              href="/appointments"
+              className="mt-2 inline-block text-blue-600 hover:text-blue-700 text-sm"
+            >
+              Agendar una cita
+            </Link>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {appointments.map((apt) => (
+              <div
+                key={apt.id}
+                className="flex items-center justify-between rounded-lg border p-4 hover:bg-slate-50 transition-colors"
+              >
+                <div className="flex items-center gap-4">
+                  <span className="text-lg font-semibold text-slate-900 w-14">
+                    {format(new Date(apt.startTime), 'HH:mm')}
+                  </span>
+                  <div>
+                    <p className="font-medium text-slate-900">
+                      {apt.patient.firstName} {apt.patient.lastName}
+                    </p>
+                    <p className="text-sm text-slate-500">{apt.type || 'Consulta'}</p>
+                  </div>
+                </div>
+                <span
+                  className={`rounded-full px-3 py-1 text-xs font-medium ${getStatusStyle(apt.status)}`}
+                >
+                  {getStatusLabel(apt.status)}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Quick actions */}
       <div className="grid gap-4 md:grid-cols-3">
         <QuickAction
-          href="/dashboard/consultations/new"
-          icon="🎙️"
+          href="/consultations/new"
+          icon={<Mic className="h-6 w-6 text-blue-600" />}
           title="Nueva consulta"
           description="Inicia una consulta con dictado por voz"
+          color="blue"
         />
         <QuickAction
-          href="/dashboard/patients/new"
-          icon="👤"
+          href="/patients/new"
+          icon={<UserPlus className="h-6 w-6 text-green-600" />}
           title="Nuevo paciente"
           description="Registra un nuevo paciente"
+          color="green"
         />
         <QuickAction
-          href="/dashboard/appointments/new"
-          icon="📅"
+          href="/appointments"
+          icon={<CalendarPlus className="h-6 w-6 text-purple-600" />}
           title="Nueva cita"
           description="Agenda una cita"
+          color="purple"
         />
       </div>
     </div>
@@ -100,14 +280,14 @@ function StatCard({
   icon: Icon,
   label,
   value,
-  change,
-  positive,
+  subtitle,
+  trend,
 }: {
   icon: React.ComponentType<{ className?: string }>;
   label: string;
   value: string;
-  change: string;
-  positive?: boolean;
+  subtitle?: string;
+  trend?: 'up' | 'down';
 }) {
   return (
     <div className="rounded-xl border bg-white p-6">
@@ -115,65 +295,23 @@ function StatCard({
         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100">
           <Icon className="h-5 w-5 text-slate-600" />
         </div>
-        <div>
+        <div className="flex-1">
           <p className="text-sm text-slate-500">{label}</p>
-          <p className="text-2xl font-bold text-slate-900">{value}</p>
+          <div className="flex items-center gap-2">
+            <p className="text-2xl font-bold text-slate-900">{value}</p>
+            {trend && (
+              trend === 'up' ? (
+                <TrendingUp className="h-4 w-4 text-green-500" />
+              ) : (
+                <TrendingDown className="h-4 w-4 text-red-500" />
+              )
+            )}
+          </div>
         </div>
       </div>
-      {change && (
-        <p
-          className={`mt-2 text-xs ${
-            positive === undefined
-              ? 'text-slate-500'
-              : positive
-                ? 'text-green-600'
-                : 'text-red-600'
-          }`}
-        >
-          {change}
-        </p>
+      {subtitle && (
+        <p className="mt-2 text-xs text-slate-500 truncate">{subtitle}</p>
       )}
-    </div>
-  );
-}
-
-function AppointmentRow({
-  time,
-  patient,
-  type,
-  status,
-}: {
-  time: string;
-  patient: string;
-  type: string;
-  status: 'completed' | 'upcoming' | 'scheduled';
-}) {
-  const statusStyles = {
-    completed: 'bg-green-100 text-green-700',
-    upcoming: 'bg-blue-100 text-blue-700',
-    scheduled: 'bg-slate-100 text-slate-700',
-  };
-
-  const statusLabels = {
-    completed: 'Completada',
-    upcoming: 'Próxima',
-    scheduled: 'Programada',
-  };
-
-  return (
-    <div className="flex items-center justify-between rounded-lg border p-4">
-      <div className="flex items-center gap-4">
-        <span className="text-lg font-semibold text-slate-900">{time}</span>
-        <div>
-          <p className="font-medium text-slate-900">{patient}</p>
-          <p className="text-sm text-slate-500">{type}</p>
-        </div>
-      </div>
-      <span
-        className={`rounded-full px-3 py-1 text-xs font-medium ${statusStyles[status]}`}
-      >
-        {statusLabels[status]}
-      </span>
     </div>
   );
 }
@@ -183,22 +321,32 @@ function QuickAction({
   icon,
   title,
   description,
+  color,
 }: {
   href: string;
-  icon: string;
+  icon: React.ReactNode;
   title: string;
   description: string;
+  color: 'blue' | 'green' | 'purple';
 }) {
+  const colorStyles = {
+    blue: 'hover:border-blue-300 hover:bg-blue-50',
+    green: 'hover:border-green-300 hover:bg-green-50',
+    purple: 'hover:border-purple-300 hover:bg-purple-50',
+  };
+
   return (
-    <a
+    <Link
       href={href}
-      className="flex items-center gap-4 rounded-xl border bg-white p-6 transition-colors hover:border-blue-300 hover:bg-blue-50"
+      className={`flex items-center gap-4 rounded-xl border bg-white p-6 transition-colors ${colorStyles[color]}`}
     >
-      <span className="text-3xl">{icon}</span>
+      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-slate-100">
+        {icon}
+      </div>
       <div>
         <p className="font-semibold text-slate-900">{title}</p>
         <p className="text-sm text-slate-500">{description}</p>
       </div>
-    </a>
+    </Link>
   );
 }
