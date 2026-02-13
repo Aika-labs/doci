@@ -17,6 +17,10 @@ import {
   Clock,
   UserPlus,
   Stethoscope,
+  Pill,
+  DollarSign,
+  ArrowUpRight,
+  ArrowDownRight,
 } from 'lucide-react';
 
 type DateRange = '7d' | '30d' | '90d' | 'month';
@@ -33,6 +37,10 @@ interface ReportStats {
   consultationsByDay: Array<{ date: string; count: number }>;
   patientsByGender: { male: number; female: number; other: number };
   appointmentsByStatus: Record<string, number>;
+  totalPrescriptions: number;
+  consultationsByHour: Array<{ hour: number; count: number }>;
+  patientRetention: number;
+  growthRate: number;
 }
 
 export default function ReportsPage() {
@@ -85,9 +93,16 @@ export default function ReportsPage() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      let consultations: Array<{ createdAt: string; clinicalData?: { soapNotes?: { assessment?: string } } }> = [];
-      let patients: Array<{ createdAt: string; gender: string }> = [];
+      // Fetch prescriptions
+      const prescriptionsRes = await fetch(
+        `${apiUrl}/prescriptions`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      let consultations: Array<{ createdAt: string; startedAt?: string; clinicalData?: { soapNotes?: { assessment?: string } } }> = [];
+      let patients: Array<{ id: string; createdAt: string; gender: string }> = [];
       let appointments: Array<{ status: string }> = [];
+      let prescriptions: Array<{ createdAt: string }> = [];
 
       if (consultationsRes.ok) {
         const data = await consultationsRes.json();
@@ -102,6 +117,11 @@ export default function ReportsPage() {
       if (appointmentsRes.ok) {
         const data = await appointmentsRes.json();
         appointments = data.data || data || [];
+      }
+
+      if (prescriptionsRes.ok) {
+        const data = await prescriptionsRes.json();
+        prescriptions = data || [];
       }
 
       // Calculate stats
@@ -144,6 +164,38 @@ export default function ReportsPage() {
         .sort((a, b) => b.count - a.count)
         .slice(0, 5);
 
+      // Consultations by hour
+      const hourCount: Record<number, number> = {};
+      consultations.forEach((c) => {
+        const hour = new Date(c.startedAt || c.createdAt).getHours();
+        hourCount[hour] = (hourCount[hour] || 0) + 1;
+      });
+      const consultationsByHour = Array.from({ length: 24 }, (_, i) => ({
+        hour: i,
+        count: hourCount[i] || 0,
+      }));
+
+      // Patient retention (patients with more than 1 consultation)
+      const patientConsultations: Record<string, number> = {};
+      consultations.forEach((c) => {
+        const patientId = (c as { patientId?: string }).patientId;
+        if (patientId) {
+          patientConsultations[patientId] = (patientConsultations[patientId] || 0) + 1;
+        }
+      });
+      const returningPatients = Object.values(patientConsultations).filter((count) => count > 1).length;
+      const patientRetention = patients.length > 0 ? (returningPatients / patients.length) * 100 : 0;
+
+      // Growth rate (compare new patients this period vs previous)
+      const periodDays = days.length;
+      const previousStart = subDays(start, periodDays);
+      const previousNewPatients = patients.filter(
+        (p) => new Date(p.createdAt) >= previousStart && new Date(p.createdAt) < start
+      ).length;
+      const growthRate = previousNewPatients > 0 
+        ? ((newPatients - previousNewPatients) / previousNewPatients) * 100 
+        : newPatients > 0 ? 100 : 0;
+
       setStats({
         totalConsultations: consultations.length,
         totalPatients: patients.length,
@@ -156,6 +208,10 @@ export default function ReportsPage() {
         consultationsByDay,
         patientsByGender,
         appointmentsByStatus,
+        totalPrescriptions: prescriptions.length,
+        consultationsByHour,
+        patientRetention,
+        growthRate,
       });
     } catch (error) {
       console.error('Error fetching report data:', error);
@@ -241,7 +297,7 @@ export default function ReportsPage() {
       </div>
 
       {/* Key Metrics */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
         <MetricCard
           icon={FileText}
           label="Consultas"
@@ -259,12 +315,26 @@ export default function ReportsPage() {
           label="Nuevos pacientes"
           value={stats?.newPatients || 0}
           color="purple"
+          trend={stats?.growthRate}
         />
         <MetricCard
           icon={Calendar}
           label="Citas"
           value={stats?.totalAppointments || 0}
           color="orange"
+        />
+        <MetricCard
+          icon={Pill}
+          label="Recetas"
+          value={stats?.totalPrescriptions || 0}
+          color="teal"
+        />
+        <MetricCard
+          icon={DollarSign}
+          label="Retención"
+          value={`${(stats?.patientRetention || 0).toFixed(0)}%`}
+          color="indigo"
+          isPercentage
         />
       </div>
 
@@ -332,6 +402,48 @@ export default function ReportsPage() {
               total={stats?.totalAppointments || 1}
               color="bg-yellow-500"
             />
+          </div>
+        </div>
+      </div>
+
+      {/* Peak Hours Chart */}
+      <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-lg font-semibold text-gray-900">Horas pico de consultas</h2>
+          <div className="flex items-center gap-2 text-sm text-gray-500">
+            <Clock className="h-4 w-4" />
+            <span>Distribución por hora del día</span>
+          </div>
+        </div>
+        <div className="h-32 flex items-end gap-0.5">
+          {stats?.consultationsByHour.slice(7, 21).map((hour, i) => {
+            const maxHour = Math.max(...(stats?.consultationsByHour.map((h) => h.count) || [1]));
+            const isPeak = hour.count === maxHour && hour.count > 0;
+            return (
+              <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                <div
+                  className={`w-full rounded-t transition-all ${
+                    isPeak ? 'bg-green-500' : 'bg-gray-300 hover:bg-gray-400'
+                  }`}
+                  style={{
+                    height: `${maxHour > 0 ? (hour.count / maxHour) * 100 : 0}%`,
+                    minHeight: hour.count > 0 ? '4px' : '0',
+                  }}
+                  title={`${hour.hour}:00 - ${hour.count} consultas`}
+                />
+                <span className="text-xs text-gray-400">{hour.hour}</span>
+              </div>
+            );
+          })}
+        </div>
+        <div className="mt-4 flex items-center justify-center gap-4 text-sm">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 bg-green-500 rounded" />
+            <span className="text-gray-600">Hora pico</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 bg-gray-300 rounded" />
+            <span className="text-gray-600">Otras horas</span>
           </div>
         </div>
       </div>
@@ -462,17 +574,23 @@ function MetricCard({
   label,
   value,
   color,
+  trend,
+  isPercentage,
 }: {
   icon: React.ComponentType<{ className?: string }>;
   label: string;
-  value: number;
-  color: 'blue' | 'green' | 'purple' | 'orange';
+  value: number | string;
+  color: 'blue' | 'green' | 'purple' | 'orange' | 'teal' | 'indigo';
+  trend?: number;
+  isPercentage?: boolean;
 }) {
   const colorStyles = {
     blue: 'bg-blue-100 text-blue-600',
     green: 'bg-green-100 text-green-600',
     purple: 'bg-purple-100 text-purple-600',
     orange: 'bg-orange-100 text-orange-600',
+    teal: 'bg-teal-100 text-teal-600',
+    indigo: 'bg-indigo-100 text-indigo-600',
   };
 
   return (
@@ -481,9 +599,19 @@ function MetricCard({
         <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${colorStyles[color]}`}>
           <Icon className="h-5 w-5" />
         </div>
-        <div>
-          <p className="text-2xl font-bold text-gray-900">{value}</p>
-          <p className="text-sm text-gray-500">{label}</p>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2">
+            <p className={`font-bold text-gray-900 ${isPercentage ? 'text-xl' : 'text-2xl'}`}>{value}</p>
+            {trend !== undefined && trend !== 0 && (
+              <span className={`flex items-center text-xs font-medium ${
+                trend > 0 ? 'text-green-600' : 'text-red-600'
+              }`}>
+                {trend > 0 ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
+                {Math.abs(trend).toFixed(0)}%
+              </span>
+            )}
+          </div>
+          <p className="text-sm text-gray-500 truncate">{label}</p>
         </div>
       </div>
     </div>
