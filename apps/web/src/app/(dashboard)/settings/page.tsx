@@ -1,17 +1,50 @@
 'use client';
 
-import { useState } from 'react';
-import { useUser } from '@clerk/nextjs';
+import { useState, useEffect, useCallback } from 'react';
+import { useAuth, useUser } from '@clerk/nextjs';
 import { Building2, User, Bell, Shield, Palette, Save, Loader2 } from 'lucide-react';
 import { useToast } from '@/components/ui';
+import { settingsApi, UserProfile, TenantSettings } from '@/lib/api';
 
 type SettingsTab = 'profile' | 'clinic' | 'notifications' | 'security' | 'appearance';
 
 export default function SettingsPage() {
+  const { getToken } = useAuth();
   const { user } = useUser();
-  const { success } = useToast();
+  const { success, error: showError } = useToast();
   const [activeTab, setActiveTab] = useState<SettingsTab>('profile');
+  const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [tenant, setTenant] = useState<TenantSettings | null>(null);
+
+  const fetchData = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const token = await getToken();
+      if (!token) return;
+
+      const [profileRes, tenantRes] = await Promise.allSettled([
+        settingsApi.getProfile(token),
+        settingsApi.getTenant(token),
+      ]);
+
+      if (profileRes.status === 'fulfilled') {
+        setProfile(profileRes.value);
+      }
+      if (tenantRes.status === 'fulfilled') {
+        setTenant(tenantRes.value);
+      }
+    } catch (error) {
+      console.error('Error fetching settings:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [getToken]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const tabs = [
     { id: 'profile' as const, label: 'Perfil', icon: User },
@@ -21,13 +54,52 @@ export default function SettingsPage() {
     { id: 'appearance' as const, label: 'Apariencia', icon: Palette },
   ];
 
-  const handleSave = async () => {
+  const handleSaveProfile = async (data: Partial<UserProfile>) => {
     setIsSaving(true);
-    // Simulate save
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      const token = await getToken();
+      if (!token) return;
+
+      const updated = await settingsApi.updateProfile(token, data);
+      setProfile(updated);
+      success('Perfil actualizado', 'Los cambios han sido guardados correctamente');
+    } catch {
+      showError('Error', 'No se pudo guardar el perfil');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleSaveTenant = async (data: Partial<TenantSettings>) => {
+    setIsSaving(true);
+    try {
+      const token = await getToken();
+      if (!token) return;
+
+      const updated = await settingsApi.updateTenant(token, data);
+      setTenant(updated);
+      success('Clínica actualizada', 'Los cambios han sido guardados correctamente');
+    } catch {
+      showError('Error', 'No se pudo guardar la configuración de la clínica');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleSaveLocal = async () => {
+    setIsSaving(true);
+    await new Promise((resolve) => setTimeout(resolve, 500));
     setIsSaving(false);
     success('Configuración guardada', 'Los cambios han sido aplicados correctamente');
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -60,17 +132,26 @@ export default function SettingsPage() {
         {/* Content */}
         <div className="flex-1 bg-white rounded-xl border border-gray-200 p-6">
           {activeTab === 'profile' && (
-            <ProfileSettings user={user} onSave={handleSave} isSaving={isSaving} />
+            <ProfileSettings
+              user={user}
+              profile={profile}
+              onSave={handleSaveProfile}
+              isSaving={isSaving}
+            />
           )}
           {activeTab === 'clinic' && (
-            <ClinicSettings onSave={handleSave} isSaving={isSaving} />
+            <ClinicSettings
+              tenant={tenant}
+              onSave={handleSaveTenant}
+              isSaving={isSaving}
+            />
           )}
           {activeTab === 'notifications' && (
-            <NotificationSettings onSave={handleSave} isSaving={isSaving} />
+            <NotificationSettings onSave={handleSaveLocal} isSaving={isSaving} />
           )}
           {activeTab === 'security' && <SecuritySettings />}
           {activeTab === 'appearance' && (
-            <AppearanceSettings onSave={handleSave} isSaving={isSaving} />
+            <AppearanceSettings onSave={handleSaveLocal} isSaving={isSaving} />
           )}
         </div>
       </div>
@@ -78,23 +159,30 @@ export default function SettingsPage() {
   );
 }
 
-interface SettingsProps {
-  onSave: () => Promise<void>;
+interface ProfileSettingsProps {
+  user: ReturnType<typeof useUser>['user'];
+  profile: UserProfile | null;
+  onSave: (data: Partial<UserProfile>) => Promise<void>;
   isSaving: boolean;
 }
 
-function ProfileSettings({ user, onSave, isSaving }: SettingsProps & { user: ReturnType<typeof useUser>['user'] }) {
+function ProfileSettings({ user, profile, onSave, isSaving }: ProfileSettingsProps) {
   const [formData, setFormData] = useState({
-    firstName: user?.firstName || '',
-    lastName: user?.lastName || '',
-    specialty: '',
-    licenseNumber: '',
-    phone: '',
-    bio: '',
+    firstName: profile?.firstName || user?.firstName || '',
+    lastName: profile?.lastName || user?.lastName || '',
+    specialty: profile?.specialty || '',
+    licenseNumber: profile?.licenseNumber || '',
+    phone: profile?.phone || '',
+    bio: profile?.bio || '',
   });
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSave(formData);
+  };
+
   return (
-    <div>
+    <form onSubmit={handleSubmit}>
       <h2 className="text-lg font-semibold text-gray-900 mb-4">Información del perfil</h2>
       
       <div className="space-y-4">
@@ -176,7 +264,7 @@ function ProfileSettings({ user, onSave, isSaving }: SettingsProps & { user: Ret
 
         <div className="pt-4">
           <button
-            onClick={onSave}
+            type="submit"
             disabled={isSaving}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
           >
@@ -185,29 +273,37 @@ function ProfileSettings({ user, onSave, isSaving }: SettingsProps & { user: Ret
           </button>
         </div>
       </div>
-    </div>
+    </form>
   );
 }
 
-function ClinicSettings({ onSave, isSaving }: SettingsProps) {
+interface ClinicSettingsProps {
+  tenant: TenantSettings | null;
+  onSave: (data: Partial<TenantSettings>) => Promise<void>;
+  isSaving: boolean;
+}
+
+function ClinicSettings({ tenant, onSave, isSaving }: ClinicSettingsProps) {
+  const defaultSchedule = {
+    monday: { open: '09:00', close: '18:00', enabled: true },
+    tuesday: { open: '09:00', close: '18:00', enabled: true },
+    wednesday: { open: '09:00', close: '18:00', enabled: true },
+    thursday: { open: '09:00', close: '18:00', enabled: true },
+    friday: { open: '09:00', close: '18:00', enabled: true },
+    saturday: { open: '09:00', close: '14:00', enabled: false },
+    sunday: { open: '09:00', close: '14:00', enabled: false },
+  };
+
   const [formData, setFormData] = useState({
-    name: '',
-    address: '',
-    city: '',
-    state: '',
-    zipCode: '',
-    phone: '',
-    email: '',
-    website: '',
-    schedule: {
-      monday: { open: '09:00', close: '18:00', enabled: true },
-      tuesday: { open: '09:00', close: '18:00', enabled: true },
-      wednesday: { open: '09:00', close: '18:00', enabled: true },
-      thursday: { open: '09:00', close: '18:00', enabled: true },
-      friday: { open: '09:00', close: '18:00', enabled: true },
-      saturday: { open: '09:00', close: '14:00', enabled: false },
-      sunday: { open: '09:00', close: '14:00', enabled: false },
-    },
+    name: tenant?.name || '',
+    address: tenant?.address || '',
+    city: tenant?.city || '',
+    state: tenant?.state || '',
+    postalCode: tenant?.postalCode || '',
+    phone: tenant?.phone || '',
+    email: tenant?.email || '',
+    website: tenant?.website || '',
+    schedule: (tenant?.schedule as typeof defaultSchedule) || defaultSchedule,
   });
 
   const days = [
@@ -220,8 +316,13 @@ function ClinicSettings({ onSave, isSaving }: SettingsProps) {
     { key: 'sunday', label: 'Domingo' },
   ] as const;
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSave(formData);
+  };
+
   return (
-    <div>
+    <form onSubmit={handleSubmit}>
       <h2 className="text-lg font-semibold text-gray-900 mb-4">Información de la clínica</h2>
       
       <div className="space-y-4">
@@ -270,8 +371,8 @@ function ClinicSettings({ onSave, isSaving }: SettingsProps) {
             <label className="block text-sm font-medium text-gray-700 mb-1">C.P.</label>
             <input
               type="text"
-              value={formData.zipCode}
-              onChange={(e) => setFormData({ ...formData, zipCode: e.target.value })}
+              value={formData.postalCode}
+              onChange={(e) => setFormData({ ...formData, postalCode: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
@@ -360,7 +461,7 @@ function ClinicSettings({ onSave, isSaving }: SettingsProps) {
 
         <div className="pt-4">
           <button
-            onClick={onSave}
+            type="submit"
             disabled={isSaving}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
           >
@@ -369,11 +470,16 @@ function ClinicSettings({ onSave, isSaving }: SettingsProps) {
           </button>
         </div>
       </div>
-    </div>
+    </form>
   );
 }
 
-function NotificationSettings({ onSave, isSaving }: SettingsProps) {
+interface LocalSettingsProps {
+  onSave: () => Promise<void>;
+  isSaving: boolean;
+}
+
+function NotificationSettings({ onSave, isSaving }: LocalSettingsProps) {
   const [settings, setSettings] = useState({
     emailAppointmentReminder: true,
     emailNewPatient: true,
@@ -384,8 +490,14 @@ function NotificationSettings({ onSave, isSaving }: SettingsProps) {
     reminderTime: '24',
   });
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // TODO: Save to backend when endpoint is available
+    onSave();
+  };
+
   return (
-    <div>
+    <form onSubmit={handleSubmit}>
       <h2 className="text-lg font-semibold text-gray-900 mb-4">Preferencias de notificaciones</h2>
       
       <div className="space-y-6">
@@ -462,7 +574,7 @@ function NotificationSettings({ onSave, isSaving }: SettingsProps) {
 
         <div className="pt-4">
           <button
-            onClick={onSave}
+            type="submit"
             disabled={isSaving}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
           >
@@ -471,7 +583,7 @@ function NotificationSettings({ onSave, isSaving }: SettingsProps) {
           </button>
         </div>
       </div>
-    </div>
+    </form>
   );
 }
 
@@ -530,15 +642,21 @@ function SecuritySettings() {
   );
 }
 
-function AppearanceSettings({ onSave, isSaving }: SettingsProps) {
+function AppearanceSettings({ onSave, isSaving }: LocalSettingsProps) {
   const [settings, setSettings] = useState({
     theme: 'light',
     compactMode: false,
     language: 'es',
   });
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // TODO: Save to localStorage or backend
+    onSave();
+  };
+
   return (
-    <div>
+    <form onSubmit={handleSubmit}>
       <h2 className="text-lg font-semibold text-gray-900 mb-4">Apariencia</h2>
       
       <div className="space-y-6">
@@ -552,6 +670,7 @@ function AppearanceSettings({ onSave, isSaving }: SettingsProps) {
             ].map((option) => (
               <button
                 key={option.value}
+                type="button"
                 onClick={() => setSettings({ ...settings, theme: option.value })}
                 className={`px-4 py-2 rounded-lg border text-sm font-medium transition-colors ${
                   settings.theme === option.value
@@ -595,7 +714,7 @@ function AppearanceSettings({ onSave, isSaving }: SettingsProps) {
 
         <div className="pt-4">
           <button
-            onClick={onSave}
+            type="submit"
             disabled={isSaving}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
           >
@@ -604,6 +723,6 @@ function AppearanceSettings({ onSave, isSaving }: SettingsProps) {
           </button>
         </div>
       </div>
-    </div>
+    </form>
   );
 }
