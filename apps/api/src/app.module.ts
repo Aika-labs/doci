@@ -13,6 +13,7 @@ import { FilesModule } from './modules/files/files.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { VademecumModule } from './modules/vademecum/vademecum.module';
 import { AuditModule } from './modules/audit/audit.module';
+import { BackupModule } from './modules/backup/backup.module';
 import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
@@ -44,6 +45,7 @@ import { PrismaModule } from './prisma/prisma.module';
     NotificationsModule,
     VademecumModule,
     AuditModule,
+    BackupModule,
   ],
 })
 export class AppModule {}
