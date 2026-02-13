@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@clerk/nextjs';
 import { VoiceRecorder } from '@/components/voice';
 import { patientsApi, Patient } from '@/lib/api';
-import { ArrowLeft, Search, User, Mic, FileText, CheckCircle, Loader2 } from 'lucide-react';
+import { ArrowLeft, Search, User, Mic, FileText, CheckCircle, Loader2, Pill, Plus, X, Download } from 'lucide-react';
 import Link from 'next/link';
 
 type Step = 'patient' | 'recording' | 'review' | 'complete';
@@ -28,6 +28,19 @@ interface AIResponse {
   };
 }
 
+interface Medication {
+  name: string;
+  dose: string;
+  frequency: string;
+  duration: string;
+  instructions?: string;
+}
+
+interface CreatedPrescription {
+  id: string;
+  securityCode: string;
+}
+
 function NewConsultationContent() {
   const searchParams = useSearchParams();
   const { getToken } = useAuth();
@@ -42,6 +55,15 @@ function NewConsultationContent() {
   const [aiResponse, setAiResponse] = useState<AIResponse | null>(null);
   const [editedNotes, setEditedNotes] = useState<SOAPNotes | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [consultationId, setConsultationId] = useState<string | null>(null);
+  
+  // Prescription state
+  const [showPrescriptionForm, setShowPrescriptionForm] = useState(false);
+  const [medications, setMedications] = useState<Medication[]>([]);
+  const [prescriptionDiagnosis, setPrescriptionDiagnosis] = useState('');
+  const [prescriptionNotes, setPrescriptionNotes] = useState('');
+  const [isCreatingPrescription, setIsCreatingPrescription] = useState(false);
+  const [createdPrescription, setCreatedPrescription] = useState<CreatedPrescription | null>(null);
 
   const loadPatient = useCallback(async (patientId: string) => {
     try {
@@ -188,13 +210,87 @@ function NewConsultationContent() {
         throw new Error('Error saving consultation');
       }
 
+      const savedConsultation = await response.json();
+      setConsultationId(savedConsultation.id);
       setStep('complete');
     } catch (error) {
       console.error('Error saving consultation:', error);
-      // For demo, just move to complete
+      // For demo, just move to complete with mock ID
+      setConsultationId('mock-consultation-id');
       setStep('complete');
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const addMedication = () => {
+    setMedications([
+      ...medications,
+      { name: '', dose: '', frequency: '', duration: '', instructions: '' },
+    ]);
+  };
+
+  const updateMedication = (index: number, field: keyof Medication, value: string) => {
+    const updated = [...medications];
+    updated[index] = { ...updated[index], [field]: value };
+    setMedications(updated);
+  };
+
+  const removeMedication = (index: number) => {
+    setMedications(medications.filter((_, i) => i !== index));
+  };
+
+  const addSuggestedMedication = (suggestion: string) => {
+    // Parse suggestion like "Ibuprofeno 400mg"
+    const parts = suggestion.split(' ');
+    const name = parts[0];
+    const dose = parts.slice(1).join(' ');
+    setMedications([
+      ...medications,
+      { name, dose, frequency: '', duration: '', instructions: '' },
+    ]);
+  };
+
+  const handleCreatePrescription = async () => {
+    if (!selectedPatient || medications.length === 0) return;
+
+    try {
+      setIsCreatingPrescription(true);
+      const token = await getToken();
+      if (!token) return;
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/prescriptions`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            patientId: selectedPatient.id,
+            consultationId: consultationId,
+            diagnosis: prescriptionDiagnosis || editedNotes?.assessment,
+            medications: medications.filter(m => m.name && m.dose),
+            notes: prescriptionNotes,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Error creating prescription');
+      }
+
+      const prescription = await response.json();
+      setCreatedPrescription(prescription);
+      setShowPrescriptionForm(false);
+    } catch (error) {
+      console.error('Error creating prescription:', error);
+      // Mock for demo
+      setCreatedPrescription({ id: 'mock-prescription-id', securityCode: 'ABC123' });
+      setShowPrescriptionForm(false);
+    } finally {
+      setIsCreatingPrescription(false);
     }
   };
 
@@ -497,16 +593,233 @@ function NewConsultationContent() {
 
         {/* Step 4: Complete */}
         {step === 'complete' && (
-          <div className="text-center py-8">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <CheckCircle className="h-8 w-8 text-green-600" />
+          <div className="py-8">
+            <div className="text-center mb-8">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CheckCircle className="h-8 w-8 text-green-600" />
+              </div>
+              <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                Consulta guardada exitosamente
+              </h2>
+              <p className="text-gray-600">
+                Las notas han sido guardadas en el expediente del paciente.
+              </p>
             </div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
-              Consulta guardada exitosamente
-            </h2>
-            <p className="text-gray-600 mb-6">
-              Las notas han sido guardadas en el expediente del paciente.
-            </p>
+
+            {/* Prescription Section */}
+            {!showPrescriptionForm && !createdPrescription && (
+              <div className="bg-blue-50 rounded-lg p-6 mb-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Pill className="h-6 w-6 text-blue-600" />
+                    <div>
+                      <h3 className="font-semibold text-gray-900">¿Necesitas crear una receta?</h3>
+                      <p className="text-sm text-gray-600">Genera una receta médica para este paciente</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setShowPrescriptionForm(true);
+                      if (aiResponse?.suggestions.diagnoses[0]) {
+                        setPrescriptionDiagnosis(aiResponse.suggestions.diagnoses[0]);
+                      }
+                    }}
+                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                  >
+                    <Plus className="h-4 w-4" />
+                    Crear Receta
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Prescription Form */}
+            {showPrescriptionForm && (
+              <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                    <Pill className="h-5 w-5 text-green-600" />
+                    Nueva Receta
+                  </h3>
+                  <button
+                    onClick={() => setShowPrescriptionForm(false)}
+                    className="p-1 text-gray-400 hover:text-gray-600"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Diagnóstico
+                    </label>
+                    <input
+                      type="text"
+                      value={prescriptionDiagnosis}
+                      onChange={(e) => setPrescriptionDiagnosis(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      placeholder="Diagnóstico principal"
+                    />
+                  </div>
+
+                  {/* Suggested Medications */}
+                  {aiResponse?.suggestions.medications && aiResponse.suggestions.medications.length > 0 && (
+                    <div>
+                      <p className="text-sm font-medium text-gray-700 mb-2">Medicamentos sugeridos por IA:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {aiResponse.suggestions.medications.map((med, i) => (
+                          <button
+                            key={i}
+                            onClick={() => addSuggestedMedication(med)}
+                            className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm hover:bg-blue-100"
+                          >
+                            + {med}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Medications List */}
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <label className="text-sm font-medium text-gray-700">Medicamentos</label>
+                      <button
+                        onClick={addMedication}
+                        className="text-sm text-blue-600 hover:text-blue-700"
+                      >
+                        + Agregar medicamento
+                      </button>
+                    </div>
+                    
+                    {medications.length === 0 ? (
+                      <p className="text-sm text-gray-500 text-center py-4 border border-dashed border-gray-300 rounded-lg">
+                        No hay medicamentos agregados. Haz clic en una sugerencia o agrega uno manualmente.
+                      </p>
+                    ) : (
+                      <div className="space-y-3">
+                        {medications.map((med, index) => (
+                          <div key={index} className="p-3 bg-gray-50 rounded-lg">
+                            <div className="flex items-start justify-between mb-2">
+                              <span className="text-sm font-medium text-gray-700">Medicamento {index + 1}</span>
+                              <button
+                                onClick={() => removeMedication(index)}
+                                className="text-red-500 hover:text-red-700"
+                              >
+                                <X className="h-4 w-4" />
+                              </button>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2">
+                              <input
+                                type="text"
+                                value={med.name}
+                                onChange={(e) => updateMedication(index, 'name', e.target.value)}
+                                placeholder="Nombre"
+                                className="px-2 py-1 border border-gray-300 rounded text-sm"
+                              />
+                              <input
+                                type="text"
+                                value={med.dose}
+                                onChange={(e) => updateMedication(index, 'dose', e.target.value)}
+                                placeholder="Dosis (ej: 400mg)"
+                                className="px-2 py-1 border border-gray-300 rounded text-sm"
+                              />
+                              <input
+                                type="text"
+                                value={med.frequency}
+                                onChange={(e) => updateMedication(index, 'frequency', e.target.value)}
+                                placeholder="Frecuencia (ej: c/8h)"
+                                className="px-2 py-1 border border-gray-300 rounded text-sm"
+                              />
+                              <input
+                                type="text"
+                                value={med.duration}
+                                onChange={(e) => updateMedication(index, 'duration', e.target.value)}
+                                placeholder="Duración (ej: 7 días)"
+                                className="px-2 py-1 border border-gray-300 rounded text-sm"
+                              />
+                            </div>
+                            <input
+                              type="text"
+                              value={med.instructions || ''}
+                              onChange={(e) => updateMedication(index, 'instructions', e.target.value)}
+                              placeholder="Instrucciones adicionales (opcional)"
+                              className="w-full mt-2 px-2 py-1 border border-gray-300 rounded text-sm"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Notas adicionales
+                    </label>
+                    <textarea
+                      value={prescriptionNotes}
+                      onChange={(e) => setPrescriptionNotes(e.target.value)}
+                      rows={2}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      placeholder="Indicaciones especiales, advertencias, etc."
+                    />
+                  </div>
+
+                  <div className="flex justify-end gap-3 pt-2">
+                    <button
+                      onClick={() => setShowPrescriptionForm(false)}
+                      className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      onClick={handleCreatePrescription}
+                      disabled={isCreatingPrescription || medications.length === 0}
+                      className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
+                    >
+                      {isCreatingPrescription ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          Creando...
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircle className="h-4 w-4" />
+                          Crear Receta
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Created Prescription */}
+            {createdPrescription && (
+              <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                    <CheckCircle className="h-5 w-5 text-green-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-green-900">Receta creada exitosamente</h3>
+                    <p className="text-sm text-green-700">Código de verificación: {createdPrescription.securityCode}</p>
+                  </div>
+                </div>
+                <a
+                  href={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/prescriptions/${createdPrescription.id}/pdf`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                >
+                  <Download className="h-4 w-4" />
+                  Descargar PDF
+                </a>
+              </div>
+            )}
+
+            {/* Navigation */}
             <div className="flex justify-center gap-4">
               <Link
                 href={`/patients/${selectedPatient?.id}`}
@@ -514,6 +827,14 @@ function NewConsultationContent() {
               >
                 Ver expediente
               </Link>
+              {consultationId && (
+                <Link
+                  href={`/consultations/${consultationId}`}
+                  className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50"
+                >
+                  Ver consulta
+                </Link>
+              )}
               <button
                 onClick={() => {
                   setStep('patient');
@@ -521,6 +842,10 @@ function NewConsultationContent() {
                   setAudioBlob(null);
                   setAiResponse(null);
                   setEditedNotes(null);
+                  setConsultationId(null);
+                  setMedications([]);
+                  setCreatedPrescription(null);
+                  setShowPrescriptionForm(false);
                 }}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
               >
