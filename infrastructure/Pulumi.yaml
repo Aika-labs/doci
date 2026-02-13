@@ -1,0 +1,7 @@
+name: doci-infrastructure
+runtime: nodejs
+description: Doci EHR Infrastructure on Hetzner Cloud
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: typescript
