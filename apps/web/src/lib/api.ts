@@ -157,3 +157,94 @@ export const appointmentsApi = {
       token,
     }),
 };
+
+// Prescription types
+export interface MedicationItem {
+  name: string;
+  dose: string;
+  frequency: string;
+  duration: string;
+  instructions?: string;
+  quantity?: string;
+}
+
+export interface Prescription {
+  id: string;
+  consultationId: string;
+  medications: MedicationItem[];
+  diagnosis: string | null;
+  instructions: string | null;
+  securityCode: string;
+  pdfUrl: string | null;
+  isValid: boolean;
+  expiresAt: string | null;
+  createdAt: string;
+  consultation?: {
+    patient: {
+      id: string;
+      firstName: string;
+      lastName: string;
+      birthDate?: string;
+    };
+    user: {
+      id: string;
+      firstName: string;
+      lastName: string;
+      specialty?: string;
+      licenseNumber?: string;
+    };
+  };
+}
+
+export interface PrescriptionVerification {
+  valid: boolean;
+  message?: string;
+  prescription?: {
+    id: string;
+    createdAt: string;
+    patient: string;
+    doctor: string;
+    licenseNumber: string | null;
+  };
+}
+
+// Prescription API functions
+export const prescriptionsApi = {
+  getAll: (token: string, params?: { consultationId?: string }) => {
+    const searchParams = new URLSearchParams();
+    if (params?.consultationId) searchParams.set('consultationId', params.consultationId);
+    
+    const query = searchParams.toString();
+    return apiFetch<Prescription[]>(`/prescriptions${query ? `?${query}` : ''}`, { token });
+  },
+
+  getById: (token: string, id: string) =>
+    apiFetch<Prescription>(`/prescriptions/${id}`, { token }),
+
+  create: (token: string, data: {
+    consultationId: string;
+    medications: MedicationItem[];
+    diagnosis?: string;
+    instructions?: string;
+    expiresAt?: string;
+  }) =>
+    apiFetch<Prescription>('/prescriptions', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      token,
+    }),
+
+  getPdfUrl: (id: string) => {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+    return `${API_URL}/prescriptions/${id}/pdf`;
+  },
+
+  invalidate: (token: string, id: string) =>
+    apiFetch<Prescription>(`/prescriptions/${id}/invalidate`, {
+      method: 'PATCH',
+      token,
+    }),
+
+  verify: (code: string) =>
+    apiFetch<PrescriptionVerification>(`/prescriptions/verify/${code}`),
+};
