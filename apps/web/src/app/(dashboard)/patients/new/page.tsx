@@ -8,10 +8,12 @@ import { patientsApi } from '@/lib/api';
 import { PatientFormData } from '@/lib/validations/patient';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import { useToast } from '@/components/ui';
 
 export default function NewPatientPage() {
   const router = useRouter();
   const { getToken } = useAuth();
+  const { success, error: showError } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -62,9 +64,12 @@ export default function NewPatientPage() {
       };
 
       await patientsApi.create(token, patientData);
+      success('Paciente creado', 'El paciente ha sido registrado exitosamente');
       router.push('/patients');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error al crear el paciente');
+      const message = err instanceof Error ? err.message : 'Error al crear el paciente';
+      setError(message);
+      showError('Error', message);
     } finally {
       setIsLoading(false);
     }

@@ -9,6 +9,7 @@ import { PatientFormData } from '@/lib/validations/patient';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import Link from 'next/link';
+import { useToast } from '@/components/ui';
 import {
   ArrowLeft,
   Trash2,
@@ -77,6 +78,7 @@ export default function PatientDetailPage() {
   const router = useRouter();
   const params = useParams();
   const { getToken } = useAuth();
+  const { success, error: showError } = useToast();
   const [patient, setPatient] = useState<Patient | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -224,8 +226,11 @@ export default function PatientDetailPage() {
       await patientsApi.update(token, patientId, patientData);
       await fetchPatient();
       setIsEditing(false);
+      success('Paciente actualizado', 'Los datos han sido guardados correctamente');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error al actualizar el paciente');
+      const message = err instanceof Error ? err.message : 'Error al actualizar el paciente';
+      setError(message);
+      showError('Error', message);
     } finally {
       setIsSaving(false);
     }
@@ -242,9 +247,12 @@ export default function PatientDetailPage() {
       if (!token) return;
 
       await patientsApi.delete(token, patientId);
+      success('Paciente eliminado', 'El paciente ha sido eliminado del sistema');
       router.push('/patients');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error al eliminar el paciente');
+      const message = err instanceof Error ? err.message : 'Error al eliminar el paciente';
+      setError(message);
+      showError('Error', message);
       setIsDeleting(false);
     }
   };

@@ -7,6 +7,7 @@ import { VoiceRecorder } from '@/components/voice';
 import { patientsApi, Patient } from '@/lib/api';
 import { ArrowLeft, Search, User, Mic, FileText, CheckCircle, Loader2, Pill, Plus, X, Download } from 'lucide-react';
 import Link from 'next/link';
+import { useToast } from '@/components/ui';
 
 type Step = 'patient' | 'recording' | 'review' | 'complete';
 
@@ -44,6 +45,7 @@ interface CreatedPrescription {
 function NewConsultationContent() {
   const searchParams = useSearchParams();
   const { getToken } = useAuth();
+  const { success, error: showError } = useToast();
   
   const [step, setStep] = useState<Step>('patient');
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
@@ -213,8 +215,10 @@ function NewConsultationContent() {
       const savedConsultation = await response.json();
       setConsultationId(savedConsultation.id);
       setStep('complete');
+      success('Consulta guardada', 'Las notas han sido guardadas en el expediente');
     } catch (error) {
       console.error('Error saving consultation:', error);
+      showError('Error', 'No se pudo guardar la consulta');
       // For demo, just move to complete with mock ID
       setConsultationId('mock-consultation-id');
       setStep('complete');
@@ -284,8 +288,10 @@ function NewConsultationContent() {
       const prescription = await response.json();
       setCreatedPrescription(prescription);
       setShowPrescriptionForm(false);
+      success('Receta creada', `Código de verificación: ${prescription.securityCode}`);
     } catch (error) {
       console.error('Error creating prescription:', error);
+      showError('Error', 'No se pudo crear la receta');
       // Mock for demo
       setCreatedPrescription({ id: 'mock-prescription-id', securityCode: 'ABC123' });
       setShowPrescriptionForm(false);
