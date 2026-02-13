@@ -18,6 +18,7 @@ import {
   HardDrive,
   BarChart3,
 } from 'lucide-react';
+import { CommandPalette } from '@/components/search';
 
 export default function DashboardLayout({
   children,
@@ -151,20 +152,23 @@ export default function DashboardLayout({
 
       {/* Main content */}
       <main className={`flex-1 transition-all duration-300 ${collapsed ? 'md:ml-20' : 'md:ml-64'}`}>
-        {/* Top bar (mobile) */}
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-white px-4 md:hidden">
+        {/* Top bar */}
+        <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-white px-4">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="rounded-lg p-2 hover:bg-slate-100"
+            className="rounded-lg p-2 hover:bg-slate-100 md:hidden"
           >
             <Menu className="h-5 w-5" />
           </button>
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2 md:hidden">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white">
               <span className="text-sm font-bold">D</span>
             </div>
             <span className="text-lg font-semibold">Doci</span>
           </Link>
+          <div className="flex-1 hidden md:block">
+            <CommandPalette />
+          </div>
           <div className="ml-auto">
             <UserButton afterSignOutUrl="/sign-in" />
           </div>

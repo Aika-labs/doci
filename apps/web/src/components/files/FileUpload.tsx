@@ -11,6 +11,7 @@ import {
   AlertCircle,
   File as FileIcon,
 } from 'lucide-react';
+import { useToast } from '@/components/ui';
 
 type FileType = 'IMAGE' | 'DOCUMENT' | 'LAB_RESULT' | 'IMAGING' | 'PRESCRIPTION' | 'OTHER';
 
@@ -56,6 +57,7 @@ export function FileUpload({
   acceptedTypes = ['image/*', 'application/pdf', '.doc', '.docx', '.xls', '.xlsx'],
 }: FileUploadProps) {
   const { getToken } = useAuth();
+  const { success, error: showError } = useToast();
   const [files, setFiles] = useState<FileToUpload[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -191,15 +193,18 @@ export function FileUpload({
         )
       );
 
+      success('Archivo subido', `${fileToUpload.file.name} se subió correctamente`);
       onUploadComplete?.(uploadedFile);
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
       setFiles((prev) =>
         prev.map((f, i) =>
           i === index
-            ? { ...f, status: 'error', error: error instanceof Error ? error.message : 'Error desconocido' }
+            ? { ...f, status: 'error', error: errorMessage }
             : f
         )
       );
+      showError('Error al subir', errorMessage);
     }
   };
 

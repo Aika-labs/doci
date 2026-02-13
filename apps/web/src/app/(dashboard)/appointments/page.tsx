@@ -21,11 +21,13 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import Link from 'next/link';
+import { useToast } from '@/components/ui';
 
 type ViewMode = 'calendar' | 'list' | 'day';
 
 export default function AppointmentsPage() {
   const { getToken } = useAuth();
+  const { success, error: showError } = useToast();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -80,19 +82,24 @@ export default function AppointmentsPage() {
     const token = await getToken();
     if (!token) return;
 
-    if (selectedAppointment) {
-      await appointmentsApi.update(token, selectedAppointment.id, {
-        ...data,
-        scheduledAt: new Date(data.scheduledAt).toISOString(),
-      });
-    } else {
-      await appointmentsApi.create(token, {
-        ...data,
-        scheduledAt: new Date(data.scheduledAt).toISOString(),
-      });
+    try {
+      if (selectedAppointment) {
+        await appointmentsApi.update(token, selectedAppointment.id, {
+          ...data,
+          scheduledAt: new Date(data.scheduledAt).toISOString(),
+        });
+        success('Cita actualizada', 'Los cambios han sido guardados');
+      } else {
+        await appointmentsApi.create(token, {
+          ...data,
+          scheduledAt: new Date(data.scheduledAt).toISOString(),
+        });
+        success('Cita creada', 'La cita ha sido agendada correctamente');
+      }
+      await fetchAppointments();
+    } catch (err) {
+      showError('Error', err instanceof Error ? err.message : 'No se pudo guardar la cita');
     }
-
-    await fetchAppointments();
   };
 
   const handleStatusChange = async (appointmentId: string, status: 'SCHEDULED' | 'CONFIRMED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED' | 'NO_SHOW') => {
@@ -102,8 +109,17 @@ export default function AppointmentsPage() {
 
       await appointmentsApi.update(token, appointmentId, { status });
       await fetchAppointments();
+      
+      const statusMessages: Record<string, string> = {
+        COMPLETED: 'Cita marcada como completada',
+        CANCELLED: 'Cita cancelada',
+        NO_SHOW: 'Paciente marcado como no asistió',
+        CONFIRMED: 'Cita confirmada',
+      };
+      success('Estado actualizado', statusMessages[status] || 'Estado de la cita actualizado');
     } catch (error) {
       console.error('Error updating appointment status:', error);
+      showError('Error', 'No se pudo actualizar el estado de la cita');
     }
   };
 

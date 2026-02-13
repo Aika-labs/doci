@@ -1,9 +1,11 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { patientSchema, PatientFormData } from '@/lib/validations/patient';
 import { Patient } from '@/lib/api';
+import { useToast } from '@/components/ui';
 
 interface PatientFormProps {
   patient?: Patient;
@@ -13,10 +15,11 @@ interface PatientFormProps {
 }
 
 export function PatientForm({ patient, onSubmit, onCancel, isLoading }: PatientFormProps) {
+  const { warning } = useToast();
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitted },
   } = useForm<PatientFormData>({
     resolver: zodResolver(patientSchema),
     defaultValues: patient
@@ -46,6 +49,17 @@ export function PatientForm({ patient, onSubmit, onCancel, isLoading }: PatientF
           gender: 'MALE',
         },
   });
+
+  // Show toast when form has validation errors
+  useEffect(() => {
+    if (isSubmitted && Object.keys(errors).length > 0) {
+      const errorCount = Object.keys(errors).length;
+      warning(
+        'Formulario incompleto',
+        `Por favor corrige ${errorCount} ${errorCount === 1 ? 'campo' : 'campos'} requerido${errorCount === 1 ? '' : 's'}`
+      );
+    }
+  }, [isSubmitted, errors, warning]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

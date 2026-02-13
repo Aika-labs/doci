@@ -3,11 +3,13 @@
 import { useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { Building2, User, Bell, Shield, Palette, Save, Loader2 } from 'lucide-react';
+import { useToast } from '@/components/ui';
 
 type SettingsTab = 'profile' | 'clinic' | 'notifications' | 'security' | 'appearance';
 
 export default function SettingsPage() {
   const { user } = useUser();
+  const { success } = useToast();
   const [activeTab, setActiveTab] = useState<SettingsTab>('profile');
   const [isSaving, setIsSaving] = useState(false);
 
@@ -24,6 +26,7 @@ export default function SettingsPage() {
     // Simulate save
     await new Promise((resolve) => setTimeout(resolve, 1000));
     setIsSaving(false);
+    success('Configuración guardada', 'Los cambios han sido aplicados correctamente');
   };
 
   return (
