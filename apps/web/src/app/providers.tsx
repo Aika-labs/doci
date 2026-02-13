@@ -1,10 +1,22 @@
 'use client';
 
+import { useEffect } from 'react';
 import { ClerkProvider } from '@clerk/nextjs';
 import { esES } from '@clerk/localizations';
 
 interface ProvidersProps {
   children: React.ReactNode;
+}
+
+function ServiceWorkerRegistration() {
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch((error) => {
+        console.error('SW registration failed:', error);
+      });
+    }
+  }, []);
+  return null;
 }
 
 export function Providers({ children }: ProvidersProps) {
@@ -35,6 +47,7 @@ export function Providers({ children }: ProvidersProps) {
       }}
     >
       {children}
+      <ServiceWorkerRegistration />
     </ClerkProvider>
   );
 }
