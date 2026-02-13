@@ -1,0 +1,470 @@
+// Doci - EHR System Database Schema
+// Multitenancy + JSONB para plantillas clínicas dinámicas
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DIRECT_URL")
+  extensions = [pgcrypto, uuid_ossp]
+}
+
+// ============================================
+// MULTITENANCY - Cada clínica/consultorio es un tenant
+// ============================================
+
+model Tenant {
+  id             String   @id @default(cuid())
+  name           String
+  slug           String   @unique
+  plan           Plan     @default(BASIC)
+
+  // Configuración personalizada del tenant
+  settings       Json?    @db.JsonB
+  // Branding: { logo, primaryColor, secondaryColor, favicon }
+  branding       Json?    @db.JsonB
+
+  // Límites de almacenamiento
+  storageUsedMb  Int      @default(0)
+  storageLimitMb Int      @default(5120) // 5GB default
+
+  // Timestamps
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  users          User[]
+  patients       Patient[]
+  templates      ClinicalTemplate[]
+  appointments   Appointment[]
+  auditLogs      AuditLog[]
+
+  @@index([slug])
+}
+
+enum Plan {
+  BASIC
+  PROFESSIONAL
+  ENTERPRISE
+}
+
+// ============================================
+// USUARIOS - Médicos, enfermeras, recepcionistas
+// ============================================
+
+model User {
+  id            String   @id @default(cuid())
+  tenantId      String
+  tenant        Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  // Autenticación (Clerk)
+  clerkId       String   @unique
+  email         String
+
+  // Perfil profesional
+  firstName     String
+  lastName      String
+  role          UserRole @default(DOCTOR)
+  specialty     String?
+  licenseNumber String?  // Cédula profesional
+
+  // Branding personal del médico
+  signatureUrl  String?
+  logoUrl       String?
+  phone         String?
+
+  // Preferencias de IA
+  aiPreferences Json?    @db.JsonB // { language, voiceSpeed, autoSuggest }
+
+  // Estado
+  isActive      Boolean  @default(true)
+
+  // Timestamps
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  appointments   Appointment[]
+  consultations  Consultation[]
+
+  @@index([tenantId])
+  @@index([clerkId])
+  @@index([tenantId, isActive])
+}
+
+enum UserRole {
+  ADMIN
+  DOCTOR
+  NURSE
+  RECEPTIONIST
+}
+
+// ============================================
+// PACIENTES
+// ============================================
+
+model Patient {
+  id               String    @id @default(cuid())
+  tenantId         String
+  tenant           Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  // Datos personales
+  firstName        String
+  lastName         String
+  email            String?
+  phone            String?
+  birthDate        DateTime?
+  gender           Gender?
+
+  // Identificación
+  nationalId       String?   // CURP, DNI, SSN, etc.
+  insuranceId      String?
+  insuranceCompany String?
+
+  // Dirección
+  address          Json?     @db.JsonB // { street, city, state, zip, country }
+
+  // Datos médicos base (siempre disponibles para IA)
+  bloodType        String?
+  allergies        Json?     @db.JsonB // [{ allergen, severity, reaction }]
+  chronicConditions Json?    @db.JsonB // [{ condition, diagnosedDate, notes }]
+  currentMedications Json?   @db.JsonB // [{ name, dose, frequency, startDate }]
+
+  // Contacto de emergencia
+  emergencyContact Json?     @db.JsonB // { name, phone, relationship }
+
+  // Notas generales
+  notes            String?   @db.Text
+
+  // Estado
+  isActive         Boolean   @default(true)
+
+  // Timestamps
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  // Relations
+  appointments     Appointment[]
+  consultations    Consultation[]
+  files            PatientFile[]
+
+  @@index([tenantId])
+  @@index([tenantId, lastName])
+  @@index([tenantId, phone])
+  @@index([tenantId, isActive])
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  PREFER_NOT_TO_SAY
+}
+
+// ============================================
+// PLANTILLAS CLÍNICAS DINÁMICAS (JSONB)
+// Zero hardcoding - cada especialidad define sus campos
+// ============================================
+
+model ClinicalTemplate {
+  id          String   @id @default(cuid())
+  tenantId    String
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  name        String
+  description String?
+  specialty   String?  // Odontología, Psicología, General, etc.
+
+  // Esquema dinámico de campos
+  // Ejemplo:
+  // [
+  //   { "name": "motivo_consulta", "label": "Motivo de consulta", "type": "textarea", "required": true },
+  //   { "name": "peso", "label": "Peso (kg)", "type": "number", "required": false },
+  //   { "name": "presion_arterial", "label": "Presión arterial", "type": "text", "required": false },
+  //   { "name": "diagnostico", "label": "Diagnóstico", "type": "select", "options": ["Sano", "Enfermo"], "required": true }
+  // ]
+  schema      Json     @db.JsonB
+
+  // Prompt de IA personalizado para esta plantilla
+  aiPrompt    String?  @db.Text
+
+  // Estado
+  isDefault   Boolean  @default(false)
+  isActive    Boolean  @default(true)
+
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  consultations Consultation[]
+
+  @@index([tenantId])
+  @@unique([tenantId, name])
+}
+
+// ============================================
+// CONSULTAS / HISTORIAS CLÍNICAS
+// ============================================
+
+model Consultation {
+  id            String   @id @default(cuid())
+  tenantId      String
+
+  patientId     String
+  patient       Patient  @relation(fields: [patientId], references: [id])
+
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+
+  templateId    String?
+  template      ClinicalTemplate? @relation(fields: [templateId], references: [id])
+
+  appointmentId String?  @unique
+  appointment   Appointment? @relation(fields: [appointmentId], references: [id])
+
+  // Datos clínicos (JSONB dinámico según plantilla)
+  // Los campos coinciden con el schema de la plantilla
+  clinicalData  Json     @db.JsonB
+
+  // Notas SOAP estructuradas (generadas por IA o manual)
+  // { subjective, objective, assessment, plan }
+  soapNotes     Json?    @db.JsonB
+
+  // Signos vitales (estructura fija para fácil acceso)
+  // { weight, height, bloodPressure, heartRate, temperature, oxygenSaturation }
+  vitalSigns    Json?    @db.JsonB
+
+  // IA - Transcripción y análisis
+  aiTranscription String? @db.Text  // Texto crudo del dictado
+  aiSummary       String? @db.Text  // Resumen generado por IA
+  aiSuggestions   Json?   @db.JsonB // [{ type, content, confidence }]
+
+  // Diagnósticos (CIE-10)
+  diagnoses     Json?    @db.JsonB // [{ code, description, type: 'primary'|'secondary' }]
+
+  // Estado
+  status        ConsultationStatus @default(IN_PROGRESS)
+
+  // Timestamps
+  startedAt     DateTime @default(now())
+  completedAt   DateTime?
+
+  // Relations
+  prescriptions Prescription[]
+
+  @@index([tenantId, patientId])
+  @@index([tenantId, userId])
+  @@index([tenantId, startedAt])
+}
+
+enum ConsultationStatus {
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+// ============================================
+// CITAS / AGENDA
+// ============================================
+
+model Appointment {
+  id          String   @id @default(cuid())
+  tenantId    String
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  patientId   String
+  patient     Patient  @relation(fields: [patientId], references: [id])
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+
+  // Horario
+  startTime   DateTime
+  endTime     DateTime
+  duration    Int      @default(30) // minutos
+
+  // Detalles
+  type        AppointmentType @default(CONSULTATION)
+  reason      String?  // Motivo de la cita
+  notes       String?  // Notas internas
+
+  // Estado
+  status      AppointmentStatus @default(SCHEDULED)
+
+  // Recordatorios
+  reminderSentAt DateTime?
+  confirmedAt    DateTime?
+  cancelledAt    DateTime?
+  cancelReason   String?
+
+  // Telemedicina
+  isTelemedicine Boolean @default(false)
+  meetingUrl     String?
+
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  consultation Consultation?
+
+  @@index([tenantId, startTime])
+  @@index([tenantId, userId, startTime])
+  @@index([tenantId, patientId])
+  @@index([tenantId, status])
+}
+
+enum AppointmentType {
+  CONSULTATION
+  FOLLOW_UP
+  PROCEDURE
+  TELEMEDICINE
+  EMERGENCY
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+// ============================================
+// RECETAS MÉDICAS
+// ============================================
+
+model Prescription {
+  id             String   @id @default(cuid())
+  consultationId String
+  consultation   Consultation @relation(fields: [consultationId], references: [id], onDelete: Cascade)
+
+  // Medicamentos
+  // [{ name, dose, frequency, duration, instructions, quantity }]
+  medications    Json     @db.JsonB
+
+  // Instrucciones generales
+  instructions   String?  @db.Text
+  diagnosis      String?
+
+  // Seguridad y verificación
+  securityCode   String   @unique @default(cuid())
+  digitalSignature String?
+
+  // PDF generado (URL de Supabase Storage)
+  pdfUrl         String?
+
+  // Validez
+  isValid        Boolean  @default(true)
+  expiresAt      DateTime?
+
+  // Timestamps
+  createdAt      DateTime @default(now())
+
+  @@index([securityCode])
+  @@index([consultationId])
+}
+
+// ============================================
+// ARCHIVOS DEL PACIENTE
+// ============================================
+
+model PatientFile {
+  id          String   @id @default(cuid())
+  patientId   String
+  patient     Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  // Metadata
+  name        String
+  description String?
+  type        FileType
+  mimeType    String
+
+  // Storage (Supabase)
+  storagePath String   // Path en Supabase Storage
+  storageUrl  String?  // URL pública o presigned
+  sizeMb      Float
+
+  // Análisis de IA (para imágenes médicas y labs)
+  aiAnalysis  Json?    @db.JsonB // { summary, findings, confidence }
+
+  // Timestamps
+  createdAt   DateTime @default(now())
+  uploadedBy  String?  // userId
+
+  @@index([patientId])
+  @@index([patientId, type])
+}
+
+enum FileType {
+  IMAGE
+  DOCUMENT
+  LAB_RESULT
+  IMAGING      // Rayos X, MRI, CT
+  PRESCRIPTION
+  OTHER
+}
+
+// ============================================
+// AUDIT LOG - Trazabilidad para compliance
+// ============================================
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  userId    String?
+
+  // Acción realizada
+  action    String   // CREATE, READ, UPDATE, DELETE, EXPORT, LOGIN, LOGOUT
+  entity    String   // Patient, Consultation, Prescription, etc.
+  entityId  String?
+
+  // Detalles del cambio
+  changes   Json?    @db.JsonB // { before, after } para UPDATE
+  metadata  Json?    @db.JsonB // Datos adicionales
+
+  // Información de la request
+  ipAddress String?
+  userAgent String?
+
+  // Timestamp
+  createdAt DateTime @default(now())
+
+  @@index([tenantId, createdAt])
+  @@index([tenantId, entity, entityId])
+  @@index([tenantId, userId])
+}
+
+// ============================================
+// PROTOCOLOS DE TRATAMIENTO (Feature avanzado)
+// ============================================
+
+model TreatmentProtocol {
+  id          String   @id @default(cuid())
+  tenantId    String
+
+  name        String   // "Fisioterapia 10 sesiones"
+  description String?
+  specialty   String?
+
+  // Configuración del protocolo
+  // { totalSessions, intervalDays, services: [{ name, price }], autoSchedule }
+  config      Json     @db.JsonB
+
+  // Estado
+  isActive    Boolean  @default(true)
+
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([tenantId])
+  @@unique([tenantId, name])
+}
