@@ -49,28 +49,28 @@ export default function DashboardLayout({
   };
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-white to-teal-50/30">
       {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/50 md:hidden"
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm md:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex flex-col border-r bg-white transition-all duration-300 ${
+        className={`fixed inset-y-0 left-0 z-50 flex flex-col border-r border-gray-200/60 bg-white/80 backdrop-blur-xl transition-all duration-300 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } md:translate-x-0 ${collapsed ? 'md:w-20' : 'md:w-64'}`}
       >
         {/* Logo */}
-        <div className="flex h-16 items-center justify-between border-b px-4">
+        <div className="flex h-16 items-center justify-between border-b border-gray-200/60 px-4">
           <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600 text-white">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500 to-cyan-600 text-white shadow-lg shadow-teal-500/25">
               <span className="text-lg font-bold">D</span>
             </div>
-            {!collapsed && <span className="text-xl font-semibold">Doci</span>}
+            {!collapsed && <span className="text-xl font-semibold text-gray-900">Doci</span>}
           </Link>
           <button
             onClick={() => setSidebarOpen(false)}
@@ -94,7 +94,7 @@ export default function DashboardLayout({
             </NavItem>
           ))}
 
-          <div className="my-4 border-t" />
+          <div className="my-4 border-t border-gray-200/60" />
 
           <NavItem
             href="/consultations/new"
@@ -106,7 +106,7 @@ export default function DashboardLayout({
             Nueva Consulta
           </NavItem>
 
-          <div className="my-4 border-t" />
+          <div className="my-4 border-t border-gray-200/60" />
 
           {secondaryNavigation.map((item) => (
             <NavItem
@@ -122,7 +122,7 @@ export default function DashboardLayout({
         </nav>
 
         {/* Footer with user */}
-        <div className="border-t p-3">
+        <div className="border-t border-gray-200/60 p-3">
           <div className={`flex items-center gap-3 ${collapsed ? 'justify-center' : ''}`}>
             <UserButton
               afterSignOutUrl="/sign-in"
@@ -134,8 +134,8 @@ export default function DashboardLayout({
             />
             {!collapsed && (
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-slate-900 truncate">Mi cuenta</p>
-                <p className="text-xs text-slate-500">Gestionar perfil</p>
+                <p className="text-sm font-medium text-gray-900 truncate">Mi cuenta</p>
+                <p className="text-xs text-gray-500">Gestionar perfil</p>
               </div>
             )}
           </div>
@@ -144,7 +144,7 @@ export default function DashboardLayout({
         {/* Collapse button (desktop only) */}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="hidden md:flex absolute -right-3 top-20 h-6 w-6 items-center justify-center rounded-full border bg-white shadow-sm hover:bg-slate-50"
+          className="hidden md:flex absolute -right-3 top-20 h-6 w-6 items-center justify-center rounded-full border border-gray-200 bg-white shadow-sm hover:bg-gray-50"
         >
           <ChevronLeft className={`h-4 w-4 transition-transform ${collapsed ? 'rotate-180' : ''}`} />
         </button>
@@ -153,18 +153,18 @@ export default function DashboardLayout({
       {/* Main content */}
       <main className={`flex-1 transition-all duration-300 ${collapsed ? 'md:ml-20' : 'md:ml-64'}`}>
         {/* Top bar */}
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-white px-4">
+        <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-gray-200/60 bg-white/80 backdrop-blur-xl px-4">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="rounded-lg p-2 hover:bg-slate-100 md:hidden"
+            className="rounded-lg p-2 hover:bg-gray-100 md:hidden"
           >
             <Menu className="h-5 w-5" />
           </button>
           <Link href="/" className="flex items-center gap-2 md:hidden">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500 to-cyan-600 text-white shadow-lg shadow-teal-500/25">
               <span className="text-sm font-bold">D</span>
             </div>
-            <span className="text-lg font-semibold">Doci</span>
+            <span className="text-lg font-semibold text-gray-900">Doci</span>
           </Link>
           <div className="flex-1 hidden md:block">
             <CommandPalette />
@@ -178,7 +178,7 @@ export default function DashboardLayout({
       </main>
 
       {/* Mobile bottom nav */}
-      <nav className="fixed inset-x-0 bottom-0 z-50 border-t bg-white md:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-gray-200/60 bg-white/80 backdrop-blur-xl md:hidden">
         <div className="flex items-center justify-around py-2">
           <MobileNavItem href="/" icon={Home} label="Inicio" active={pathname === '/'} />
           <MobileNavItem href="/patients" icon={Users} label="Pacientes" active={pathname.startsWith('/patients')} />
@@ -212,15 +212,15 @@ function NavItem({
   collapsed?: boolean;
   active?: boolean;
 }) {
-  const baseStyles = 'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors';
+  const baseStyles = 'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200';
   
   let styles = baseStyles;
   if (highlight) {
-    styles += ' bg-blue-600 text-white hover:bg-blue-700';
+    styles += ' bg-gradient-to-r from-teal-500 to-cyan-600 text-white shadow-lg shadow-teal-500/25 hover:shadow-xl hover:shadow-teal-500/30';
   } else if (active) {
-    styles += ' bg-blue-50 text-blue-700';
+    styles += ' bg-teal-50 text-teal-700';
   } else {
-    styles += ' text-slate-600 hover:bg-slate-100 hover:text-slate-900';
+    styles += ' text-gray-600 hover:bg-gray-100 hover:text-gray-900';
   }
 
   if (collapsed) {
@@ -248,14 +248,14 @@ function MobileNavItem({
   highlight?: boolean;
   active?: boolean;
 }) {
-  let textColor = 'text-slate-500';
-  if (highlight) textColor = 'text-blue-600';
-  else if (active) textColor = 'text-blue-600';
+  let textColor = 'text-gray-500';
+  if (highlight) textColor = 'text-teal-600';
+  else if (active) textColor = 'text-teal-600';
 
   return (
-    <Link href={href} className={`flex flex-col items-center gap-1 px-3 py-1 ${textColor}`}>
+    <Link href={href} className={`flex flex-col items-center gap-1 px-3 py-1 transition-colors ${textColor}`}>
       <Icon className="h-5 w-5" />
-      <span className="text-xs">{label}</span>
+      <span className="text-xs font-medium">{label}</span>
     </Link>
   );
 }
