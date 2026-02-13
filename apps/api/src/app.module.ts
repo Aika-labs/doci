@@ -10,6 +10,7 @@ import { TemplatesModule } from './modules/templates/templates.module';
 import { PrescriptionsModule } from './modules/prescriptions/prescriptions.module';
 import { StorageModule } from './modules/storage/storage.module';
 import { FilesModule } from './modules/files/files.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
 import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
@@ -38,6 +39,7 @@ import { PrismaModule } from './prisma/prisma.module';
     PrescriptionsModule,
     StorageModule,
     FilesModule,
+    NotificationsModule,
   ],
 })
 export class AppModule {}
