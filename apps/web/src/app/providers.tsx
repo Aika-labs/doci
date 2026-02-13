@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { ClerkProvider } from '@clerk/nextjs';
 import { esES } from '@clerk/localizations';
+import { ToastProvider } from '@/components/ui';
 
 interface ProvidersProps {
   children: React.ReactNode;
@@ -46,7 +47,9 @@ export function Providers({ children }: ProvidersProps) {
         },
       }}
     >
-      {children}
+      <ToastProvider>
+        {children}
+      </ToastProvider>
       <ServiceWorkerRegistration />
     </ClerkProvider>
   );
