@@ -17,8 +17,10 @@ import {
   FileStack,
   HardDrive,
   BarChart3,
+  Receipt,
 } from 'lucide-react';
 import { CommandPalette } from '@/components/search';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 export default function DashboardLayout({
   children,
@@ -38,6 +40,7 @@ export default function DashboardLayout({
   ];
 
   const secondaryNavigation = [
+    { name: 'Facturación', href: '/billing', icon: Receipt },
     { name: 'Reportes', href: '/reports', icon: BarChart3 },
     { name: 'Almacenamiento', href: '/storage', icon: HardDrive },
     { name: 'Configuración', href: '/settings', icon: Settings },
@@ -174,7 +177,9 @@ export default function DashboardLayout({
           </div>
         </header>
 
-        <div className="p-4 md:p-8">{children}</div>
+        <div className="p-4 md:p-8">
+          <ErrorBoundary>{children}</ErrorBoundary>
+        </div>
       </main>
 
       {/* Mobile bottom nav */}

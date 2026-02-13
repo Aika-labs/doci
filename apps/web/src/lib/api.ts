@@ -248,3 +248,248 @@ export const prescriptionsApi = {
   verify: (code: string) =>
     apiFetch<PrescriptionVerification>(`/prescriptions/verify/${code}`),
 };
+
+// Billing types
+export interface Service {
+  id: string;
+  tenantId: string;
+  name: string;
+  description: string | null;
+  code: string | null;
+  satCode: string | null;
+  price: number;
+  currency: string;
+  duration: number | null;
+  category: string | null;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface InvoiceItem {
+  id: string;
+  invoiceId: string;
+  serviceId: string | null;
+  service?: Service;
+  description: string;
+  quantity: number;
+  unitPrice: number;
+  discount: number;
+  total: number;
+}
+
+export interface Invoice {
+  id: string;
+  tenantId: string;
+  patientId: string;
+  patient?: Patient;
+  invoiceNumber: string;
+  status: 'DRAFT' | 'PENDING' | 'PAID' | 'PARTIAL' | 'CANCELLED' | 'OVERDUE';
+  issueDate: string;
+  dueDate: string;
+  subtotal: number;
+  tax: number;
+  discount: number;
+  total: number;
+  currency: string;
+  notes: string | null;
+  items: InvoiceItem[];
+  payments?: Payment[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Payment {
+  id: string;
+  invoiceId: string;
+  amount: number;
+  method: 'CASH' | 'CARD' | 'TRANSFER' | 'CHECK' | 'OTHER';
+  reference: string | null;
+  paidAt: string;
+  notes: string | null;
+  createdAt: string;
+}
+
+export interface InvoicesResponse {
+  data: Invoice[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export interface ServicesResponse {
+  data: Service[];
+  total: number;
+}
+
+export interface FinancialSummary {
+  totalRevenue: number;
+  totalPending: number;
+  totalOverdue: number;
+  invoiceCount: number;
+  paidCount: number;
+  pendingCount: number;
+}
+
+// Billing API functions
+export const billingApi = {
+  // Services
+  getServices: (token: string, params?: { category?: string; search?: string }) => {
+    const searchParams = new URLSearchParams();
+    if (params?.category) searchParams.set('category', params.category);
+    if (params?.search) searchParams.set('search', params.search);
+    const query = searchParams.toString();
+    return apiFetch<ServicesResponse>(`/billing/services${query ? `?${query}` : ''}`, { token });
+  },
+
+  getService: (token: string, id: string) =>
+    apiFetch<Service>(`/billing/services/${id}`, { token }),
+
+  createService: (token: string, data: Partial<Service>) =>
+    apiFetch<Service>('/billing/services', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      token,
+    }),
+
+  updateService: (token: string, id: string, data: Partial<Service>) =>
+    apiFetch<Service>(`/billing/services/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+      token,
+    }),
+
+  deleteService: (token: string, id: string) =>
+    apiFetch<void>(`/billing/services/${id}`, {
+      method: 'DELETE',
+      token,
+    }),
+
+  // Invoices
+  getInvoices: (token: string, params?: { 
+    status?: string; 
+    patientId?: string;
+    startDate?: string;
+    endDate?: string;
+    page?: number;
+    limit?: number;
+  }) => {
+    const searchParams = new URLSearchParams();
+    if (params?.status) searchParams.set('status', params.status);
+    if (params?.patientId) searchParams.set('patientId', params.patientId);
+    if (params?.startDate) searchParams.set('startDate', params.startDate);
+    if (params?.endDate) searchParams.set('endDate', params.endDate);
+    if (params?.page) searchParams.set('page', params.page.toString());
+    if (params?.limit) searchParams.set('limit', params.limit.toString());
+    const query = searchParams.toString();
+    return apiFetch<InvoicesResponse>(`/billing/invoices${query ? `?${query}` : ''}`, { token });
+  },
+
+  getInvoice: (token: string, id: string) =>
+    apiFetch<Invoice>(`/billing/invoices/${id}`, { token }),
+
+  createInvoice: (token: string, data: {
+    patientId: string;
+    dueDate?: string;
+    notes?: string;
+    items: Array<{
+      serviceId?: string;
+      description: string;
+      quantity: number;
+      unitPrice: number;
+      discount?: number;
+    }>;
+  }) =>
+    apiFetch<Invoice>('/billing/invoices', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      token,
+    }),
+
+  updateInvoice: (token: string, id: string, data: Partial<Invoice>) =>
+    apiFetch<Invoice>(`/billing/invoices/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+      token,
+    }),
+
+  cancelInvoice: (token: string, id: string) =>
+    apiFetch<Invoice>(`/billing/invoices/${id}/cancel`, {
+      method: 'POST',
+      token,
+    }),
+
+  // Payments
+  addPayment: (token: string, invoiceId: string, data: {
+    amount: number;
+    method: 'CASH' | 'CARD' | 'TRANSFER' | 'CHECK' | 'OTHER';
+    reference?: string;
+    notes?: string;
+  }) =>
+    apiFetch<Payment>(`/billing/invoices/${invoiceId}/payments`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      token,
+    }),
+
+  // Reports
+  getFinancialSummary: (token: string, params?: { startDate?: string; endDate?: string }) => {
+    const searchParams = new URLSearchParams();
+    if (params?.startDate) searchParams.set('startDate', params.startDate);
+    if (params?.endDate) searchParams.set('endDate', params.endDate);
+    const query = searchParams.toString();
+    return apiFetch<FinancialSummary>(`/billing/reports/summary${query ? `?${query}` : ''}`, { token });
+  },
+};
+
+// Settings types
+export interface UserProfile {
+  id: string;
+  clerkId: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  specialty: string | null;
+  licenseNumber: string | null;
+  phone: string | null;
+  bio: string | null;
+}
+
+export interface TenantSettings {
+  id: string;
+  name: string;
+  address: string | null;
+  city: string | null;
+  state: string | null;
+  postalCode: string | null;
+  phone: string | null;
+  email: string | null;
+  website: string | null;
+  schedule: Record<string, { open: string; close: string; enabled: boolean }> | null;
+  settings: Record<string, unknown> | null;
+}
+
+// Settings API functions
+export const settingsApi = {
+  // User profile
+  getProfile: (token: string) =>
+    apiFetch<UserProfile>('/auth/me', { token }),
+
+  updateProfile: (token: string, data: Partial<UserProfile>) =>
+    apiFetch<UserProfile>('/auth/me', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+      token,
+    }),
+
+  // Tenant settings
+  getTenant: (token: string) =>
+    apiFetch<TenantSettings>('/auth/tenant', { token }),
+
+  updateTenant: (token: string, data: Partial<TenantSettings>) =>
+    apiFetch<TenantSettings>('/auth/tenant', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+      token,
+    }),
+};

@@ -2,6 +2,31 @@
 
 Sistema de Historia Clínica Electrónica (EHR) con transcripción de voz por IA, diseñado específicamente para el mercado latinoamericano.
 
+## Quick Start
+
+```bash
+# Clonar
+git clone https://github.com/Aika-labs/doci.git
+cd doci
+
+# Setup automático
+chmod +x scripts/setup.sh
+./scripts/setup.sh
+
+# O manual:
+pnpm install
+cp .env.example .env
+# Editar .env con credenciales
+pnpm --filter @doci/database prisma generate
+pnpm --filter @doci/database prisma migrate dev
+pnpm dev
+```
+
+**URLs de desarrollo:**
+- Frontend: http://localhost:3000
+- API: http://localhost:3001
+- API Docs (Swagger): http://localhost:3001/api
+
 ## Características Principales
 
 ### Core EHR
@@ -39,108 +64,49 @@ Sistema de Historia Clínica Electrónica (EHR) con transcripción de voz por IA
 ```
 doci/
 ├── apps/
-│   ├── api/                 # NestJS Backend
-│   │   └── src/
-│   │       ├── modules/
-│   │       │   ├── ai/              # Transcripción y análisis IA
-│   │       │   ├── appointments/    # Gestión de citas
-│   │       │   ├── audit/           # Audit trail
-│   │       │   ├── auth/            # Autenticación Clerk
-│   │       │   ├── backup/          # Respaldos automáticos
-│   │       │   ├── billing/         # Facturación
-│   │       │   ├── calendar/        # Sync Google/Outlook
-│   │       │   ├── consultations/   # Consultas médicas
-│   │       │   ├── files/           # Archivos de pacientes
-│   │       │   ├── notifications/   # WhatsApp/Email
-│   │       │   ├── onboarding/      # Wizard inicial
-│   │       │   ├── patients/        # Gestión de pacientes
-│   │       │   ├── prescriptions/   # Recetas digitales
-│   │       │   ├── search/          # Búsqueda global
-│   │       │   ├── specialty-templates/  # Plantillas médicas
-│   │       │   ├── storage/         # Supabase Storage
-│   │       │   ├── subscriptions/   # Planes y Stripe
-│   │       │   ├── templates/       # Plantillas clínicas
-│   │       │   └── vademecum/       # Base de medicamentos
-│   │       └── prisma/
+│   ├── api/                 # NestJS Backend (20 módulos)
 │   └── web/                 # Next.js Frontend
-│       └── src/
-│           ├── app/         # App Router
-│           └── components/  # UI Components
 ├── packages/
-│   ├── database/            # Prisma schema y cliente
-│   └── shared/              # Tipos y validadores compartidos
+│   ├── database/            # Prisma schema (~25 modelos)
+│   └── shared/              # Tipos y validadores
 ├── infrastructure/          # Pulumi IaC
-└── docker/                  # Dockerfiles
+├── docker/                  # Dockerfiles
+├── docs/                    # Documentación
+│   ├── ARCHITECTURE.md      # Estructura detallada del código
+│   ├── DEPLOYMENT.md        # Guía de despliegue
+│   └── PRODUCTION_CHECKLIST.md  # Estado y pendientes
+└── scripts/
+    ├── setup.sh             # Setup inicial
+    └── deploy.sh            # Deploy producción
 ```
+
+Ver [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) para la estructura completa.
 
 ## Requisitos
 
 - Node.js 20+
 - pnpm 9+
-- PostgreSQL 15+ (o cuenta Supabase)
+- PostgreSQL 15+ con pgvector (o cuenta Supabase)
 - Cuenta OpenAI con acceso a GPT-4 y Whisper
 - Cuenta Clerk para autenticación
 
-## Instalación
-
-### 1. Clonar el repositorio
-
-```bash
-git clone https://github.com/Aika-labs/doci.git
-cd doci
-```
-
-### 2. Instalar dependencias
-
-```bash
-pnpm install
-```
-
-### 3. Configurar variables de entorno
-
-```bash
-cp .env.example .env
-# Editar .env con tus credenciales
-```
-
-### 4. Configurar base de datos
-
-```bash
-# Generar cliente Prisma
-pnpm --filter @doci/database prisma generate
-
-# Ejecutar migraciones
-pnpm --filter @doci/database prisma migrate dev
-```
-
-### 5. Iniciar en desarrollo
-
-```bash
-# Todos los servicios
-pnpm dev
-
-# Solo API
-pnpm --filter @doci/api dev
-
-# Solo Web
-pnpm --filter @doci/web dev
-```
-
 ## Variables de Entorno
 
-Ver `.env.example` para la lista completa. Variables principales:
+Copiar `.env.example` a `.env` y configurar:
 
-| Variable | Descripción |
-|----------|-------------|
-| `DATABASE_URL` | URL de conexión PostgreSQL (pooler) |
-| `DIRECT_URL` | URL directa PostgreSQL (migraciones) |
-| `SUPABASE_URL` | URL del proyecto Supabase |
-| `SUPABASE_SERVICE_KEY` | Service role key de Supabase |
-| `CLERK_SECRET_KEY` | Secret key de Clerk |
-| `OPENAI_API_KEY` | API key de OpenAI |
-| `STRIPE_SECRET_KEY` | Secret key de Stripe |
-| `GOOGLE_CLIENT_ID` | OAuth client ID de Google |
-| `MICROSOFT_CLIENT_ID` | OAuth client ID de Microsoft |
+| Variable | Descripción | Requerido |
+|----------|-------------|-----------|
+| `DATABASE_URL` | PostgreSQL connection (pooler) | ✅ |
+| `DIRECT_URL` | PostgreSQL direct (migrations) | ✅ |
+| `SUPABASE_URL` | URL del proyecto Supabase | ✅ |
+| `SUPABASE_SERVICE_KEY` | Service role key | ✅ |
+| `CLERK_SECRET_KEY` | Clerk authentication | ✅ |
+| `OPENAI_API_KEY` | OpenAI API | ✅ |
+| `STRIPE_SECRET_KEY` | Stripe payments | Opcional |
+| `GOOGLE_CLIENT_ID` | Google Calendar OAuth | Opcional |
+| `MICROSOFT_CLIENT_ID` | Outlook OAuth | Opcional |
+| `TWILIO_ACCOUNT_SID` | WhatsApp notifications | Opcional |
+| `RESEND_API_KEY` | Email notifications | Opcional |
 
 ## Scripts Disponibles
 
@@ -152,35 +118,53 @@ pnpm lint             # Linting
 pnpm typecheck        # Type checking
 
 # Base de datos
-pnpm db:generate      # Generar cliente Prisma
-pnpm db:migrate       # Ejecutar migraciones
-pnpm db:studio        # Abrir Prisma Studio
+pnpm --filter @doci/database prisma generate   # Generar cliente
+pnpm --filter @doci/database prisma migrate dev # Migraciones
+pnpm --filter @doci/database prisma studio     # GUI de BD
 
 # Por workspace
-pnpm --filter @doci/api <script>
-pnpm --filter @doci/web <script>
-pnpm --filter @doci/database <script>
+pnpm --filter @doci/api dev      # Solo API
+pnpm --filter @doci/web dev      # Solo Web
 ```
 
 ## API Endpoints
 
-### Autenticación
-Todos los endpoints requieren autenticación via Clerk JWT excepto los marcados como públicos.
-
-### Módulos Principales
-
-| Módulo | Base Path | Descripción |
-|--------|-----------|-------------|
-| Patients | `/patients` | CRUD de pacientes |
+| Módulo | Path | Descripción |
+|--------|------|-------------|
+| Patients | `/patients` | CRUD pacientes |
 | Consultations | `/consultations` | Consultas médicas |
 | Appointments | `/appointments` | Gestión de citas |
 | Prescriptions | `/prescriptions` | Recetas digitales |
 | AI | `/ai` | Transcripción y análisis |
 | Vademecum | `/vademecum` | Base de medicamentos |
 | Billing | `/billing` | Facturación |
-| Calendar | `/calendar` | Sync de calendarios |
+| Calendar | `/calendar` | Sync calendarios |
 | Search | `/search` | Búsqueda global |
 | Subscriptions | `/subscriptions` | Planes y pagos |
+| Audit | `/audit` | Logs de actividad |
+| Onboarding | `/onboarding` | Wizard inicial |
+
+## Despliegue
+
+### Desarrollo Local
+
+```bash
+./scripts/setup.sh
+pnpm dev
+```
+
+### Producción (VPS con Docker)
+
+```bash
+# Configurar
+cp .env.example .env.production
+nano .env.production  # Agregar DOMAIN=tudominio.com
+
+# Deploy
+./scripts/deploy.sh
+```
+
+Ver [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) para guía completa.
 
 ## Planes de Suscripción
 
@@ -188,37 +172,32 @@ Todos los endpoints requieren autenticación via Clerk JWT excepto los marcados 
 |------|------------|----------|-----------|---------|
 | **Básico** | $499 MXN | 2 | 500 | 5 GB |
 | **Profesional** | $999 MXN | 5 | 2,000 | 20 GB |
-| **Empresarial** | $2,499 MXN | Ilimitado | Ilimitado | 100 GB |
+| **Empresarial** | $2,499 MXN | ∞ | ∞ | 100 GB |
 
-## Especialidades Médicas Soportadas
+## Servicios Externos
 
-- Medicina General
-- Pediatría
-- Ginecología y Obstetricia
-- Cardiología
-- Dermatología
-- Psiquiatría
+### Obligatorios
+- **Supabase**: PostgreSQL + Storage (Free tier disponible)
+- **Clerk**: Autenticación (Free tier disponible)
+- **OpenAI**: IA (~$50-200/mes según uso)
 
-Cada especialidad incluye plantillas SOAP personalizadas y prompts de IA optimizados.
+### Opcionales
+- **Stripe**: Pagos (2.9% + $0.30/tx)
+- **Twilio**: WhatsApp (~$0.005/msg)
+- **Resend**: Email (Free tier disponible)
+- **Google/Microsoft**: Calendar sync (Gratis)
 
-## Despliegue
+### Monitoreo Recomendado
+- **UptimeRobot**: Monitoreo uptime (Gratis)
+- **Sentry**: Error tracking (Free tier)
 
-### Docker
+Ver [docs/PRODUCTION_CHECKLIST.md](docs/PRODUCTION_CHECKLIST.md) para costos detallados.
 
-```bash
-# Build
-docker-compose -f docker/docker-compose.yml build
+## Documentación
 
-# Run
-docker-compose -f docker/docker-compose.yml up -d
-```
-
-### Pulumi (Hetzner Cloud)
-
-```bash
-cd infrastructure
-pulumi up
-```
+- [ARCHITECTURE.md](docs/ARCHITECTURE.md) - Estructura completa del código
+- [DEPLOYMENT.md](docs/DEPLOYMENT.md) - Guía de despliegue local y producción
+- [PRODUCTION_CHECKLIST.md](docs/PRODUCTION_CHECKLIST.md) - Estado actual y pendientes
 
 ## Contribuir
 
@@ -231,9 +210,3 @@ pulumi up
 ## Licencia
 
 MIT License - ver [LICENSE](LICENSE) para detalles.
-
-## Soporte
-
-- **Email**: soporte@doci.health
-- **Documentación**: https://docs.doci.health
-- **Issues**: https://github.com/Aika-labs/doci/issues
