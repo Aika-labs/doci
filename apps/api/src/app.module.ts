@@ -11,6 +11,8 @@ import { PrescriptionsModule } from './modules/prescriptions/prescriptions.modul
 import { StorageModule } from './modules/storage/storage.module';
 import { FilesModule } from './modules/files/files.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
+import { VademecumModule } from './modules/vademecum/vademecum.module';
+import { AuditModule } from './modules/audit/audit.module';
 import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
@@ -40,6 +42,8 @@ import { PrismaModule } from './prisma/prisma.module';
     StorageModule,
     FilesModule,
     NotificationsModule,
+    VademecumModule,
+    AuditModule,
   ],
 })
 export class AppModule {}

@@ -10,7 +10,7 @@ datasource db {
   provider   = "postgresql"
   url        = env("DATABASE_URL")
   directUrl  = env("DIRECT_URL")
-  extensions = [pgcrypto, uuid_ossp]
+  extensions = [pgcrypto, uuid_ossp, vector]
 }
 
 // ============================================
@@ -467,4 +467,361 @@ model TreatmentProtocol {
 
   @@index([tenantId])
   @@unique([tenantId, name])
+}
+
+// ============================================
+// VADEMÉCUM - Base de datos de medicamentos con RAG
+// ============================================
+
+model Vademecum {
+  id               String   @id @default(cuid())
+  
+  // Identificación del medicamento
+  nombreGenerico   String
+  nombreComercial  String[]
+  principioActivo  String?
+  grupoTerapeutico String?
+  
+  // Contenido completo para embedding
+  contenido        String   @db.Text
+  
+  // Vector embedding para búsqueda semántica (1536 dims para OpenAI ada-002)
+  embedding        Unsupported("vector(1536)")?
+  
+  // Datos estructurados
+  // { presentaciones, dosisAdultos, dosisPediatrica, contraindicaciones, 
+  //   interacciones, efectosAdversos, embarazoLactancia, indicaciones }
+  metadata         Json     @db.JsonB
+  
+  // Fuente del dato
+  fuente           String?  // PLM, COFEPRIS, DrugBank, etc.
+  
+  // Timestamps
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  
+  @@index([nombreGenerico])
+}
+
+// ============================================
+// CATÁLOGO DE SERVICIOS
+// ============================================
+
+model Service {
+  id          String   @id @default(cuid())
+  tenantId    String
+  
+  // Información del servicio
+  name        String
+  description String?
+  category    String?  // Consulta, Procedimiento, Laboratorio, etc.
+  
+  // Precios
+  price       Decimal  @db.Decimal(10, 2)
+  currency    String   @default("MXN")
+  taxRate     Decimal  @default(0) @db.Decimal(5, 2) // IVA 16% = 0.16
+  
+  // Duración estimada (para citas)
+  durationMinutes Int?
+  
+  // Código SAT para facturación CFDI
+  satCode    String?
+  satUnit    String?  @default("E48") // Unidad de servicio
+  
+  // Estado
+  isActive   Boolean  @default(true)
+  
+  // Timestamps
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  // Relations
+  invoiceItems InvoiceItem[]
+  
+  @@index([tenantId])
+  @@unique([tenantId, name])
+}
+
+// ============================================
+// FACTURAS / CUENTAS POR COBRAR
+// ============================================
+
+model Invoice {
+  id          String   @id @default(cuid())
+  tenantId    String
+  
+  // Cliente
+  patientId   String?
+  patientName String   // Denormalizado para facturas
+  patientRfc  String?  // RFC para CFDI
+  patientEmail String?
+  
+  // Referencia
+  consultationId String?
+  invoiceNumber  String  // Folio interno
+  
+  // Montos
+  subtotal    Decimal  @db.Decimal(10, 2)
+  taxAmount   Decimal  @db.Decimal(10, 2)
+  discount    Decimal  @default(0) @db.Decimal(10, 2)
+  total       Decimal  @db.Decimal(10, 2)
+  currency    String   @default("MXN")
+  
+  // Estado de pago
+  status      InvoiceStatus @default(PENDING)
+  paidAmount  Decimal  @default(0) @db.Decimal(10, 2)
+  paidAt      DateTime?
+  dueDate     DateTime?
+  
+  // CFDI (Facturación electrónica México)
+  cfdiUuid    String?  // UUID del CFDI timbrado
+  cfdiXml     String?  @db.Text
+  cfdiPdfUrl  String?
+  
+  // Notas
+  notes       String?
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  items       InvoiceItem[]
+  payments    Payment[]
+  
+  @@index([tenantId])
+  @@index([tenantId, status])
+  @@index([tenantId, patientId])
+  @@unique([tenantId, invoiceNumber])
+}
+
+enum InvoiceStatus {
+  DRAFT
+  PENDING
+  PARTIAL
+  PAID
+  OVERDUE
+  CANCELLED
+  REFUNDED
+}
+
+model InvoiceItem {
+  id          String   @id @default(cuid())
+  invoiceId   String
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  
+  serviceId   String?
+  service     Service? @relation(fields: [serviceId], references: [id])
+  
+  // Descripción (puede ser servicio o item libre)
+  description String
+  quantity    Int      @default(1)
+  unitPrice   Decimal  @db.Decimal(10, 2)
+  taxRate     Decimal  @default(0) @db.Decimal(5, 2)
+  total       Decimal  @db.Decimal(10, 2)
+  
+  // Código SAT
+  satCode     String?
+  satUnit     String?
+  
+  @@index([invoiceId])
+}
+
+model Payment {
+  id          String   @id @default(cuid())
+  invoiceId   String
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  
+  // Monto
+  amount      Decimal  @db.Decimal(10, 2)
+  currency    String   @default("MXN")
+  
+  // Método de pago
+  method      PaymentMethod
+  reference   String?  // Número de transacción, cheque, etc.
+  
+  // Notas
+  notes       String?
+  
+  // Timestamps
+  paidAt      DateTime @default(now())
+  createdBy   String?  // userId
+  
+  @@index([invoiceId])
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+  TRANSFER
+  CHECK
+  OTHER
+}
+
+// ============================================
+// PLANES Y SUSCRIPCIONES
+// ============================================
+
+model PricingPlan {
+  id          String   @id @default(cuid())
+  
+  // Identificación
+  name        String   @unique // basic, professional, enterprise
+  displayName String
+  description String?
+  
+  // Precios
+  monthlyPrice Decimal @db.Decimal(10, 2)
+  yearlyPrice  Decimal @db.Decimal(10, 2)
+  currency     String  @default("MXN")
+  
+  // Límites
+  maxUsers        Int?
+  maxPatients     Int?
+  maxStorageMb    Int?
+  maxAppointments Int?  // Por mes
+  
+  // Features
+  features     Json    @db.JsonB // ["ai_transcription", "whatsapp", "calendar_sync", etc.]
+  
+  // Estado
+  isActive     Boolean @default(true)
+  isPopular    Boolean @default(false)
+  
+  // Timestamps
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  // Relations
+  subscriptions Subscription[]
+}
+
+model Subscription {
+  id          String   @id @default(cuid())
+  tenantId    String   @unique
+  planId      String
+  plan        PricingPlan @relation(fields: [planId], references: [id])
+  
+  // Período
+  status      SubscriptionStatus @default(ACTIVE)
+  billingCycle BillingCycle @default(MONTHLY)
+  
+  // Fechas
+  startDate   DateTime @default(now())
+  endDate     DateTime?
+  trialEndsAt DateTime?
+  cancelledAt DateTime?
+  
+  // Stripe/Payment
+  stripeCustomerId     String?
+  stripeSubscriptionId String?
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([tenantId])
+  @@index([status])
+}
+
+enum SubscriptionStatus {
+  TRIALING
+  ACTIVE
+  PAST_DUE
+  CANCELLED
+  EXPIRED
+}
+
+enum BillingCycle {
+  MONTHLY
+  YEARLY
+}
+
+// ============================================
+// CALENDAR SYNC - Google/Outlook
+// ============================================
+
+model CalendarIntegration {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  
+  // Provider
+  provider    CalendarProvider
+  
+  // OAuth tokens (encrypted)
+  accessToken  String  @db.Text
+  refreshToken String? @db.Text
+  tokenExpiry  DateTime?
+  
+  // Calendar ID
+  calendarId   String?
+  
+  // Sync settings
+  syncEnabled  Boolean @default(true)
+  lastSyncAt   DateTime?
+  
+  // Timestamps
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  @@index([userId])
+}
+
+enum CalendarProvider {
+  GOOGLE
+  OUTLOOK
+}
+
+// ============================================
+// ONBOARDING - Progreso del usuario
+// ============================================
+
+model OnboardingProgress {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  tenantId    String
+  
+  // Pasos completados
+  // { profile: true, firstPatient: true, firstConsultation: false, ... }
+  completedSteps Json  @db.JsonB
+  
+  // Estado general
+  isCompleted Boolean @default(false)
+  completedAt DateTime?
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([userId])
+  @@index([tenantId])
+}
+
+// ============================================
+// PLANTILLAS POR ESPECIALIDAD (Predefinidas)
+// ============================================
+
+model SpecialtyTemplate {
+  id          String   @id @default(cuid())
+  
+  // Identificación
+  specialty   String   @unique // medicina_general, pediatria, ginecologia, etc.
+  displayName String
+  description String?
+  
+  // Schema de campos para la plantilla
+  schema      Json     @db.JsonB
+  
+  // Prompt de IA optimizado para esta especialidad
+  aiPrompt    String?  @db.Text
+  
+  // Campos SOAP predefinidos
+  soapDefaults Json?   @db.JsonB
+  
+  // Estado
+  isActive    Boolean  @default(true)
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
