@@ -19,6 +19,7 @@ import { CalendarModule } from './modules/calendar/calendar.module';
 import { OnboardingModule } from './modules/onboarding/onboarding.module';
 import { SearchModule } from './modules/search/search.module';
 import { SpecialtyTemplatesModule } from './modules/specialty-templates/specialty-templates.module';
+import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
 import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
@@ -56,6 +57,7 @@ import { PrismaModule } from './prisma/prisma.module';
     OnboardingModule,
     SearchModule,
     SpecialtyTemplatesModule,
+    SubscriptionsModule,
   ],
 })
 export class AppModule {}
