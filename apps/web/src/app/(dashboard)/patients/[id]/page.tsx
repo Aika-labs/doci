@@ -9,7 +9,7 @@ import { PatientFormData } from '@/lib/validations/patient';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import Link from 'next/link';
-import { useToast } from '@/components/ui';
+import { useToast, ConfirmDialog } from '@/components/ui';
 import {
   ArrowLeft,
   Trash2,
@@ -86,6 +86,7 @@ export default function PatientDetailPage() {
   const [error, setError] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [activeTab, setActiveTab] = useState<TabType>('overview');
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   // Tab data
   const [consultations, setConsultations] = useState<Consultation[]>([]);
@@ -237,10 +238,6 @@ export default function PatientDetailPage() {
   };
 
   const handleDelete = async () => {
-    if (!confirm('¿Estás seguro de que deseas eliminar este paciente? Esta acción no se puede deshacer.')) {
-      return;
-    }
-
     try {
       setIsDeleting(true);
       const token = await getToken();
@@ -254,6 +251,7 @@ export default function PatientDetailPage() {
       setError(message);
       showError('Error', message);
       setIsDeleting(false);
+      setShowDeleteConfirm(false);
     }
   };
 
@@ -340,7 +338,7 @@ export default function PatientDetailPage() {
                 Editar
               </button>
               <button
-                onClick={handleDelete}
+                onClick={() => setShowDeleteConfirm(true)}
                 disabled={isDeleting}
                 className="p-2 text-red-600 border border-red-300 rounded-lg hover:bg-red-50 transition-colors disabled:opacity-50"
               >
@@ -417,6 +415,19 @@ export default function PatientDetailPage() {
           )}
         </>
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={showDeleteConfirm}
+        title="Eliminar paciente"
+        message={`¿Estás seguro de que deseas eliminar a ${patient?.firstName} ${patient?.lastName}? Esta acción no se puede deshacer y se perderán todos los datos asociados.`}
+        confirmLabel="Eliminar"
+        cancelLabel="Cancelar"
+        variant="danger"
+        isLoading={isDeleting}
+        onConfirm={handleDelete}
+        onCancel={() => setShowDeleteConfirm(false)}
+      />
     </div>
   );
 }
