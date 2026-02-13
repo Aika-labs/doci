@@ -15,7 +15,11 @@ import {
   Stethoscope,
   Pill,
   ClipboardList,
+  Eye,
+  Download,
+  Upload,
 } from 'lucide-react';
+import { useToast, ConfirmDialog } from '@/components/ui';
 
 type TemplateType = 'SOAP' | 'PRESCRIPTION' | 'REFERRAL' | 'CERTIFICATE' | 'OTHER';
 
@@ -47,6 +51,7 @@ const templateTypeIcons: Record<TemplateType, React.ReactNode> = {
 
 export default function TemplatesPage() {
   const { getToken } = useAuth();
+  const { success, error: showError } = useToast();
   const [templates, setTemplates] = useState<Template[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -54,6 +59,12 @@ export default function TemplatesPage() {
   const [showForm, setShowForm] = useState(false);
   const [editingTemplate, setEditingTemplate] = useState<Template | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [previewTemplate, setPreviewTemplate] = useState<Template | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<{ open: boolean; template: Template | null; isDeleting: boolean }>({
+    open: false,
+    template: null,
+    isDeleting: false,
+  });
 
   // Form state
   const [formData, setFormData] = useState({
@@ -114,32 +125,46 @@ export default function TemplatesPage() {
       if (res.ok) {
         await fetchTemplates();
         resetForm();
+        success(
+          editingTemplate ? 'Plantilla actualizada' : 'Plantilla creada',
+          editingTemplate ? 'Los cambios han sido guardados' : 'La plantilla está lista para usar'
+        );
+      } else {
+        showError('Error', 'No se pudo guardar la plantilla');
       }
     } catch (error) {
       console.error('Error saving template:', error);
+      showError('Error', 'No se pudo guardar la plantilla');
     } finally {
       setIsSaving(false);
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('¿Estás seguro de eliminar esta plantilla?')) return;
+  const handleDelete = async () => {
+    if (!deleteConfirm.template) return;
 
     try {
+      setDeleteConfirm((prev) => ({ ...prev, isDeleting: true }));
       const token = await getToken();
       if (!token) return;
 
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
-      const res = await fetch(`${apiUrl}/templates/${id}`, {
+      const res = await fetch(`${apiUrl}/templates/${deleteConfirm.template.id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
 
       if (res.ok) {
-        setTemplates(templates.filter((t) => t.id !== id));
+        setTemplates(templates.filter((t) => t.id !== deleteConfirm.template?.id));
+        success('Plantilla eliminada', 'La plantilla ha sido eliminada correctamente');
+      } else {
+        showError('Error', 'No se pudo eliminar la plantilla');
       }
     } catch (error) {
       console.error('Error deleting template:', error);
+      showError('Error', 'No se pudo eliminar la plantilla');
+    } finally {
+      setDeleteConfirm({ open: false, template: null, isDeleting: false });
     }
   };
 
@@ -165,9 +190,13 @@ export default function TemplatesPage() {
 
       if (res.ok) {
         await fetchTemplates();
+        success('Plantilla duplicada', `Se creó "${template.name} (copia)"`);
+      } else {
+        showError('Error', 'No se pudo duplicar la plantilla');
       }
     } catch (error) {
       console.error('Error duplicating template:', error);
+      showError('Error', 'No se pudo duplicar la plantilla');
     }
   };
 
@@ -180,6 +209,74 @@ export default function TemplatesPage() {
       isDefault: template.isDefault,
     });
     setShowForm(true);
+  };
+
+  const handleExport = () => {
+    const dataToExport = filteredTemplates.map((t) => ({
+      name: t.name,
+      type: t.type,
+      content: t.content,
+      isDefault: t.isDefault,
+    }));
+    const blob = new Blob([JSON.stringify(dataToExport, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `plantillas-doci-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    success('Plantillas exportadas', `Se exportaron ${filteredTemplates.length} plantillas`);
+  };
+
+  const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const text = await file.text();
+      const imported = JSON.parse(text) as Array<{ name: string; type: TemplateType; content: string; isDefault?: boolean }>;
+      
+      if (!Array.isArray(imported)) {
+        showError('Error', 'El archivo no tiene el formato correcto');
+        return;
+      }
+
+      const token = await getToken();
+      if (!token) return;
+
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      let importedCount = 0;
+
+      for (const template of imported) {
+        if (template.name && template.type && template.content) {
+          const res = await fetch(`${apiUrl}/templates`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              name: template.name,
+              type: template.type,
+              content: template.content,
+              isDefault: template.isDefault || false,
+            }),
+          });
+          if (res.ok) importedCount++;
+        }
+      }
+
+      await fetchTemplates();
+      success('Plantillas importadas', `Se importaron ${importedCount} plantillas correctamente`);
+    } catch (error) {
+      console.error('Error importing templates:', error);
+      showError('Error', 'No se pudieron importar las plantillas');
+    }
+
+    // Reset input
+    e.target.value = '';
   };
 
   const resetForm = () => {
@@ -264,16 +361,36 @@ Este certificado se expide a solicitud del interesado para los fines que estime 
           <h1 className="text-2xl font-bold text-gray-900">Plantillas</h1>
           <p className="text-gray-600">Gestiona tus plantillas médicas reutilizables</p>
         </div>
-        <button
-          onClick={() => {
-            resetForm();
-            setShowForm(true);
-          }}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-        >
-          <Plus className="h-4 w-4" />
-          Nueva Plantilla
-        </button>
+        <div className="flex items-center gap-2">
+          <label className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 cursor-pointer">
+            <Upload className="h-4 w-4" />
+            <span className="hidden sm:inline">Importar</span>
+            <input
+              type="file"
+              accept=".json"
+              onChange={handleImport}
+              className="hidden"
+            />
+          </label>
+          <button
+            onClick={handleExport}
+            disabled={filteredTemplates.length === 0}
+            className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <Download className="h-4 w-4" />
+            <span className="hidden sm:inline">Exportar</span>
+          </button>
+          <button
+            onClick={() => {
+              resetForm();
+              setShowForm(true);
+            }}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >
+            <Plus className="h-4 w-4" />
+            Nueva Plantilla
+          </button>
+        </div>
       </div>
 
       {/* Filters */}
@@ -474,6 +591,13 @@ Este certificado se expide a solicitud del interesado para los fines que estime 
                 </div>
                 <div className="flex items-center gap-1">
                   <button
+                    onClick={() => setPreviewTemplate(template)}
+                    className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded"
+                    title="Vista previa"
+                  >
+                    <Eye className="h-4 w-4" />
+                  </button>
+                  <button
                     onClick={() => handleDuplicate(template)}
                     className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded"
                     title="Duplicar"
@@ -488,7 +612,7 @@ Este certificado se expide a solicitud del interesado para los fines que estime 
                     <Edit2 className="h-4 w-4" />
                   </button>
                   <button
-                    onClick={() => handleDelete(template.id)}
+                    onClick={() => setDeleteConfirm({ open: true, template, isDeleting: false })}
                     className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded"
                     title="Eliminar"
                   >
@@ -504,6 +628,65 @@ Este certificado se expide a solicitud del interesado para los fines que estime 
           ))}
         </div>
       )}
+
+      {/* Preview Modal */}
+      {previewTemplate && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden m-4">
+            <div className="flex items-center justify-between p-4 border-b">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600">
+                  {templateTypeIcons[previewTemplate.type]}
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-900">{previewTemplate.name}</h2>
+                  <span className="text-sm text-gray-500">{templateTypeLabels[previewTemplate.type]}</span>
+                </div>
+              </div>
+              <button
+                onClick={() => setPreviewTemplate(null)}
+                className="p-1 text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+              <pre className="whitespace-pre-wrap font-sans text-sm text-gray-700 leading-relaxed">
+                {previewTemplate.content}
+              </pre>
+            </div>
+            <div className="flex justify-end gap-3 p-4 border-t bg-gray-50">
+              <button
+                onClick={() => {
+                  handleEdit(previewTemplate);
+                  setPreviewTemplate(null);
+                }}
+                className="flex items-center gap-2 px-4 py-2 text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50"
+              >
+                <Edit2 className="h-4 w-4" />
+                Editar
+              </button>
+              <button
+                onClick={() => setPreviewTemplate(null)}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation */}
+      <ConfirmDialog
+        isOpen={deleteConfirm.open}
+        onCancel={() => setDeleteConfirm({ open: false, template: null, isDeleting: false })}
+        onConfirm={handleDelete}
+        title="Eliminar plantilla"
+        message={`¿Estás seguro de eliminar la plantilla "${deleteConfirm.template?.name}"? Esta acción no se puede deshacer.`}
+        confirmLabel="Eliminar"
+        isLoading={deleteConfirm.isDeleting}
+      />
     </div>
   );
 }
