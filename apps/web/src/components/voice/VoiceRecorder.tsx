@@ -4,24 +4,28 @@ import { useState, useRef, useEffect } from 'react';
 import { Mic, Square, Loader2, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-interface VoiceRecorderProps {
-  onTranscription: (text: string) => void;
+export interface VoiceRecorderProps {
+  onTranscription?: (text: string) => void;
+  onRecordingComplete?: (blob: Blob) => void;
   onRecordingStart?: () => void;
   onRecordingStop?: () => void;
   patientId?: string;
   className?: string;
   disabled?: boolean;
+  autoProcess?: boolean; // If true, automatically sends to API for transcription
 }
 
 type RecordingState = 'idle' | 'recording' | 'processing' | 'error';
 
 export function VoiceRecorder({
   onTranscription,
+  onRecordingComplete,
   onRecordingStart,
   onRecordingStop,
   patientId,
   className,
   disabled = false,
+  autoProcess = false,
 }: VoiceRecorderProps) {
   const [state, setState] = useState<RecordingState>('idle');
   const [duration, setDuration] = useState(0);
@@ -37,16 +41,20 @@ export function VoiceRecorder({
 
   // Store callbacks in refs to avoid dependency issues
   const onTranscriptionRef = useRef(onTranscription);
+  const onRecordingCompleteRef = useRef(onRecordingComplete);
   const onRecordingStartRef = useRef(onRecordingStart);
   const onRecordingStopRef = useRef(onRecordingStop);
   const patientIdRef = useRef(patientId);
+  const autoProcessRef = useRef(autoProcess);
 
   useEffect(() => {
     onTranscriptionRef.current = onTranscription;
+    onRecordingCompleteRef.current = onRecordingComplete;
     onRecordingStartRef.current = onRecordingStart;
     onRecordingStopRef.current = onRecordingStop;
     patientIdRef.current = patientId;
-  }, [onTranscription, onRecordingStart, onRecordingStop, patientId]);
+    autoProcessRef.current = autoProcess;
+  }, [onTranscription, onRecordingComplete, onRecordingStart, onRecordingStop, patientId, autoProcess]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -130,7 +138,16 @@ export function VoiceRecorder({
 
       mediaRecorder.onstop = () => {
         const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
-        processAudio(audioBlob);
+        
+        // Call onRecordingComplete callback with the blob
+        onRecordingCompleteRef.current?.(audioBlob);
+        
+        // Only auto-process if autoProcess is true
+        if (autoProcessRef.current) {
+          processAudio(audioBlob);
+        } else {
+          setState('idle');
+        }
       };
 
       mediaRecorderRef.current = mediaRecorder;
@@ -189,7 +206,7 @@ export function VoiceRecorder({
       }
 
       const data = await response.json();
-      onTranscriptionRef.current(data.text);
+      onTranscriptionRef.current?.(data.text);
       setState('idle');
     } catch (err) {
       console.error('Error processing audio:', err);

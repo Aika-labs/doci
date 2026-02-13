@@ -80,4 +80,39 @@ export class AIController {
       data: { summary },
     };
   }
+
+  @Post('process-consultation')
+  @ApiOperation({ summary: 'Process audio recording and generate structured consultation notes' })
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('audio'))
+  async processConsultation(
+    @CurrentTenant() ctx: TenantContext,
+    @UploadedFile() file: Express.Multer.File,
+    @Body('patientId') patientId: string,
+  ) {
+    if (!file) {
+      throw new BadRequestException('Audio file is required');
+    }
+
+    if (!patientId) {
+      throw new BadRequestException('PatientId is required');
+    }
+
+    // Step 1: Transcribe audio
+    const transcription = await this.aiService.transcribe(file.buffer, 'es');
+
+    // Step 2: Structure into SOAP notes with patient context
+    const structuredNotes = await this.aiService.structureNotes(
+      ctx,
+      transcription.text,
+      patientId,
+      { includeHistory: true },
+    );
+
+    return {
+      transcription: transcription.text,
+      soapNotes: structuredNotes.soapNotes,
+      suggestions: structuredNotes.suggestions,
+    };
+  }
 }

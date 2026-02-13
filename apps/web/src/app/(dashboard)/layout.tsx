@@ -29,32 +29,32 @@ export default function DashboardLayout({
 
           {/* Navigation */}
           <nav className="flex-1 space-y-1 p-4">
-            <NavItem href="/dashboard" icon={Home}>
+            <NavItem href="/" icon={Home}>
               Inicio
             </NavItem>
-            <NavItem href="/dashboard/patients" icon={Users}>
+            <NavItem href="/patients" icon={Users}>
               Pacientes
             </NavItem>
-            <NavItem href="/dashboard/appointments" icon={Calendar}>
+            <NavItem href="/appointments" icon={Calendar}>
               Agenda
             </NavItem>
-            <NavItem href="/dashboard/consultations" icon={FileText}>
+            <NavItem href="/consultations" icon={FileText}>
               Consultas
             </NavItem>
 
             <div className="my-4 border-t" />
 
-            <NavItem href="/dashboard/consultations/new" icon={Mic} highlight>
+            <NavItem href="/consultations/new" icon={Mic} highlight>
               Nueva Consulta
             </NavItem>
           </nav>
 
           {/* Footer */}
           <div className="border-t p-4">
-            <NavItem href="/dashboard/settings" icon={Settings}>
+            <NavItem href="/settings" icon={Settings}>
               Configuración
             </NavItem>
-            <NavItem href="/api/auth/signout" icon={LogOut}>
+            <NavItem href="/sign-in" icon={LogOut}>
               Cerrar sesión
             </NavItem>
           </div>
@@ -69,16 +69,16 @@ export default function DashboardLayout({
       {/* Mobile bottom nav */}
       <nav className="fixed inset-x-0 bottom-0 z-50 border-t bg-white md:hidden">
         <div className="flex items-center justify-around py-2">
-          <MobileNavItem href="/dashboard" icon={Home} label="Inicio" />
-          <MobileNavItem href="/dashboard/patients" icon={Users} label="Pacientes" />
+          <MobileNavItem href="/" icon={Home} label="Inicio" />
+          <MobileNavItem href="/patients" icon={Users} label="Pacientes" />
           <MobileNavItem
-            href="/dashboard/consultations/new"
+            href="/consultations/new"
             icon={Mic}
             label="Grabar"
             highlight
           />
-          <MobileNavItem href="/dashboard/appointments" icon={Calendar} label="Agenda" />
-          <MobileNavItem href="/dashboard/settings" icon={Settings} label="Config" />
+          <MobileNavItem href="/appointments" icon={Calendar} label="Agenda" />
+          <MobileNavItem href="/settings" icon={Settings} label="Config" />
         </div>
       </nav>
     </div>
