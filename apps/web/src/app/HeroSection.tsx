@@ -92,11 +92,8 @@ export default function HeroSection() {
   }, [getConfig]);
 
   return (
-    <header className="relative w-full bg-[#0A1628]" style={{ height: '300vh' }}>
-      <div
-        ref={trackRef}
-        className="sticky top-0 flex h-screen w-full flex-col items-center justify-start overflow-hidden"
-      >
+    <header ref={trackRef} className="relative w-full bg-[#0A1628]" style={{ height: '300vh' }}>
+      <div className="sticky top-0 flex h-screen w-full flex-col items-center justify-start overflow-hidden">
         {/* Floating glass nav */}
         <nav className="pointer-events-none absolute top-0 left-0 z-50 w-full">
           <div className="absolute top-6 left-6 z-10 md:top-8 md:left-8">

@@ -161,7 +161,7 @@ export default function ConsultationDetailPage() {
     return (
       <div className="py-12 text-center">
         <h2 className="text-xl font-semibold text-white">{error || 'Consulta no encontrada'}</h2>
-        <Link href="/consultations" className="mt-4 text-blue-400 hover:text-blue-300">
+        <Link href="/dashboard/consultations" className="mt-4 text-blue-400 hover:text-blue-300">
           Volver a consultas
         </Link>
       </div>
@@ -175,7 +175,7 @@ export default function ConsultationDetailPage() {
       {/* Header */}
       <div className="mb-6">
         <Link
-          href="/consultations"
+          href="/dashboard/consultations"
           className="mb-4 inline-flex items-center gap-2 text-white/50 hover:text-white"
         >
           <ArrowLeft className="h-4 w-4" />

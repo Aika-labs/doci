@@ -335,7 +335,7 @@ function NewConsultationContent() {
       {/* Header */}
       <div className="mb-6">
         <Link
-          href="/consultations"
+          href="/dashboard/consultations"
           className="mb-4 inline-flex items-center gap-2 text-white/50 hover:text-white"
         >
           <ArrowLeft className="h-4 w-4" />

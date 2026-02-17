@@ -200,7 +200,7 @@ export default function DashboardPage() {
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-white">Citas de hoy</h2>
           <Link
-            href="/appointments"
+            href="/dashboard/appointments"
             className="text-sm text-blue-400 transition-colors hover:text-blue-300"
           >
             Ver todas
@@ -212,7 +212,7 @@ export default function DashboardPage() {
             <Calendar className="mx-auto mb-3 h-12 w-12 text-white/20" />
             <p>No hay citas programadas para hoy</p>
             <Link
-              href="/appointments"
+              href="/dashboard/appointments"
               className="mt-2 inline-block text-sm text-blue-400 hover:text-blue-300"
             >
               Agendar una cita
@@ -250,21 +250,21 @@ export default function DashboardPage() {
       {/* Quick actions */}
       <div className="grid gap-4 md:grid-cols-3">
         <QuickAction
-          href="/consultations/new"
+          href="/dashboard/consultations/new"
           icon={<Mic className="h-6 w-6 text-blue-400" />}
           title="Nueva consulta"
           description="Inicia una consulta con dictado por voz"
           accent="blue"
         />
         <QuickAction
-          href="/patients/new"
+          href="/dashboard/patients/new"
           icon={<UserPlus className="h-6 w-6 text-emerald-400" />}
           title="Nuevo paciente"
           description="Registra un nuevo paciente"
           accent="emerald"
         />
         <QuickAction
-          href="/appointments"
+          href="/dashboard/appointments"
           icon={<CalendarPlus className="h-6 w-6 text-violet-400" />}
           title="Nueva cita"
           description="Agenda una cita"
