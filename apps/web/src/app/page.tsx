@@ -12,11 +12,19 @@ import {
   Smartphone,
   BarChart3,
   Lock,
+  Brain,
+  FileText,
+  Bell,
+  Mic,
+  Search,
+  Zap,
+  Globe,
+  TrendingUp,
 } from 'lucide-react';
 import HeroSection from './HeroSection';
 
 /* ==========================================================================
-   Doci Landing Page
+   Doci Landing Page — Venezuela Edition
    Design: Dark medical-blue theme inspired by modern SaaS / ESG layouts.
    Palette: navy #0A1628, light #E8F4FD, accent #3B82F6
    ========================================================================== */
@@ -28,11 +36,11 @@ export default function HomePage() {
       <HeroSection />
 
       {/* ── Partners / Trust ───────────────────────────────────────── */}
-      <section className="relative z-30 -mt-16 rounded-t-[3rem] bg-white pt-20 pb-20 text-[#0A1628] md:rounded-t-[5rem]">
+      <section className="relative z-30 -mt-8 rounded-t-[3rem] bg-white pt-20 pb-20 text-[#0A1628] shadow-[0_-20px_60px_rgba(0,0,0,0.5)] md:-mt-16 md:rounded-t-[5rem]">
         <div className="mx-auto max-w-7xl px-6 md:px-12">
           <div className="flex flex-col items-center justify-center gap-12 pt-8">
             <h2 className="text-center text-3xl font-bold tracking-tight md:text-4xl">
-              Diseñado para médicos modernos
+              Cumplimiento y seguridad que tu práctica necesita
             </h2>
             <div className="flex flex-wrap items-center justify-center gap-8 opacity-70 grayscale transition-all duration-500 hover:opacity-100 hover:grayscale-0 md:gap-16">
               <div className="flex h-12 items-center gap-2">
@@ -41,7 +49,7 @@ export default function HomePage() {
               </div>
               <div className="flex h-12 items-center gap-2">
                 <Lock className="h-8 w-8 text-[#0A1628]" />
-                <span className="text-lg font-bold tracking-tight">NOM-024</span>
+                <span className="text-lg font-bold tracking-tight">LOPD</span>
               </div>
               <div className="flex h-12 items-center gap-2">
                 <Stethoscope className="h-8 w-8 text-[#0A1628]" />
@@ -49,7 +57,7 @@ export default function HomePage() {
               </div>
               <div className="flex h-12 items-center gap-2">
                 <HeartPulse className="h-8 w-8 text-[#0A1628]" />
-                <span className="text-lg font-bold tracking-tight">COFEPRIS</span>
+                <span className="text-lg font-bold tracking-tight">MPPS</span>
               </div>
             </div>
           </div>
@@ -67,97 +75,147 @@ export default function HomePage() {
               Clínica
             </h2>
             <p className="max-w-lg text-xl leading-relaxed font-medium text-[#0A1628]/60 md:text-2xl">
-              Herramientas de IA que se adaptan a tu especialidad, automatizan la documentación y te
-              devuelven horas de tu día.
+              Herramientas de IA diseñadas para el médico venezolano: automatizan tu documentación,
+              organizan tu consulta y te devuelven horas de tu día.
             </p>
           </div>
 
           {/* Cards right */}
           <div className="flex flex-col gap-10">
-            {/* AI Voice Notes */}
             <FeatureCard
               title="Notas clínicas con IA"
-              description="Dicta tus notas y la IA las estructura automáticamente en formato SOAP. Ahorra hasta 2 horas diarias."
+              description="Dicta tus notas y la IA las estructura automáticamente en formato SOAP. Olvídate de escribir a mano después de cada consulta."
               stat="2hrs"
               statLabel="Ahorro diario promedio"
             />
-
-            {/* Digital Records */}
             <FeatureCard
               title="Expediente Digital"
-              description="Historias clínicas personalizables por especialidad con plantillas dinámicas y búsqueda inteligente."
+              description="Historias clínicas personalizables por especialidad con plantillas dinámicas. Toda la información de tu paciente en un solo lugar, accesible al instante."
               cta="Explorar plantillas"
             />
-
-            {/* Digital Prescriptions */}
             <FeatureCard
               title="Recetas Digitales"
-              description="Genera recetas con firma digital y código QR. Tus pacientes verifican la autenticidad en línea."
+              description="Genera recetas con firma digital y código QR verificable. Tus pacientes las reciben por WhatsApp y las farmacias las validan en segundos."
               cta="Ver ejemplo"
             />
           </div>
         </div>
       </section>
 
-      {/* ── Capabilities Section (dark) ────────────────────────────── */}
+      {/* ── Todo en un lugar — Mind-map style (dark) ────────────────── */}
       <section className="relative z-30 -mt-16 rounded-t-[3rem] bg-[#0A1628] pt-32 pb-32 text-[#E8F4FD] md:rounded-t-[5rem]">
         <div className="mx-auto max-w-7xl px-6 text-center md:px-12">
           <h2 className="mb-6 text-5xl font-medium tracking-tight md:text-8xl">Todo en un lugar</h2>
-          <p className="mx-auto mb-24 max-w-2xl text-lg font-light text-white/60 md:text-2xl">
-            Cada herramienta que necesitas para gestionar tu práctica médica, integrada en una sola
-            plataforma.
+          <p className="mx-auto mb-20 max-w-3xl text-lg font-light text-white/60 md:text-2xl">
+            Una sola plataforma que reemplaza 5 herramientas diferentes. Menos costos, menos
+            complejidad, más eficiencia en cada consulta.
           </p>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            <CapabilityCard
-              icon={<Calendar className="h-7 w-7" />}
-              title="Agenda Inteligente"
-              description="Recordatorios por WhatsApp, confirmación automática y vista de calendario integrada."
-            />
-            <CapabilityCard
-              icon={<Pill className="h-7 w-7" />}
-              title="Vademécum con IA"
-              description="Búsqueda semántica de medicamentos, interacciones y dosis personalizadas por paciente."
-            />
-            <CapabilityCard
-              icon={<Smartphone className="h-7 w-7" />}
-              title="PWA Móvil"
-              description="Accede desde cualquier dispositivo. Funciona incluso sin conexión a internet."
-            />
+          {/* Mind-map: center hub + radiating features */}
+          <div className="relative mx-auto max-w-5xl">
+            {/* Center hub */}
+            <div className="mx-auto mb-16 flex h-28 w-28 items-center justify-center rounded-full border-2 border-blue-400/30 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 shadow-[0_0_60px_rgba(59,130,246,0.15)] md:h-36 md:w-36">
+              <div className="flex flex-col items-center gap-1">
+                <Brain className="h-8 w-8 text-blue-400 md:h-10 md:w-10" />
+                <span className="text-xs font-bold tracking-wider text-blue-300 uppercase">
+                  Doci IA
+                </span>
+              </div>
+            </div>
+
+            {/* Feature grid radiating from center */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <MindMapNode
+                icon={<Mic className="h-5 w-5" />}
+                title="Dictado por voz"
+                description="Habla y la IA transcribe, estructura y codifica tu nota clínica al instante."
+              />
+              <MindMapNode
+                icon={<Calendar className="h-5 w-5" />}
+                title="Agenda inteligente"
+                description="Recordatorios por WhatsApp, confirmación automática y cero pacientes olvidados."
+              />
+              <MindMapNode
+                icon={<Pill className="h-5 w-5" />}
+                title="Vademécum con IA"
+                description="Interacciones, dosis y contraindicaciones personalizadas por paciente en tiempo real."
+              />
+              <MindMapNode
+                icon={<FileText className="h-5 w-5" />}
+                title="Reportes automáticos"
+                description="Estadísticas de tu consulta, ingresos y patologías más frecuentes sin esfuerzo."
+              />
+              <MindMapNode
+                icon={<Bell className="h-5 w-5" />}
+                title="Notificaciones WhatsApp"
+                description="Recordatorios de citas, resultados y seguimiento post-consulta directo al paciente."
+              />
+              <MindMapNode
+                icon={<Smartphone className="h-5 w-5" />}
+                title="PWA móvil"
+                description="Funciona desde cualquier dispositivo, incluso sin conexión. Ideal para zonas con internet inestable."
+              />
+              <MindMapNode
+                icon={<Search className="h-5 w-5" />}
+                title="Búsqueda semántica"
+                description="Encuentra cualquier dato del expediente con lenguaje natural: 'pacientes diabéticos mayores de 50'."
+              />
+              <MindMapNode
+                icon={<Shield className="h-5 w-5" />}
+                title="Respaldos automáticos"
+                description="Tus datos cifrados y respaldados cada hora. Nunca más pierdas información de pacientes."
+              />
+              <MindMapNode
+                icon={<Zap className="h-5 w-5" />}
+                title="Plantillas por especialidad"
+                description="Dermatología, pediatría, ginecología y más. Formularios pre-configurados que se adaptan a ti."
+              />
+            </div>
+
+            {/* Bottom CTA line */}
+            <div className="mt-16 flex flex-col items-center gap-4">
+              <div className="h-12 w-px bg-gradient-to-b from-blue-400/40 to-transparent" />
+              <p className="max-w-lg text-center text-lg font-medium text-white/80 md:text-xl">
+                Menos herramientas, menos fricción.{' '}
+                <span className="text-blue-400">
+                  Más tiempo para lo que importa: tus pacientes.
+                </span>
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── Social Impact / Benefits (white) ───────────────────────── */}
+      {/* ── Impacto Real (white) ───────────────────────────────────── */}
       <section className="relative z-20 -mt-16 rounded-t-[3rem] bg-white px-6 pt-24 pb-24 text-[#0A1628] md:rounded-t-[5rem]">
         <div className="mx-auto max-w-7xl">
           <div className="mb-20 grid grid-cols-1 gap-12 lg:grid-cols-2">
             <h2 className="text-5xl font-bold tracking-tight md:text-7xl">
-              Impacto
+              Resultados
               <br />
-              Real
+              Reales
             </h2>
             <p className="text-xl leading-relaxed text-[#0A1628]/70 md:text-2xl">
-              Doci transforma la práctica médica en LATAM: menos burocracia, mejor atención, más
-              tiempo para lo que importa.
+              Médicos en toda Venezuela ya están transformando su práctica con Doci. Menos papeleo,
+              más pacientes atendidos, mejor calidad de vida profesional.
             </p>
           </div>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             <BenefitCard
               icon={<Users className="h-7 w-7" />}
-              title="Pacientes"
-              description="Mejor experiencia: recordatorios, historial accesible y comunicación directa con su médico."
+              title="Tus pacientes"
+              description="Recordatorios automáticos, historial siempre accesible y comunicación directa por WhatsApp. Tus pacientes se sienten cuidados."
             />
             <BenefitCard
               icon={<Clock className="h-7 w-7" />}
-              title="Eficiencia"
-              description="Reduce 70% del tiempo en documentación. Más consultas, menos papeleo."
+              title="Tu tiempo"
+              description="Reduce 70% del tiempo en documentación. Atiende más consultas sin sacrificar calidad ni tu vida personal."
             />
             <BenefitCard
-              icon={<Shield className="h-7 w-7" />}
-              title="Seguridad"
-              description="Datos cifrados, respaldos automáticos y cumplimiento con normativas de salud mexicanas."
+              icon={<TrendingUp className="h-7 w-7" />}
+              title="Tu crecimiento"
+              description="Reportes de ingresos, métricas de consulta y herramientas para escalar tu práctica de forma inteligente."
             />
           </div>
         </div>
@@ -171,7 +229,8 @@ export default function HomePage() {
               Panel de Impacto
             </h2>
             <p className="text-xl text-white/60 md:text-2xl">
-              Métricas en tiempo real de cómo Doci optimiza la práctica médica de nuestros usuarios.
+              Métricas en tiempo real de cómo Doci optimiza la práctica médica de nuestros usuarios
+              en Venezuela.
             </p>
           </div>
 
@@ -190,9 +249,7 @@ export default function HomePage() {
                   <div
                     key={i}
                     className={`group relative w-full cursor-pointer rounded-t-lg transition-all duration-500 hover:bg-blue-400/60 ${
-                      i === 5
-                        ? 'bg-gradient-to-t from-blue-500 to-blue-400/50'
-                        : 'hover:h-[ bg-white/10' + (h + 5) + '%]'
+                      i === 5 ? 'bg-gradient-to-t from-blue-500 to-blue-400/50' : 'bg-white/10'
                     }`}
                     style={{ height: `${h}%` }}
                   >
@@ -220,8 +277,8 @@ export default function HomePage() {
               <div className="flex flex-1 flex-col justify-center gap-2 rounded-[2rem] border border-white/10 bg-white/5 p-8 transition-colors hover:bg-white/10">
                 <span className="text-6xl font-bold tracking-tighter text-white">99.9%</span>
                 <div className="flex items-center gap-2 text-white/60">
-                  <HeartPulse className="h-5 w-5" />
-                  <span className="text-lg">Uptime garantizado</span>
+                  <Globe className="h-5 w-5" />
+                  <span className="text-lg">Disponibilidad garantizada</span>
                 </div>
               </div>
             </div>
@@ -236,25 +293,29 @@ export default function HomePage() {
       >
         <div className="mx-auto max-w-5xl">
           <div className="mb-16 text-center">
-            <h2 className="text-5xl font-bold tracking-tight md:text-7xl">Precios simples</h2>
-            <p className="mt-4 text-xl text-[#0A1628]/60">Sin sorpresas. Cancela cuando quieras.</p>
+            <h2 className="text-5xl font-bold tracking-tight md:text-7xl">
+              Invierte en tu práctica
+            </h2>
+            <p className="mt-4 text-xl text-[#0A1628]/60">
+              Precios accesibles para el médico venezolano. Sin sorpresas, cancela cuando quieras.
+            </p>
           </div>
 
           <div className="grid gap-8 md:grid-cols-2">
             {/* Basic */}
             <div className="rounded-[2rem] border border-gray-200 bg-white p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl md:p-10">
-              <h3 className="text-xl font-bold">Básico</h3>
+              <h3 className="text-xl font-bold">Esencial</h3>
               <p className="mt-2 text-[#0A1628]/60">Para consultorios individuales</p>
               <div className="mt-6">
-                <span className="text-5xl font-bold">$499</span>
-                <span className="text-[#0A1628]/60"> MXN/mes</span>
+                <span className="text-5xl font-bold">$20</span>
+                <span className="text-[#0A1628]/60"> USD/mes</span>
               </div>
               <ul className="mt-8 space-y-4">
                 <PricingFeature>Hasta 100 pacientes</PricingFeature>
                 <PricingFeature>Notas con IA (50/mes)</PricingFeature>
-                <PricingFeature>Agenda y citas</PricingFeature>
-                <PricingFeature>Recetas digitales</PricingFeature>
-                <PricingFeature>Soporte por email</PricingFeature>
+                <PricingFeature>Agenda y citas con recordatorios</PricingFeature>
+                <PricingFeature>Recetas digitales con QR</PricingFeature>
+                <PricingFeature>Soporte por email y WhatsApp</PricingFeature>
               </ul>
               <Link
                 href="#cta"
@@ -267,21 +328,21 @@ export default function HomePage() {
             {/* Pro */}
             <div className="relative overflow-hidden rounded-[2rem] bg-[#0A1628] p-8 text-white transition-all duration-300 hover:-translate-y-2 hover:shadow-xl md:p-10">
               <div className="absolute top-6 right-6 rounded-full bg-blue-500 px-3 py-1 text-xs font-semibold">
-                Popular
+                Más popular
               </div>
               <h3 className="text-xl font-bold">Profesional</h3>
-              <p className="mt-2 text-white/60">Para clínicas y equipos</p>
+              <p className="mt-2 text-white/60">Para clínicas y equipos médicos</p>
               <div className="mt-6">
-                <span className="text-5xl font-bold">$999</span>
-                <span className="text-white/60"> MXN/mes</span>
+                <span className="text-5xl font-bold">$40</span>
+                <span className="text-white/60"> USD/mes</span>
               </div>
               <ul className="mt-8 space-y-4">
                 <PricingFeature light>Pacientes ilimitados</PricingFeature>
                 <PricingFeature light>Notas con IA ilimitadas</PricingFeature>
-                <PricingFeature light>Múltiples usuarios</PricingFeature>
-                <PricingFeature light>Reportes avanzados</PricingFeature>
-                <PricingFeature light>API y webhooks</PricingFeature>
-                <PricingFeature light>Soporte prioritario 24/7</PricingFeature>
+                <PricingFeature light>Múltiples usuarios y roles</PricingFeature>
+                <PricingFeature light>Reportes avanzados de ingresos</PricingFeature>
+                <PricingFeature light>Vademécum con IA incluido</PricingFeature>
+                <PricingFeature light>API, webhooks y soporte prioritario 24/7</PricingFeature>
               </ul>
               <Link
                 href="#cta"
@@ -298,19 +359,20 @@ export default function HomePage() {
       <section id="cta" className="bg-[#0A1628] px-6 py-32">
         <div className="mx-auto max-w-4xl text-center">
           <h2 className="text-5xl font-bold tracking-tight text-white md:text-7xl">
-            Empieza a transformar
+            Tu consultorio merece
             <br />
-            tu práctica hoy
+            evolucionar
           </h2>
           <p className="mx-auto mt-6 max-w-xl text-xl text-white/60">
-            Únete a cientos de médicos que ya usan Doci para optimizar su consultorio.
+            Únete a los médicos venezolanos que ya dejaron el papeleo atrás. 14 días gratis, sin
+            tarjeta de crédito, sin compromiso.
           </p>
           <div className="mt-10">
             <Link
               href="/sign-up"
               className="group inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 px-10 py-5 text-lg font-semibold text-white shadow-xl shadow-blue-500/25 transition-all duration-300 hover:scale-105 hover:from-blue-600 hover:to-cyan-600"
             >
-              Prueba gratis 14 días
+              Empieza gratis ahora
               <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
@@ -394,7 +456,7 @@ function FeatureCard({
   );
 }
 
-function CapabilityCard({
+function MindMapNode({
   icon,
   title,
   description,
@@ -404,14 +466,16 @@ function CapabilityCard({
   description: string;
 }) {
   return (
-    <div className="group cursor-default rounded-[2rem] bg-white/5 p-8 transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:text-white">
-      <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-white/80 transition-colors group-hover:bg-blue-500/20 group-hover:text-blue-400">
+    <div className="group flex cursor-default items-start gap-4 rounded-2xl border border-white/5 bg-white/5 p-5 text-left transition-all duration-300 hover:-translate-y-1 hover:border-blue-400/20 hover:bg-white/10">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-500/15 text-blue-400 transition-colors group-hover:bg-blue-500/25">
         {icon}
       </div>
-      <h3 className="mb-4 text-3xl font-bold tracking-tight">{title}</h3>
-      <p className="text-lg leading-relaxed text-white/50 group-hover:text-white/70">
-        {description}
-      </p>
+      <div>
+        <h4 className="mb-1 text-base font-semibold tracking-tight text-white">{title}</h4>
+        <p className="text-sm leading-relaxed text-white/50 group-hover:text-white/70">
+          {description}
+        </p>
+      </div>
     </div>
   );
 }
