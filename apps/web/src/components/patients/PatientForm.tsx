@@ -66,89 +66,89 @@ export function PatientForm({ patient, onSubmit, onCancel, isLoading }: PatientF
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {/* Información Personal */}
-      <div className="rounded-lg border border-gray-200 bg-white p-6">
-        <h3 className="mb-4 text-lg font-semibold text-gray-900">Información Personal</h3>
+      <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-6">
+        <h3 className="mb-4 text-lg font-semibold text-white">Información Personal</h3>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Nombre *</label>
+            <label className="mb-1 block text-sm font-medium text-white/70">Nombre *</label>
             <input
               {...register('firstName')}
               type="text"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
               placeholder="Juan"
             />
             {errors.firstName && (
-              <p className="mt-1 text-sm text-red-600">{errors.firstName.message}</p>
+              <p className="mt-1 text-sm text-red-400">{errors.firstName.message}</p>
             )}
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Apellido *</label>
+            <label className="mb-1 block text-sm font-medium text-white/70">Apellido *</label>
             <input
               {...register('lastName')}
               type="text"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
               placeholder="Pérez"
             />
             {errors.lastName && (
-              <p className="mt-1 text-sm text-red-600">{errors.lastName.message}</p>
+              <p className="mt-1 text-sm text-red-400">{errors.lastName.message}</p>
             )}
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-white/70">
               Fecha de Nacimiento *
             </label>
             <input
               {...register('dateOfBirth')}
               type="date"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
             />
             {errors.dateOfBirth && (
-              <p className="mt-1 text-sm text-red-600">{errors.dateOfBirth.message}</p>
+              <p className="mt-1 text-sm text-red-400">{errors.dateOfBirth.message}</p>
             )}
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Género *</label>
+            <label className="mb-1 block text-sm font-medium text-white/70">Género *</label>
             <select
               {...register('gender')}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
             >
               <option value="MALE">Masculino</option>
               <option value="FEMALE">Femenino</option>
               <option value="OTHER">Otro</option>
             </select>
-            {errors.gender && <p className="mt-1 text-sm text-red-600">{errors.gender.message}</p>}
+            {errors.gender && <p className="mt-1 text-sm text-red-400">{errors.gender.message}</p>}
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Email</label>
+            <label className="mb-1 block text-sm font-medium text-white/70">Email</label>
             <input
               {...register('email')}
               type="email"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
               placeholder="juan@ejemplo.com"
             />
-            {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
+            {errors.email && <p className="mt-1 text-sm text-red-400">{errors.email.message}</p>}
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Teléfono</label>
+            <label className="mb-1 block text-sm font-medium text-white/70">Teléfono</label>
             <input
               {...register('phone')}
               type="tel"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
               placeholder="+52 55 1234 5678"
             />
-            {errors.phone && <p className="mt-1 text-sm text-red-600">{errors.phone.message}</p>}
+            {errors.phone && <p className="mt-1 text-sm text-red-400">{errors.phone.message}</p>}
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Tipo de Sangre</label>
+            <label className="mb-1 block text-sm font-medium text-white/70">Tipo de Sangre</label>
             <select
               {...register('bloodType')}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
             >
               <option value="">Seleccionar...</option>
               <option value="A+">A+</option>
@@ -165,41 +165,41 @@ export function PatientForm({ patient, onSubmit, onCancel, isLoading }: PatientF
       </div>
 
       {/* Información Médica */}
-      <div className="rounded-lg border border-gray-200 bg-white p-6">
-        <h3 className="mb-4 text-lg font-semibold text-gray-900">Información Médica</h3>
+      <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-6">
+        <h3 className="mb-4 text-lg font-semibold text-white">Información Médica</h3>
         <div className="grid grid-cols-1 gap-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Alergias</label>
+            <label className="mb-1 block text-sm font-medium text-white/70">Alergias</label>
             <input
               {...register('allergies')}
               type="text"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
               placeholder="Penicilina, Mariscos (separar con comas)"
             />
-            <p className="mt-1 text-xs text-gray-500">Separar múltiples alergias con comas</p>
+            <p className="mt-1 text-xs text-white/40">Separar múltiples alergias con comas</p>
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-white/70">
               Medicamentos Actuales
             </label>
             <input
               {...register('currentMedications')}
               type="text"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
               placeholder="Metformina 500mg, Losartán 50mg (separar con comas)"
             />
-            <p className="mt-1 text-xs text-gray-500">Separar múltiples medicamentos con comas</p>
+            <p className="mt-1 text-xs text-white/40">Separar múltiples medicamentos con comas</p>
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-white/70">
               Notas Adicionales
             </label>
             <textarea
               {...register('notes')}
               rows={3}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
               placeholder="Información adicional relevante..."
             />
           </div>
@@ -207,55 +207,55 @@ export function PatientForm({ patient, onSubmit, onCancel, isLoading }: PatientF
       </div>
 
       {/* Dirección */}
-      <div className="rounded-lg border border-gray-200 bg-white p-6">
-        <h3 className="mb-4 text-lg font-semibold text-gray-900">Dirección</h3>
+      <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-6">
+        <h3 className="mb-4 text-lg font-semibold text-white">Dirección</h3>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div className="md:col-span-2">
-            <label className="mb-1 block text-sm font-medium text-gray-700">Dirección</label>
+            <label className="mb-1 block text-sm font-medium text-white/70">Dirección</label>
             <input
               {...register('address')}
               type="text"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
               placeholder="Calle y número"
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Ciudad</label>
+            <label className="mb-1 block text-sm font-medium text-white/70">Ciudad</label>
             <input
               {...register('city')}
               type="text"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
               placeholder="Ciudad de México"
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Estado</label>
+            <label className="mb-1 block text-sm font-medium text-white/70">Estado</label>
             <input
               {...register('state')}
               type="text"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
               placeholder="CDMX"
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">País</label>
+            <label className="mb-1 block text-sm font-medium text-white/70">País</label>
             <input
               {...register('country')}
               type="text"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
               placeholder="México"
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Código Postal</label>
+            <label className="mb-1 block text-sm font-medium text-white/70">Código Postal</label>
             <input
               {...register('postalCode')}
               type="text"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
               placeholder="06600"
             />
           </div>
@@ -263,35 +263,35 @@ export function PatientForm({ patient, onSubmit, onCancel, isLoading }: PatientF
       </div>
 
       {/* Contacto de Emergencia */}
-      <div className="rounded-lg border border-gray-200 bg-white p-6">
-        <h3 className="mb-4 text-lg font-semibold text-gray-900">Contacto de Emergencia</h3>
+      <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-6">
+        <h3 className="mb-4 text-lg font-semibold text-white">Contacto de Emergencia</h3>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Nombre</label>
+            <label className="mb-1 block text-sm font-medium text-white/70">Nombre</label>
             <input
               {...register('emergencyContactName')}
               type="text"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
               placeholder="María García"
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Teléfono</label>
+            <label className="mb-1 block text-sm font-medium text-white/70">Teléfono</label>
             <input
               {...register('emergencyContactPhone')}
               type="tel"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
               placeholder="+52 55 9876 5432"
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Relación</label>
+            <label className="mb-1 block text-sm font-medium text-white/70">Relación</label>
             <input
               {...register('emergencyContactRelation')}
               type="text"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
               placeholder="Esposa"
             />
           </div>
@@ -299,25 +299,25 @@ export function PatientForm({ patient, onSubmit, onCancel, isLoading }: PatientF
       </div>
 
       {/* Seguro Médico */}
-      <div className="rounded-lg border border-gray-200 bg-white p-6">
-        <h3 className="mb-4 text-lg font-semibold text-gray-900">Seguro Médico</h3>
+      <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-6">
+        <h3 className="mb-4 text-lg font-semibold text-white">Seguro Médico</h3>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Aseguradora</label>
+            <label className="mb-1 block text-sm font-medium text-white/70">Aseguradora</label>
             <input
               {...register('insuranceProvider')}
               type="text"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
               placeholder="GNP Seguros"
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Número de Póliza</label>
+            <label className="mb-1 block text-sm font-medium text-white/70">Número de Póliza</label>
             <input
               {...register('insurancePolicyNumber')}
               type="text"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
               placeholder="POL-123456"
             />
           </div>
@@ -329,14 +329,14 @@ export function PatientForm({ patient, onSubmit, onCancel, isLoading }: PatientF
         <button
           type="button"
           onClick={onCancel}
-          className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-700 transition-colors hover:bg-gray-50"
+          className="rounded-2xl border border-white/[0.08] bg-white px-4 py-2 text-white/70 transition-colors hover:bg-white/[0.02]"
         >
           Cancelar
         </button>
         <button
           type="submit"
           disabled={isLoading}
-          className="rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white transition-colors hover:from-blue-600 hover:to-cyan-600 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isLoading ? 'Guardando...' : patient ? 'Actualizar' : 'Crear Paciente'}
         </button>

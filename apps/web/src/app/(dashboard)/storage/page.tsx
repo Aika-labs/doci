@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '@clerk/nextjs';
+import { useAuthCompat as useAuth } from '@/hooks/useAuthCompat';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import Link from 'next/link';
@@ -71,12 +71,12 @@ const getFileTypeIcon = (type: FileType) => {
 };
 
 const fileTypeColors: Record<FileType, string> = {
-  IMAGE: 'bg-purple-100 text-purple-600',
-  DOCUMENT: 'bg-blue-100 text-blue-600',
-  LAB_RESULT: 'bg-green-100 text-green-600',
-  IMAGING: 'bg-orange-100 text-orange-600',
-  PRESCRIPTION: 'bg-red-100 text-red-600',
-  OTHER: 'bg-gray-100 text-gray-600',
+  IMAGE: 'bg-violet-500/15 text-violet-400',
+  DOCUMENT: 'bg-blue-500/15 text-blue-400',
+  LAB_RESULT: 'bg-emerald-500/15 text-emerald-400',
+  IMAGING: 'bg-orange-500/15 text-orange-600',
+  PRESCRIPTION: 'bg-red-500/15 text-red-400',
+  OTHER: 'bg-white/[0.06] text-white/50',
 };
 
 export default function StoragePage() {
@@ -177,12 +177,12 @@ export default function StoragePage() {
       {/* Header */}
       <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Almacenamiento</h1>
-          <p className="text-gray-600">Gestiona los archivos de tus pacientes</p>
+          <h1 className="text-2xl font-bold text-white">Almacenamiento</h1>
+          <p className="text-white/50">Gestiona los archivos de tus pacientes</p>
         </div>
         <Link
           href="/patients"
-          className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600"
         >
           <Upload className="h-4 w-4" />
           Subir desde paciente
@@ -191,49 +191,49 @@ export default function StoragePage() {
 
       {/* Stats */}
       <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
-        <div className="rounded-lg border border-gray-200 bg-white p-4">
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-              <HardDrive className="h-5 w-5 text-blue-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-500/15">
+              <HardDrive className="h-5 w-5 text-blue-400" />
             </div>
             <div>
-              <p className="text-sm text-gray-500">Total archivos</p>
-              <p className="text-xl font-bold text-gray-900">{stats.totalFiles}</p>
+              <p className="text-sm text-white/40">Total archivos</p>
+              <p className="text-xl font-bold text-white">{stats.totalFiles}</p>
             </div>
           </div>
         </div>
-        <div className="rounded-lg border border-gray-200 bg-white p-4">
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100">
-              <FileSpreadsheet className="h-5 w-5 text-green-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-500/15">
+              <FileSpreadsheet className="h-5 w-5 text-emerald-400" />
             </div>
             <div>
-              <p className="text-sm text-gray-500">Espacio usado</p>
-              <p className="text-xl font-bold text-gray-900">{formatFileSize(stats.totalSizeMb)}</p>
+              <p className="text-sm text-white/40">Espacio usado</p>
+              <p className="text-xl font-bold text-white">{formatFileSize(stats.totalSizeMb)}</p>
             </div>
           </div>
         </div>
-        <div className="rounded-lg border border-gray-200 bg-white p-4">
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100">
-              <ImageIcon className="h-5 w-5 text-purple-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-violet-500/15">
+              <ImageIcon className="h-5 w-5 text-violet-400" />
             </div>
             <div>
-              <p className="text-sm text-gray-500">Imágenes</p>
-              <p className="text-xl font-bold text-gray-900">
+              <p className="text-sm text-white/40">Imágenes</p>
+              <p className="text-xl font-bold text-white">
                 {(stats.byType.IMAGE || 0) + (stats.byType.IMAGING || 0)}
               </p>
             </div>
           </div>
         </div>
-        <div className="rounded-lg border border-gray-200 bg-white p-4">
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-100">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-orange-500/15">
               <FileText className="h-5 w-5 text-orange-600" />
             </div>
             <div>
-              <p className="text-sm text-gray-500">Documentos</p>
-              <p className="text-xl font-bold text-gray-900">
+              <p className="text-sm text-white/40">Documentos</p>
+              <p className="text-xl font-bold text-white">
                 {(stats.byType.DOCUMENT || 0) + (stats.byType.LAB_RESULT || 0)}
               </p>
             </div>
@@ -244,21 +244,21 @@ export default function StoragePage() {
       {/* Search and Filters */}
       <div className="mb-6 flex flex-col gap-4 md:flex-row">
         <div className="relative flex-1">
-          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-white/30" />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Buscar por nombre de archivo o paciente..."
-            className="w-full rounded-lg border border-gray-300 py-2 pr-4 pl-10 focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-2xl border border-white/[0.08] py-2 pr-4 pl-10 focus:ring-2 focus:ring-blue-500/20"
           />
         </div>
         <button
           onClick={() => setShowFilters(!showFilters)}
-          className={`flex items-center gap-2 rounded-lg border px-4 py-2 transition-colors ${
+          className={`flex items-center gap-2 rounded-2xl border px-4 py-2 transition-colors ${
             showFilters || filterType !== 'ALL'
-              ? 'border-blue-500 bg-blue-50 text-blue-700'
-              : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+              ? 'border-blue-500 bg-blue-50 text-blue-300'
+              : 'border-white/[0.08] text-white/70 hover:bg-white/[0.02]'
           }`}
         >
           <Filter className="h-4 w-4" />
@@ -269,15 +269,15 @@ export default function StoragePage() {
 
       {/* Filter Panel */}
       {showFilters && (
-        <div className="mb-6 rounded-lg border border-gray-200 bg-white p-4">
-          <label className="mb-2 block text-sm font-medium text-gray-700">Tipo de archivo</label>
+        <div className="mb-6 rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
+          <label className="mb-2 block text-sm font-medium text-white/70">Tipo de archivo</label>
           <div className="flex flex-wrap gap-2">
             <button
               onClick={() => setFilterType('ALL')}
               className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
                 filterType === 'ALL'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white'
+                  : 'bg-white/[0.06] text-white/70 hover:bg-white/10'
               }`}
             >
               Todos
@@ -288,8 +288,8 @@ export default function StoragePage() {
                 onClick={() => setFilterType(value as FileType)}
                 className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
                   filterType === value
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white'
+                    : 'bg-white/[0.06] text-white/70 hover:bg-white/10'
                 }`}
               >
                 {label}
@@ -302,17 +302,17 @@ export default function StoragePage() {
       {/* Files Grid */}
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+          <Loader2 className="h-8 w-8 animate-spin text-blue-400" />
         </div>
       ) : filteredFiles.length === 0 ? (
-        <div className="rounded-lg border border-gray-200 bg-white py-12 text-center">
-          <HardDrive className="mx-auto mb-3 h-12 w-12 text-gray-300" />
-          <p className="mb-4 text-gray-500">
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] py-12 text-center">
+          <HardDrive className="mx-auto mb-3 h-12 w-12 text-white/20" />
+          <p className="mb-4 text-white/40">
             {searchTerm || filterType !== 'ALL'
               ? 'No se encontraron archivos con esos filtros'
               : 'No hay archivos subidos'}
           </p>
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-white/30">
             Los archivos se suben desde el expediente de cada paciente
           </p>
         </div>
@@ -321,7 +321,7 @@ export default function StoragePage() {
           {filteredFiles.map((file) => (
             <div
               key={file.id}
-              className="cursor-pointer rounded-lg border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md"
+              className="cursor-pointer rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4 transition-shadow hover:shadow-md"
               onClick={() => setSelectedFile(file)}
             >
               <div className="flex items-start gap-3">
@@ -331,9 +331,9 @@ export default function StoragePage() {
                   {getFileTypeIcon(file.type)}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h3 className="truncate font-medium text-gray-900">{file.name}</h3>
-                  <p className="text-sm text-gray-500">{fileTypeLabels[file.type]}</p>
-                  <div className="mt-1 flex items-center gap-2 text-xs text-gray-400">
+                  <h3 className="truncate font-medium text-white">{file.name}</h3>
+                  <p className="text-sm text-white/40">{fileTypeLabels[file.type]}</p>
+                  <div className="mt-1 flex items-center gap-2 text-xs text-white/30">
                     <span>{formatFileSize(file.sizeMb)}</span>
                     <span>•</span>
                     <span>{format(new Date(file.createdAt), 'd MMM yyyy', { locale: es })}</span>
@@ -342,11 +342,11 @@ export default function StoragePage() {
               </div>
               {file.patient && (
                 <div className="mt-3 flex items-center gap-2 border-t pt-3">
-                  <User className="h-4 w-4 text-gray-400" />
+                  <User className="h-4 w-4 text-white/30" />
                   <Link
                     href={`/patients/${file.patient.id}`}
                     onClick={(e) => e.stopPropagation()}
-                    className="text-sm text-blue-600 hover:text-blue-700"
+                    className="text-sm text-blue-400 hover:text-blue-300"
                   >
                     {file.patient.firstName} {file.patient.lastName}
                   </Link>
@@ -362,10 +362,10 @@ export default function StoragePage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="m-4 w-full max-w-lg rounded-xl bg-white shadow-xl">
             <div className="flex items-center justify-between border-b p-4">
-              <h2 className="text-lg font-semibold text-gray-900">Detalles del archivo</h2>
+              <h2 className="text-lg font-semibold text-white">Detalles del archivo</h2>
               <button
                 onClick={() => setSelectedFile(null)}
-                className="p-1 text-gray-400 hover:text-gray-600"
+                className="p-1 text-white/30 hover:text-white/50"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -378,21 +378,21 @@ export default function StoragePage() {
                   {getFileTypeIcon(selectedFile.type)}
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">{selectedFile.name}</h3>
-                  <p className="text-sm text-gray-500">{fileTypeLabels[selectedFile.type]}</p>
+                  <h3 className="font-semibold text-white">{selectedFile.name}</h3>
+                  <p className="text-sm text-white/40">{fileTypeLabels[selectedFile.type]}</p>
                 </div>
               </div>
 
               <div className="space-y-3">
                 <div className="flex items-center gap-2 text-sm">
-                  <HardDrive className="h-4 w-4 text-gray-400" />
-                  <span className="text-gray-500">Tamaño:</span>
-                  <span className="text-gray-900">{formatFileSize(selectedFile.sizeMb)}</span>
+                  <HardDrive className="h-4 w-4 text-white/30" />
+                  <span className="text-white/40">Tamaño:</span>
+                  <span className="text-white">{formatFileSize(selectedFile.sizeMb)}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
-                  <Calendar className="h-4 w-4 text-gray-400" />
-                  <span className="text-gray-500">Subido:</span>
-                  <span className="text-gray-900">
+                  <Calendar className="h-4 w-4 text-white/30" />
+                  <span className="text-white/40">Subido:</span>
+                  <span className="text-white">
                     {format(new Date(selectedFile.createdAt), "d 'de' MMMM, yyyy 'a las' HH:mm", {
                       locale: es,
                     })}
@@ -400,11 +400,11 @@ export default function StoragePage() {
                 </div>
                 {selectedFile.patient && (
                   <div className="flex items-center gap-2 text-sm">
-                    <User className="h-4 w-4 text-gray-400" />
-                    <span className="text-gray-500">Paciente:</span>
+                    <User className="h-4 w-4 text-white/30" />
+                    <span className="text-white/40">Paciente:</span>
                     <Link
                       href={`/patients/${selectedFile.patient.id}`}
-                      className="text-blue-600 hover:text-blue-700"
+                      className="text-blue-400 hover:text-blue-300"
                     >
                       {selectedFile.patient.firstName} {selectedFile.patient.lastName}
                     </Link>
@@ -412,8 +412,8 @@ export default function StoragePage() {
                 )}
                 {selectedFile.description && (
                   <div className="pt-2">
-                    <p className="mb-1 text-sm text-gray-500">Descripción:</p>
-                    <p className="text-sm text-gray-900">{selectedFile.description}</p>
+                    <p className="mb-1 text-sm text-white/40">Descripción:</p>
+                    <p className="text-sm text-white">{selectedFile.description}</p>
                   </div>
                 )}
               </div>
@@ -425,7 +425,7 @@ export default function StoragePage() {
                       href={selectedFile.storageUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                      className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600"
                     >
                       <Eye className="h-4 w-4" />
                       Ver archivo
@@ -433,7 +433,7 @@ export default function StoragePage() {
                     <a
                       href={selectedFile.storageUrl}
                       download={selectedFile.name}
-                      className="flex items-center justify-center gap-2 rounded-lg border border-gray-300 px-4 py-2 hover:bg-gray-50"
+                      className="flex items-center justify-center gap-2 rounded-2xl border border-white/[0.08] px-4 py-2 hover:bg-white/[0.02]"
                     >
                       <Download className="h-4 w-4" />
                     </a>
@@ -441,7 +441,7 @@ export default function StoragePage() {
                 )}
                 <button
                   onClick={() => handleDelete(selectedFile.id)}
-                  className="flex items-center justify-center gap-2 rounded-lg border border-red-300 px-4 py-2 text-red-600 hover:bg-red-50"
+                  className="flex items-center justify-center gap-2 rounded-2xl border border-red-300 px-4 py-2 text-red-400 hover:bg-red-50"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>

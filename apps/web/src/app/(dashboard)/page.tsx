@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useAuth, useUser } from '@clerk/nextjs';
+import { useAuthCompat as useAuth, useUserCompat as useUser } from '@/hooks/useAuthCompat';
 import Link from 'next/link';
 import { format, startOfDay, endOfDay } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -54,7 +54,6 @@ export default function DashboardPage() {
 
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
-      // Fetch today's appointments
       const today = new Date();
       const appointmentsRes = await fetch(
         `${apiUrl}/appointments?startDate=${startOfDay(today).toISOString()}&endDate=${endOfDay(today).toISOString()}`,
@@ -63,12 +62,10 @@ export default function DashboardPage() {
         }
       );
 
-      // Fetch patients count
       const patientsRes = await fetch(`${apiUrl}/patients?limit=1`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // Fetch consultations this week
       const consultationsRes = await fetch(`${apiUrl}/consultations?limit=100`, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -92,7 +89,6 @@ export default function DashboardPage() {
         weekConsultations = data.data?.length || 0;
       }
 
-      // Find next upcoming appointment
       const now = new Date();
       const upcomingAppointments = todayAppointments
         .filter((apt) => new Date(apt.startTime) > now && apt.status !== 'CANCELLED')
@@ -113,9 +109,7 @@ export default function DashboardPage() {
       });
 
       setAppointments(todayAppointments.slice(0, 5));
-    } catch (error) {
-      console.error('Error fetching dashboard data:', error);
-      // Set default stats on error
+    } catch {
       setStats({
         todayAppointments: 0,
         totalPatients: 0,
@@ -140,13 +134,13 @@ export default function DashboardPage() {
 
   const getStatusStyle = (status: string) => {
     const styles: Record<string, string> = {
-      COMPLETED: 'bg-green-100 text-green-700',
-      CONFIRMED: 'bg-blue-100 text-blue-700',
-      SCHEDULED: 'bg-slate-100 text-slate-700',
-      CANCELLED: 'bg-red-100 text-red-700',
-      NO_SHOW: 'bg-yellow-100 text-yellow-700',
+      COMPLETED: 'bg-emerald-500/15 text-emerald-400',
+      CONFIRMED: 'bg-blue-500/15 text-blue-400',
+      SCHEDULED: 'bg-white/10 text-white/60',
+      CANCELLED: 'bg-red-500/15 text-red-400',
+      NO_SHOW: 'bg-amber-500/15 text-amber-400',
     };
-    return styles[status] || 'bg-slate-100 text-slate-700';
+    return styles[status] || 'bg-white/10 text-white/60';
   };
 
   const getStatusLabel = (status: string) => {
@@ -168,10 +162,10 @@ export default function DashboardPage() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">
+        <h1 className="text-2xl font-bold text-white">
           {getGreeting()}, {user?.firstName || 'Doctor'}
         </h1>
-        <p className="text-slate-500">{format(new Date(), "EEEE, d 'de' MMMM", { locale: es })}</p>
+        <p className="text-white/50">{format(new Date(), "EEEE, d 'de' MMMM", { locale: es })}</p>
       </div>
 
       {/* Stats */}
@@ -202,21 +196,24 @@ export default function DashboardPage() {
       </div>
 
       {/* Today's appointments */}
-      <div className="rounded-xl border bg-white p-6">
+      <div className="rounded-[2rem] border border-white/[0.06] bg-white/[0.03] p-6 backdrop-blur-sm">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-slate-900">Citas de hoy</h2>
-          <Link href="/appointments" className="text-sm text-blue-600 hover:text-blue-700">
+          <h2 className="text-lg font-semibold text-white">Citas de hoy</h2>
+          <Link
+            href="/appointments"
+            className="text-sm text-blue-400 transition-colors hover:text-blue-300"
+          >
             Ver todas
           </Link>
         </div>
 
         {appointments.length === 0 ? (
-          <div className="py-8 text-center text-slate-500">
-            <Calendar className="mx-auto mb-3 h-12 w-12 text-slate-300" />
+          <div className="py-8 text-center text-white/40">
+            <Calendar className="mx-auto mb-3 h-12 w-12 text-white/20" />
             <p>No hay citas programadas para hoy</p>
             <Link
               href="/appointments"
-              className="mt-2 inline-block text-sm text-blue-600 hover:text-blue-700"
+              className="mt-2 inline-block text-sm text-blue-400 hover:text-blue-300"
             >
               Agendar una cita
             </Link>
@@ -226,17 +223,17 @@ export default function DashboardPage() {
             {appointments.map((apt) => (
               <div
                 key={apt.id}
-                className="flex items-center justify-between rounded-lg border p-4 transition-colors hover:bg-slate-50"
+                className="flex items-center justify-between rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4 transition-colors hover:bg-white/[0.06]"
               >
                 <div className="flex items-center gap-4">
-                  <span className="w-14 text-lg font-semibold text-slate-900">
+                  <span className="w-14 text-lg font-semibold text-white">
                     {format(new Date(apt.startTime), 'HH:mm')}
                   </span>
                   <div>
-                    <p className="font-medium text-slate-900">
+                    <p className="font-medium text-white/90">
                       {apt.patient.firstName} {apt.patient.lastName}
                     </p>
-                    <p className="text-sm text-slate-500">{apt.type || 'Consulta'}</p>
+                    <p className="text-sm text-white/40">{apt.type || 'Consulta'}</p>
                   </div>
                 </div>
                 <span
@@ -254,29 +251,31 @@ export default function DashboardPage() {
       <div className="grid gap-4 md:grid-cols-3">
         <QuickAction
           href="/consultations/new"
-          icon={<Mic className="h-6 w-6 text-blue-600" />}
+          icon={<Mic className="h-6 w-6 text-blue-400" />}
           title="Nueva consulta"
           description="Inicia una consulta con dictado por voz"
-          color="blue"
+          accent="blue"
         />
         <QuickAction
           href="/patients/new"
-          icon={<UserPlus className="h-6 w-6 text-green-600" />}
+          icon={<UserPlus className="h-6 w-6 text-emerald-400" />}
           title="Nuevo paciente"
           description="Registra un nuevo paciente"
-          color="green"
+          accent="emerald"
         />
         <QuickAction
           href="/appointments"
-          icon={<CalendarPlus className="h-6 w-6 text-purple-600" />}
+          icon={<CalendarPlus className="h-6 w-6 text-violet-400" />}
           title="Nueva cita"
           description="Agenda una cita"
-          color="purple"
+          accent="violet"
         />
       </div>
     </div>
   );
 }
+
+/* ── StatCard ────────────────────────────────────────────────────────────── */
 
 function StatCard({
   icon: Icon,
@@ -292,59 +291,61 @@ function StatCard({
   trend?: 'up' | 'down';
 }) {
   return (
-    <div className="rounded-xl border bg-white p-6">
+    <div className="rounded-[2rem] border border-white/[0.06] bg-white/[0.03] p-6 backdrop-blur-sm transition-colors hover:bg-white/[0.06]">
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100">
-          <Icon className="h-5 w-5 text-slate-600" />
+        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/[0.06]">
+          <Icon className="h-5 w-5 text-white/60" />
         </div>
         <div className="flex-1">
-          <p className="text-sm text-slate-500">{label}</p>
+          <p className="text-sm text-white/50">{label}</p>
           <div className="flex items-center gap-2">
-            <p className="text-2xl font-bold text-slate-900">{value}</p>
+            <p className="text-2xl font-bold text-white">{value}</p>
             {trend &&
               (trend === 'up' ? (
-                <TrendingUp className="h-4 w-4 text-green-500" />
+                <TrendingUp className="h-4 w-4 text-emerald-400" />
               ) : (
-                <TrendingDown className="h-4 w-4 text-red-500" />
+                <TrendingDown className="h-4 w-4 text-red-400" />
               ))}
           </div>
         </div>
       </div>
-      {subtitle && <p className="mt-2 truncate text-xs text-slate-500">{subtitle}</p>}
+      {subtitle && <p className="mt-2 truncate text-xs text-white/40">{subtitle}</p>}
     </div>
   );
 }
+
+/* ── QuickAction ─────────────────────────────────────────────────────────── */
 
 function QuickAction({
   href,
   icon,
   title,
   description,
-  color,
+  accent,
 }: {
   href: string;
   icon: React.ReactNode;
   title: string;
   description: string;
-  color: 'blue' | 'green' | 'purple';
+  accent: 'blue' | 'emerald' | 'violet';
 }) {
-  const colorStyles = {
-    blue: 'hover:border-blue-300 hover:bg-blue-50',
-    green: 'hover:border-green-300 hover:bg-green-50',
-    purple: 'hover:border-purple-300 hover:bg-purple-50',
+  const hoverStyles = {
+    blue: 'hover:border-blue-500/20 hover:bg-blue-500/5',
+    emerald: 'hover:border-emerald-500/20 hover:bg-emerald-500/5',
+    violet: 'hover:border-violet-500/20 hover:bg-violet-500/5',
   };
 
   return (
     <Link
       href={href}
-      className={`flex items-center gap-4 rounded-xl border bg-white p-6 transition-colors ${colorStyles[color]}`}
+      className={`flex items-center gap-4 rounded-[2rem] border border-white/[0.06] bg-white/[0.03] p-6 backdrop-blur-sm transition-all duration-300 ${hoverStyles[accent]}`}
     >
-      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-slate-100">
+      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/[0.06]">
         {icon}
       </div>
       <div>
-        <p className="font-semibold text-slate-900">{title}</p>
-        <p className="text-sm text-slate-500">{description}</p>
+        <p className="font-semibold text-white">{title}</p>
+        <p className="text-sm text-white/40">{description}</p>
       </div>
     </Link>
   );

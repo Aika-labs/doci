@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useRef } from 'react';
-import { useAuth } from '@clerk/nextjs';
+import { useAuthCompat as useAuth } from '@/hooks/useAuthCompat';
 import {
   Upload,
   X,
@@ -234,12 +234,12 @@ export function FileUpload({
   const successCount = files.filter((f) => f.status === 'success').length;
 
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+    <div className="overflow-hidden rounded-[2rem] border border-white/[0.06] bg-white/[0.03]">
       {/* Header */}
       <div className="flex items-center justify-between border-b p-4">
-        <h3 className="text-lg font-semibold text-gray-900">Subir archivos</h3>
+        <h3 className="text-lg font-semibold text-white">Subir archivos</h3>
         {onClose && (
-          <button onClick={onClose} className="p-1 text-gray-400 hover:text-gray-600">
+          <button onClick={onClose} className="p-1 text-white/30 hover:text-white/50">
             <X className="h-5 w-5" />
           </button>
         )}
@@ -251,10 +251,10 @@ export function FileUpload({
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onClick={() => fileInputRef.current?.click()}
-        className={`m-4 cursor-pointer rounded-lg border-2 border-dashed p-8 transition-colors ${
+        className={`m-4 cursor-pointer rounded-2xl border-2 border-dashed p-8 transition-colors ${
           isDragging
             ? 'border-blue-500 bg-blue-50'
-            : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
+            : 'border-white/[0.08] hover:border-gray-400 hover:bg-white/[0.02]'
         }`}
       >
         <input
@@ -267,14 +267,14 @@ export function FileUpload({
         />
         <div className="text-center">
           <Upload
-            className={`mx-auto mb-3 h-10 w-10 ${isDragging ? 'text-blue-500' : 'text-gray-400'}`}
+            className={`mx-auto mb-3 h-10 w-10 ${isDragging ? 'text-blue-500' : 'text-white/30'}`}
           />
-          <p className="font-medium text-gray-700">
+          <p className="font-medium text-white/70">
             {isDragging
               ? 'Suelta los archivos aquí'
               : 'Arrastra archivos aquí o haz clic para seleccionar'}
           </p>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-white/40">
             Máximo {maxSizeMb}MB por archivo • PDF, imágenes, documentos
           </p>
         </div>
@@ -287,40 +287,40 @@ export function FileUpload({
             {files.map((fileItem, index) => (
               <div
                 key={index}
-                className={`rounded-lg border p-3 ${
+                className={`rounded-2xl border p-3 ${
                   fileItem.status === 'error'
                     ? 'border-red-200 bg-red-50'
                     : fileItem.status === 'success'
                       ? 'border-green-200 bg-green-50'
-                      : 'border-gray-200 bg-gray-50'
+                      : 'border-white/[0.06] bg-white/[0.02]'
                 }`}
               >
                 <div className="flex items-start gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg border bg-white">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl border bg-white/[0.03]">
                     {getFileIcon(fileItem.file)}
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <p className="truncate font-medium text-gray-900">{fileItem.file.name}</p>
+                      <p className="truncate font-medium text-white">{fileItem.file.name}</p>
                       {fileItem.status === 'uploading' && (
-                        <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
+                        <Loader2 className="h-4 w-4 animate-spin text-blue-400" />
                       )}
                       {fileItem.status === 'success' && (
-                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <CheckCircle className="h-4 w-4 text-emerald-400" />
                       )}
                       {fileItem.status === 'error' && (
-                        <AlertCircle className="h-4 w-4 text-red-600" />
+                        <AlertCircle className="h-4 w-4 text-red-400" />
                       )}
                     </div>
-                    <p className="text-sm text-gray-500">{formatFileSize(fileItem.file.size)}</p>
+                    <p className="text-sm text-white/40">{formatFileSize(fileItem.file.size)}</p>
                     {fileItem.error && (
-                      <p className="mt-1 text-sm text-red-600">{fileItem.error}</p>
+                      <p className="mt-1 text-sm text-red-400">{fileItem.error}</p>
                     )}
                   </div>
                   {fileItem.status === 'pending' && (
                     <button
                       onClick={() => removeFile(index)}
-                      className="p-1 text-gray-400 hover:text-red-600"
+                      className="p-1 text-white/30 hover:text-red-400"
                     >
                       <X className="h-4 w-4" />
                     </button>
@@ -330,11 +330,11 @@ export function FileUpload({
                 {fileItem.status === 'pending' && (
                   <div className="mt-3 grid grid-cols-2 gap-2">
                     <div>
-                      <label className="mb-1 block text-xs text-gray-500">Tipo</label>
+                      <label className="mb-1 block text-xs text-white/40">Tipo</label>
                       <select
                         value={fileItem.type}
                         onChange={(e) => updateFileType(index, e.target.value as FileType)}
-                        className="w-full rounded border border-gray-300 px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500"
+                        className="w-full rounded border border-white/[0.08] px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500/20"
                       >
                         {Object.entries(fileTypeLabels).map(([value, label]) => (
                           <option key={value} value={value}>
@@ -344,13 +344,13 @@ export function FileUpload({
                       </select>
                     </div>
                     <div>
-                      <label className="mb-1 block text-xs text-gray-500">Descripción</label>
+                      <label className="mb-1 block text-xs text-white/40">Descripción</label>
                       <input
                         type="text"
                         value={fileItem.description}
                         onChange={(e) => updateFileDescription(index, e.target.value)}
                         placeholder="Opcional"
-                        className="w-full rounded border border-gray-300 px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500"
+                        className="w-full rounded border border-white/[0.08] px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500/20"
                       />
                     </div>
                   </div>
@@ -361,7 +361,7 @@ export function FileUpload({
 
           {/* Actions */}
           <div className="mt-4 flex items-center justify-between border-t pt-4">
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-white/40">
               {successCount > 0 && `${successCount} subido${successCount > 1 ? 's' : ''}`}
               {successCount > 0 && pendingCount > 0 && ' • '}
               {pendingCount > 0 && `${pendingCount} pendiente${pendingCount > 1 ? 's' : ''}`}
@@ -370,7 +370,7 @@ export function FileUpload({
               {onClose && (
                 <button
                   onClick={onClose}
-                  className="rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50"
+                  className="rounded-2xl border border-white/[0.08] px-4 py-2 text-white/70 hover:bg-white/[0.02]"
                 >
                   Cerrar
                 </button>
@@ -379,7 +379,7 @@ export function FileUpload({
                 <button
                   onClick={uploadAllFiles}
                   disabled={isUploading}
-                  className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
+                  className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600 disabled:opacity-50"
                 >
                   {isUploading ? (
                     <>

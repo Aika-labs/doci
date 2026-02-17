@@ -10,15 +10,15 @@ interface ErrorAlertProps {
 
 export function ErrorAlert({ message, onDismiss, onRetry }: ErrorAlertProps) {
   return (
-    <div className="rounded-lg border border-red-200 bg-red-50 p-4">
+    <div className="rounded-2xl border border-red-200 bg-red-50 p-4">
       <div className="flex items-start gap-3">
-        <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600" />
+        <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-400" />
         <div className="flex-1">
-          <p className="text-red-700">{message}</p>
+          <p className="text-red-300">{message}</p>
           {onRetry && (
             <button
               onClick={onRetry}
-              className="mt-2 flex items-center gap-1 text-sm text-red-600 hover:text-red-700"
+              className="mt-2 flex items-center gap-1 text-sm text-red-400 hover:text-red-300"
             >
               <RefreshCw className="h-3 w-3" />
               Reintentar
@@ -26,7 +26,7 @@ export function ErrorAlert({ message, onDismiss, onRetry }: ErrorAlertProps) {
           )}
         </div>
         {onDismiss && (
-          <button onClick={onDismiss} className="p-1 text-red-400 hover:text-red-600">
+          <button onClick={onDismiss} className="p-1 text-red-400 hover:text-red-400">
             <X className="h-4 w-4" />
           </button>
         )}

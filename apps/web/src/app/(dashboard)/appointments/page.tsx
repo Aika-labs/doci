@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '@clerk/nextjs';
+import { useAuthCompat as useAuth } from '@/hooks/useAuthCompat';
 import { format, startOfMonth, endOfMonth, addMonths, addDays, isSameDay } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { AppointmentCalendar, AppointmentModal } from '@/components/appointments';
@@ -154,25 +154,25 @@ export default function AppointmentsPage() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'COMPLETED':
-        return <CheckCircle className="h-4 w-4 text-green-600" />;
+        return <CheckCircle className="h-4 w-4 text-emerald-400" />;
       case 'CANCELLED':
-        return <XCircle className="h-4 w-4 text-red-600" />;
+        return <XCircle className="h-4 w-4 text-red-400" />;
       case 'NO_SHOW':
-        return <AlertCircle className="h-4 w-4 text-yellow-600" />;
+        return <AlertCircle className="h-4 w-4 text-amber-400" />;
       default:
-        return <Clock className="h-4 w-4 text-blue-600" />;
+        return <Clock className="h-4 w-4 text-blue-400" />;
     }
   };
 
   const getStatusStyle = (status: string) => {
     const styles: Record<string, string> = {
-      COMPLETED: 'bg-green-100 text-green-700',
-      CONFIRMED: 'bg-blue-100 text-blue-700',
-      SCHEDULED: 'bg-gray-100 text-gray-700',
-      CANCELLED: 'bg-red-100 text-red-700',
-      NO_SHOW: 'bg-yellow-100 text-yellow-700',
+      COMPLETED: 'bg-emerald-500/15 text-emerald-300',
+      CONFIRMED: 'bg-blue-500/15 text-blue-300',
+      SCHEDULED: 'bg-white/[0.06] text-white/70',
+      CANCELLED: 'bg-red-500/15 text-red-300',
+      NO_SHOW: 'bg-amber-500/15 text-amber-300',
     };
-    return styles[status] || 'bg-gray-100 text-gray-700';
+    return styles[status] || 'bg-white/[0.06] text-white/70';
   };
 
   const getStatusLabel = (status: string) => {
@@ -202,12 +202,12 @@ export default function AppointmentsPage() {
       {/* Header */}
       <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Agenda</h1>
-          <p className="text-gray-600">Gestiona las citas de tus pacientes</p>
+          <h1 className="text-2xl font-bold text-white">Agenda</h1>
+          <p className="text-white/50">Gestiona las citas de tus pacientes</p>
         </div>
         <div className="flex items-center gap-2">
           {/* View Toggle */}
-          <div className="flex items-center rounded-lg bg-gray-100 p-1">
+          <div className="flex items-center rounded-2xl bg-white/[0.06] p-1">
             <button
               onClick={() => setViewMode('calendar')}
               className={`rounded p-2 ${viewMode === 'calendar' ? 'bg-white shadow-sm' : ''}`}
@@ -236,7 +236,7 @@ export default function AppointmentsPage() {
               setSelectedDate(new Date());
               setIsModalOpen(true);
             }}
-            className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
+            className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white transition-colors hover:from-blue-600 hover:to-cyan-600"
           >
             <Plus className="h-4 w-4" />
             Nueva Cita
@@ -246,18 +246,18 @@ export default function AppointmentsPage() {
 
       {/* Stats */}
       <div className="mb-6 grid grid-cols-3 gap-4">
-        <div className="rounded-lg border border-gray-200 bg-white p-4">
-          <p className="text-sm text-gray-500">Citas hoy</p>
-          <p className="text-2xl font-bold text-gray-900">{todayAppointments.length}</p>
-          <p className="text-xs text-gray-400">{completedToday} completadas</p>
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
+          <p className="text-sm text-white/40">Citas hoy</p>
+          <p className="text-2xl font-bold text-white">{todayAppointments.length}</p>
+          <p className="text-xs text-white/30">{completedToday} completadas</p>
         </div>
-        <div className="rounded-lg border border-gray-200 bg-white p-4">
-          <p className="text-sm text-gray-500">Próximas</p>
-          <p className="text-2xl font-bold text-blue-600">{upcomingAppointments.length}</p>
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
+          <p className="text-sm text-white/40">Próximas</p>
+          <p className="text-2xl font-bold text-blue-400">{upcomingAppointments.length}</p>
         </div>
-        <div className="rounded-lg border border-gray-200 bg-white p-4">
-          <p className="text-sm text-gray-500">Este mes</p>
-          <p className="text-2xl font-bold text-gray-900">{appointments.length}</p>
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
+          <p className="text-sm text-white/40">Este mes</p>
+          <p className="text-2xl font-bold text-white">{appointments.length}</p>
         </div>
       </div>
 
@@ -273,29 +273,29 @@ export default function AppointmentsPage() {
 
       {/* Day View */}
       {viewMode === 'day' && (
-        <div className="rounded-lg border border-gray-200 bg-white">
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03]">
           {/* Day Navigation */}
           <div className="flex items-center justify-between border-b p-4">
             <button
               onClick={() => setSelectedDay(addDays(selectedDay, -1))}
-              className="rounded-lg p-2 hover:bg-gray-100"
+              className="rounded-2xl p-2 hover:bg-white/[0.06]"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
             <div className="text-center">
-              <h2 className="text-lg font-semibold text-gray-900">
+              <h2 className="text-lg font-semibold text-white">
                 {format(selectedDay, "EEEE, d 'de' MMMM", { locale: es })}
               </h2>
               <button
                 onClick={() => setSelectedDay(new Date())}
-                className="text-sm text-blue-600 hover:text-blue-700"
+                className="text-sm text-blue-400 hover:text-blue-300"
               >
                 Ir a hoy
               </button>
             </div>
             <button
               onClick={() => setSelectedDay(addDays(selectedDay, 1))}
-              className="rounded-lg p-2 hover:bg-gray-100"
+              className="rounded-2xl p-2 hover:bg-white/[0.06]"
             >
               <ChevronRight className="h-5 w-5" />
             </button>
@@ -305,18 +305,18 @@ export default function AppointmentsPage() {
           <div className="p-4">
             {isLoading ? (
               <div className="flex items-center justify-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+                <Loader2 className="h-8 w-8 animate-spin text-blue-400" />
               </div>
             ) : dayAppointments.length === 0 ? (
               <div className="py-12 text-center">
-                <Calendar className="mx-auto mb-3 h-12 w-12 text-gray-300" />
-                <p className="text-gray-500">No hay citas para este día</p>
+                <Calendar className="mx-auto mb-3 h-12 w-12 text-white/20" />
+                <p className="text-white/40">No hay citas para este día</p>
                 <button
                   onClick={() => {
                     setSelectedDate(selectedDay);
                     setIsModalOpen(true);
                   }}
-                  className="mt-4 text-blue-600 hover:text-blue-700"
+                  className="mt-4 text-blue-400 hover:text-blue-300"
                 >
                   Agendar una cita
                 </button>
@@ -326,21 +326,21 @@ export default function AppointmentsPage() {
                 {dayAppointments.map((apt) => (
                   <div
                     key={apt.id}
-                    className="flex cursor-pointer items-center gap-4 rounded-lg border border-gray-200 p-4 transition-shadow hover:shadow-md"
+                    className="flex cursor-pointer items-center gap-4 rounded-2xl border border-white/[0.06] p-4 transition-shadow hover:shadow-md"
                     onClick={() => handleEventClick(apt)}
                   >
                     <div className="w-16 text-center">
-                      <p className="text-lg font-bold text-gray-900">
+                      <p className="text-lg font-bold text-white">
                         {format(getStartTime(apt), 'HH:mm')}
                       </p>
-                      <p className="text-xs text-gray-500">{format(getEndTime(apt), 'HH:mm')}</p>
+                      <p className="text-xs text-white/40">{format(getEndTime(apt), 'HH:mm')}</p>
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
                         <Link
                           href={`/patients/${apt.patient?.id}`}
                           onClick={(e) => e.stopPropagation()}
-                          className="font-medium text-gray-900 hover:text-blue-600"
+                          className="font-medium text-white hover:text-blue-400"
                         >
                           {apt.patient?.firstName} {apt.patient?.lastName}
                         </Link>
@@ -350,9 +350,9 @@ export default function AppointmentsPage() {
                           {getStatusLabel(apt.status)}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-500">{getTypeLabel(apt.type)}</p>
+                      <p className="text-sm text-white/40">{getTypeLabel(apt.type)}</p>
                       {apt.patient?.phone && (
-                        <p className="mt-1 flex items-center gap-1 text-xs text-gray-400">
+                        <p className="mt-1 flex items-center gap-1 text-xs text-white/30">
                           <Phone className="h-3 w-3" />
                           {apt.patient.phone}
                         </p>
@@ -366,7 +366,7 @@ export default function AppointmentsPage() {
                               e.stopPropagation();
                               handleStatusChange(apt.id, 'COMPLETED');
                             }}
-                            className="rounded-lg p-2 text-green-600 hover:bg-green-50"
+                            className="rounded-2xl p-2 text-emerald-400 hover:bg-green-50"
                             title="Marcar como completada"
                           >
                             <CheckCircle className="h-5 w-5" />
@@ -376,7 +376,7 @@ export default function AppointmentsPage() {
                               e.stopPropagation();
                               handleStatusChange(apt.id, 'NO_SHOW');
                             }}
-                            className="rounded-lg p-2 text-yellow-600 hover:bg-yellow-50"
+                            className="rounded-2xl p-2 text-amber-400 hover:bg-yellow-50"
                             title="Marcar como no asistió"
                           >
                             <AlertCircle className="h-5 w-5" />
@@ -396,18 +396,18 @@ export default function AppointmentsPage() {
 
       {/* List View */}
       {viewMode === 'list' && (
-        <div className="rounded-lg border border-gray-200 bg-white">
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03]">
           <div className="border-b p-4">
-            <h2 className="font-semibold text-gray-900">Próximas citas</h2>
+            <h2 className="font-semibold text-white">Próximas citas</h2>
           </div>
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+              <Loader2 className="h-8 w-8 animate-spin text-blue-400" />
             </div>
           ) : upcomingAppointments.length === 0 ? (
             <div className="py-12 text-center">
-              <Calendar className="mx-auto mb-3 h-12 w-12 text-gray-300" />
-              <p className="text-gray-500">No hay citas próximas</p>
+              <Calendar className="mx-auto mb-3 h-12 w-12 text-white/20" />
+              <p className="text-white/40">No hay citas próximas</p>
             </div>
           ) : (
             <div className="divide-y">
@@ -417,24 +417,24 @@ export default function AppointmentsPage() {
                 .map((apt) => (
                   <div
                     key={apt.id}
-                    className="flex cursor-pointer items-center gap-4 p-4 hover:bg-gray-50"
+                    className="flex cursor-pointer items-center gap-4 p-4 hover:bg-white/[0.02]"
                     onClick={() => handleEventClick(apt)}
                   >
-                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
+                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-500/15">
                       {apt.patient ? (
-                        <span className="font-semibold text-blue-600">
+                        <span className="font-semibold text-blue-400">
                           {apt.patient.firstName[0]}
                           {apt.patient.lastName[0]}
                         </span>
                       ) : (
-                        <User className="h-6 w-6 text-blue-600" />
+                        <User className="h-6 w-6 text-blue-400" />
                       )}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="truncate font-medium text-gray-900">
+                      <p className="truncate font-medium text-white">
                         {apt.patient?.firstName} {apt.patient?.lastName}
                       </p>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-white/40">
                         {format(getStartTime(apt), 'EEE d MMM, HH:mm', { locale: es })}
                         {' • '}
                         {getTypeLabel(apt.type)}

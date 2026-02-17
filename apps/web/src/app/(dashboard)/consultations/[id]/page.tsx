@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'next/navigation';
-import { useAuth } from '@clerk/nextjs';
+import { useAuthCompat as useAuth } from '@/hooks/useAuthCompat';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import Link from 'next/link';
@@ -152,7 +152,7 @@ export default function ConsultationDetailPage() {
   if (isLoading) {
     return (
       <div className="flex min-h-[400px] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-blue-400" />
       </div>
     );
   }
@@ -160,8 +160,8 @@ export default function ConsultationDetailPage() {
   if (error || !consultation) {
     return (
       <div className="py-12 text-center">
-        <h2 className="text-xl font-semibold text-gray-900">{error || 'Consulta no encontrada'}</h2>
-        <Link href="/consultations" className="mt-4 text-blue-600 hover:text-blue-700">
+        <h2 className="text-xl font-semibold text-white">{error || 'Consulta no encontrada'}</h2>
+        <Link href="/consultations" className="mt-4 text-blue-400 hover:text-blue-300">
           Volver a consultas
         </Link>
       </div>
@@ -176,7 +176,7 @@ export default function ConsultationDetailPage() {
       <div className="mb-6">
         <Link
           href="/consultations"
-          className="mb-4 inline-flex items-center gap-2 text-gray-600 hover:text-gray-900"
+          className="mb-4 inline-flex items-center gap-2 text-white/50 hover:text-white"
         >
           <ArrowLeft className="h-4 w-4" />
           Volver a consultas
@@ -185,18 +185,18 @@ export default function ConsultationDetailPage() {
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div>
             <div className="mb-1 flex items-center gap-2">
-              <h1 className="text-2xl font-bold text-gray-900">Consulta Médica</h1>
+              <h1 className="text-2xl font-bold text-white">Consulta Médica</h1>
               <span
                 className={`rounded-full px-3 py-1 text-sm font-medium ${
                   consultation.status === 'COMPLETED'
-                    ? 'bg-green-100 text-green-700'
-                    : 'bg-yellow-100 text-yellow-700'
+                    ? 'bg-emerald-500/15 text-emerald-300'
+                    : 'bg-amber-500/15 text-amber-300'
                 }`}
               >
                 {consultation.status === 'COMPLETED' ? 'Completada' : 'En progreso'}
               </span>
             </div>
-            <p className="text-gray-600">
+            <p className="text-white/50">
               {format(
                 new Date(consultation.startedAt),
                 "EEEE, d 'de' MMMM 'de' yyyy 'a las' HH:mm",
@@ -207,7 +207,7 @@ export default function ConsultationDetailPage() {
           <div className="flex gap-2">
             <Link
               href={`/consultations/new?patientId=${patient.id}`}
-              className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+              className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600"
             >
               <Plus className="h-4 w-4" />
               Nueva Consulta
@@ -221,14 +221,17 @@ export default function ConsultationDetailPage() {
         <div className="space-y-6 lg:col-span-2">
           {/* Patient Alerts */}
           {patient.allergies && patient.allergies.length > 0 && (
-            <div className="rounded-lg border border-red-200 bg-red-50 p-4">
+            <div className="rounded-2xl border border-red-200 bg-red-50 p-4">
               <div className="mb-2 flex items-center gap-2">
-                <AlertTriangle className="h-5 w-5 text-red-600" />
+                <AlertTriangle className="h-5 w-5 text-red-400" />
                 <h3 className="font-semibold text-red-900">Alergias del Paciente</h3>
               </div>
               <div className="flex flex-wrap gap-2">
                 {patient.allergies.map((allergy, i) => (
-                  <span key={i} className="rounded-full bg-red-100 px-3 py-1 text-sm text-red-700">
+                  <span
+                    key={i}
+                    className="rounded-full bg-red-500/15 px-3 py-1 text-sm text-red-300"
+                  >
                     {allergy}
                   </span>
                 ))}
@@ -237,10 +240,10 @@ export default function ConsultationDetailPage() {
           )}
 
           {/* SOAP Notes */}
-          <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
-            <div className="border-b border-gray-200 bg-gray-50 px-6 py-4">
-              <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900">
-                <FileText className="h-5 w-5 text-blue-600" />
+          <div className="overflow-hidden rounded-[2rem] border border-white/[0.06] bg-white/[0.03]">
+            <div className="border-b border-white/[0.06] bg-white/[0.02] px-6 py-4">
+              <h2 className="flex items-center gap-2 text-lg font-semibold text-white">
+                <FileText className="h-5 w-5 text-blue-400" />
                 Notas SOAP
               </h2>
             </div>
@@ -248,10 +251,10 @@ export default function ConsultationDetailPage() {
               {/* Subjective */}
               <div>
                 <div className="mb-2 flex items-center gap-2">
-                  <ClipboardList className="h-4 w-4 text-blue-600" />
-                  <h3 className="font-semibold text-gray-900">Subjetivo (S)</h3>
+                  <ClipboardList className="h-4 w-4 text-blue-400" />
+                  <h3 className="font-semibold text-white">Subjetivo (S)</h3>
                 </div>
-                <p className="rounded-lg bg-gray-50 p-4 whitespace-pre-wrap text-gray-700">
+                <p className="rounded-2xl bg-white/[0.02] p-4 whitespace-pre-wrap text-white/70">
                   {soapNotes?.subjective || 'No registrado'}
                 </p>
               </div>
@@ -259,10 +262,10 @@ export default function ConsultationDetailPage() {
               {/* Objective */}
               <div>
                 <div className="mb-2 flex items-center gap-2">
-                  <Stethoscope className="h-4 w-4 text-green-600" />
-                  <h3 className="font-semibold text-gray-900">Objetivo (O)</h3>
+                  <Stethoscope className="h-4 w-4 text-emerald-400" />
+                  <h3 className="font-semibold text-white">Objetivo (O)</h3>
                 </div>
-                <p className="rounded-lg bg-gray-50 p-4 whitespace-pre-wrap text-gray-700">
+                <p className="rounded-2xl bg-white/[0.02] p-4 whitespace-pre-wrap text-white/70">
                   {soapNotes?.objective || 'No registrado'}
                 </p>
               </div>
@@ -271,9 +274,9 @@ export default function ConsultationDetailPage() {
               <div>
                 <div className="mb-2 flex items-center gap-2">
                   <Target className="h-4 w-4 text-orange-600" />
-                  <h3 className="font-semibold text-gray-900">Evaluación (A)</h3>
+                  <h3 className="font-semibold text-white">Evaluación (A)</h3>
                 </div>
-                <p className="rounded-lg bg-gray-50 p-4 whitespace-pre-wrap text-gray-700">
+                <p className="rounded-2xl bg-white/[0.02] p-4 whitespace-pre-wrap text-white/70">
                   {soapNotes?.assessment || 'No registrado'}
                 </p>
               </div>
@@ -281,10 +284,10 @@ export default function ConsultationDetailPage() {
               {/* Plan */}
               <div>
                 <div className="mb-2 flex items-center gap-2">
-                  <CheckSquare className="h-4 w-4 text-purple-600" />
-                  <h3 className="font-semibold text-gray-900">Plan (P)</h3>
+                  <CheckSquare className="h-4 w-4 text-violet-400" />
+                  <h3 className="font-semibold text-white">Plan (P)</h3>
                 </div>
-                <p className="rounded-lg bg-gray-50 p-4 whitespace-pre-wrap text-gray-700">
+                <p className="rounded-2xl bg-white/[0.02] p-4 whitespace-pre-wrap text-white/70">
                   {soapNotes?.plan || 'No registrado'}
                 </p>
               </div>
@@ -293,30 +296,30 @@ export default function ConsultationDetailPage() {
 
           {/* Diagnoses */}
           {diagnoses && diagnoses.length > 0 && (
-            <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
-              <div className="border-b border-gray-200 bg-gray-50 px-6 py-4">
-                <h2 className="text-lg font-semibold text-gray-900">Diagnósticos (CIE-10)</h2>
+            <div className="overflow-hidden rounded-[2rem] border border-white/[0.06] bg-white/[0.03]">
+              <div className="border-b border-white/[0.06] bg-white/[0.02] px-6 py-4">
+                <h2 className="text-lg font-semibold text-white">Diagnósticos (CIE-10)</h2>
               </div>
               <div className="p-6">
                 <div className="space-y-3">
                   {diagnoses.map((diagnosis, i) => (
                     <div
                       key={i}
-                      className={`flex items-center justify-between rounded-lg p-3 ${
-                        diagnosis.type === 'primary' ? 'bg-blue-50' : 'bg-gray-50'
+                      className={`flex items-center justify-between rounded-2xl p-3 ${
+                        diagnosis.type === 'primary' ? 'bg-blue-50' : 'bg-white/[0.02]'
                       }`}
                     >
                       <div>
-                        <span className="mr-2 font-mono text-sm text-gray-500">
+                        <span className="mr-2 font-mono text-sm text-white/40">
                           {diagnosis.code}
                         </span>
-                        <span className="text-gray-900">{diagnosis.description}</span>
+                        <span className="text-white">{diagnosis.description}</span>
                       </div>
                       <span
                         className={`rounded px-2 py-1 text-xs font-medium ${
                           diagnosis.type === 'primary'
-                            ? 'bg-blue-100 text-blue-700'
-                            : 'bg-gray-200 text-gray-600'
+                            ? 'bg-blue-500/15 text-blue-300'
+                            : 'bg-white/10 text-white/50'
                         }`}
                       >
                         {diagnosis.type === 'primary' ? 'Principal' : 'Secundario'}
@@ -330,12 +333,12 @@ export default function ConsultationDetailPage() {
 
           {/* AI Transcription */}
           {consultation.aiTranscription && (
-            <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
-              <div className="border-b border-gray-200 bg-gray-50 px-6 py-4">
-                <h2 className="text-lg font-semibold text-gray-900">Transcripción de Audio</h2>
+            <div className="overflow-hidden rounded-[2rem] border border-white/[0.06] bg-white/[0.03]">
+              <div className="border-b border-white/[0.06] bg-white/[0.02] px-6 py-4">
+                <h2 className="text-lg font-semibold text-white">Transcripción de Audio</h2>
               </div>
               <div className="p-6">
-                <p className="text-sm whitespace-pre-wrap text-gray-700">
+                <p className="text-sm whitespace-pre-wrap text-white/70">
                   {consultation.aiTranscription}
                 </p>
               </div>
@@ -344,33 +347,33 @@ export default function ConsultationDetailPage() {
 
           {/* Prescriptions */}
           {prescriptions.length > 0 && (
-            <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
-              <div className="flex items-center justify-between border-b border-gray-200 bg-gray-50 px-6 py-4">
-                <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900">
-                  <Pill className="h-5 w-5 text-green-600" />
+            <div className="overflow-hidden rounded-[2rem] border border-white/[0.06] bg-white/[0.03]">
+              <div className="flex items-center justify-between border-b border-white/[0.06] bg-white/[0.02] px-6 py-4">
+                <h2 className="flex items-center gap-2 text-lg font-semibold text-white">
+                  <Pill className="h-5 w-5 text-emerald-400" />
                   Recetas
                 </h2>
               </div>
               <div className="space-y-4 p-6">
                 {prescriptions.map((prescription) => (
-                  <div key={prescription.id} className="rounded-lg border border-gray-200 p-4">
+                  <div key={prescription.id} className="rounded-2xl border border-white/[0.06] p-4">
                     <div className="mb-3 flex items-center justify-between">
                       <div>
-                        <p className="font-medium text-gray-900">
+                        <p className="font-medium text-white">
                           {format(new Date(prescription.createdAt), "d 'de' MMMM, yyyy", {
                             locale: es,
                           })}
                         </p>
                         {prescription.diagnosis && (
-                          <p className="text-sm text-gray-500">{prescription.diagnosis}</p>
+                          <p className="text-sm text-white/40">{prescription.diagnosis}</p>
                         )}
                       </div>
                       <div className="flex items-center gap-2">
                         <span
                           className={`rounded-full px-2 py-1 text-xs font-medium ${
                             prescription.isValid
-                              ? 'bg-green-100 text-green-700'
-                              : 'bg-red-100 text-red-700'
+                              ? 'bg-emerald-500/15 text-emerald-300'
+                              : 'bg-red-500/15 text-red-300'
                           }`}
                         >
                           {prescription.isValid ? 'Válida' : 'Invalidada'}
@@ -379,7 +382,7 @@ export default function ConsultationDetailPage() {
                           href={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/prescriptions/${prescription.id}/pdf`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-1 rounded-lg px-3 py-1 text-sm text-blue-600 hover:bg-blue-50"
+                          className="flex items-center gap-1 rounded-lg px-3 py-1 text-sm text-blue-400 hover:bg-blue-50"
                         >
                           <Download className="h-4 w-4" />
                           PDF
@@ -389,10 +392,10 @@ export default function ConsultationDetailPage() {
                     <div className="space-y-2">
                       {prescription.medications.map((med, i) => (
                         <div key={i} className="flex items-start gap-2 text-sm">
-                          <span className="text-gray-400">•</span>
+                          <span className="text-white/30">•</span>
                           <div>
-                            <span className="font-medium text-gray-900">{med.name}</span>
-                            <span className="text-gray-500">
+                            <span className="font-medium text-white">{med.name}</span>
+                            <span className="text-white/40">
                               {' '}
                               - {med.dose}, {med.frequency}, {med.duration}
                             </span>
@@ -410,9 +413,9 @@ export default function ConsultationDetailPage() {
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Patient Info */}
-          <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
-            <div className="border-b border-gray-200 bg-gray-50 px-4 py-3">
-              <h3 className="flex items-center gap-2 font-semibold text-gray-900">
+          <div className="overflow-hidden rounded-[2rem] border border-white/[0.06] bg-white/[0.03]">
+            <div className="border-b border-white/[0.06] bg-white/[0.02] px-4 py-3">
+              <h3 className="flex items-center gap-2 font-semibold text-white">
                 <User className="h-4 w-4" />
                 Paciente
               </h3>
@@ -420,19 +423,19 @@ export default function ConsultationDetailPage() {
             <div className="p-4">
               <Link
                 href={`/patients/${patient.id}`}
-                className="-m-2 flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-gray-50"
+                className="-m-2 flex items-center gap-3 rounded-2xl p-2 transition-colors hover:bg-white/[0.02]"
               >
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
-                  <span className="text-lg font-bold text-blue-600">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-500/15">
+                  <span className="text-lg font-bold text-blue-400">
                     {patient.firstName[0]}
                     {patient.lastName[0]}
                   </span>
                 </div>
                 <div>
-                  <p className="font-medium text-gray-900">
+                  <p className="font-medium text-white">
                     {patient.firstName} {patient.lastName}
                   </p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-white/40">
                     {calculateAge(patient.dateOfBirth)} años •{' '}
                     {patient.gender === 'MALE' ? 'M' : 'F'}
                     {patient.bloodType && ` • ${patient.bloodType}`}
@@ -442,12 +445,12 @@ export default function ConsultationDetailPage() {
 
               {patient.currentMedications && patient.currentMedications.length > 0 && (
                 <div className="mt-4 border-t pt-4">
-                  <p className="mb-2 text-xs text-gray-500">Medicamentos actuales</p>
+                  <p className="mb-2 text-xs text-white/40">Medicamentos actuales</p>
                   <div className="flex flex-wrap gap-1">
                     {patient.currentMedications.map((med, i) => (
                       <span
                         key={i}
-                        className="rounded bg-blue-50 px-2 py-0.5 text-xs text-blue-700"
+                        className="rounded bg-blue-50 px-2 py-0.5 text-xs text-blue-300"
                       >
                         {med}
                       </span>
@@ -460,50 +463,48 @@ export default function ConsultationDetailPage() {
 
           {/* Vital Signs */}
           {vitalSigns && Object.keys(vitalSigns).length > 0 && (
-            <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
-              <div className="border-b border-gray-200 bg-gray-50 px-4 py-3">
-                <h3 className="flex items-center gap-2 font-semibold text-gray-900">
+            <div className="overflow-hidden rounded-[2rem] border border-white/[0.06] bg-white/[0.03]">
+              <div className="border-b border-white/[0.06] bg-white/[0.02] px-4 py-3">
+                <h3 className="flex items-center gap-2 font-semibold text-white">
                   <Activity className="h-4 w-4" />
                   Signos Vitales
                 </h3>
               </div>
               <div className="grid grid-cols-2 gap-3 p-4">
                 {vitalSigns.bloodPressure && (
-                  <div className="rounded-lg bg-gray-50 p-2 text-center">
-                    <p className="text-lg font-bold text-gray-900">{vitalSigns.bloodPressure}</p>
-                    <p className="text-xs text-gray-500">Presión</p>
+                  <div className="rounded-2xl bg-white/[0.02] p-2 text-center">
+                    <p className="text-lg font-bold text-white">{vitalSigns.bloodPressure}</p>
+                    <p className="text-xs text-white/40">Presión</p>
                   </div>
                 )}
                 {vitalSigns.heartRate && (
-                  <div className="rounded-lg bg-gray-50 p-2 text-center">
-                    <p className="text-lg font-bold text-gray-900">{vitalSigns.heartRate}</p>
-                    <p className="text-xs text-gray-500">FC (lpm)</p>
+                  <div className="rounded-2xl bg-white/[0.02] p-2 text-center">
+                    <p className="text-lg font-bold text-white">{vitalSigns.heartRate}</p>
+                    <p className="text-xs text-white/40">FC (lpm)</p>
                   </div>
                 )}
                 {vitalSigns.temperature && (
-                  <div className="rounded-lg bg-gray-50 p-2 text-center">
-                    <p className="text-lg font-bold text-gray-900">{vitalSigns.temperature}°C</p>
-                    <p className="text-xs text-gray-500">Temp.</p>
+                  <div className="rounded-2xl bg-white/[0.02] p-2 text-center">
+                    <p className="text-lg font-bold text-white">{vitalSigns.temperature}°C</p>
+                    <p className="text-xs text-white/40">Temp.</p>
                   </div>
                 )}
                 {vitalSigns.oxygenSaturation && (
-                  <div className="rounded-lg bg-gray-50 p-2 text-center">
-                    <p className="text-lg font-bold text-gray-900">
-                      {vitalSigns.oxygenSaturation}%
-                    </p>
-                    <p className="text-xs text-gray-500">SpO2</p>
+                  <div className="rounded-2xl bg-white/[0.02] p-2 text-center">
+                    <p className="text-lg font-bold text-white">{vitalSigns.oxygenSaturation}%</p>
+                    <p className="text-xs text-white/40">SpO2</p>
                   </div>
                 )}
                 {vitalSigns.weight && (
-                  <div className="rounded-lg bg-gray-50 p-2 text-center">
-                    <p className="text-lg font-bold text-gray-900">{vitalSigns.weight} kg</p>
-                    <p className="text-xs text-gray-500">Peso</p>
+                  <div className="rounded-2xl bg-white/[0.02] p-2 text-center">
+                    <p className="text-lg font-bold text-white">{vitalSigns.weight} kg</p>
+                    <p className="text-xs text-white/40">Peso</p>
                   </div>
                 )}
                 {vitalSigns.height && (
-                  <div className="rounded-lg bg-gray-50 p-2 text-center">
-                    <p className="text-lg font-bold text-gray-900">{vitalSigns.height} cm</p>
-                    <p className="text-xs text-gray-500">Talla</p>
+                  <div className="rounded-2xl bg-white/[0.02] p-2 text-center">
+                    <p className="text-lg font-bold text-white">{vitalSigns.height} cm</p>
+                    <p className="text-xs text-white/40">Talla</p>
                   </div>
                 )}
               </div>
@@ -511,43 +512,43 @@ export default function ConsultationDetailPage() {
           )}
 
           {/* Doctor Info */}
-          <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
-            <div className="border-b border-gray-200 bg-gray-50 px-4 py-3">
-              <h3 className="flex items-center gap-2 font-semibold text-gray-900">
+          <div className="overflow-hidden rounded-[2rem] border border-white/[0.06] bg-white/[0.03]">
+            <div className="border-b border-white/[0.06] bg-white/[0.02] px-4 py-3">
+              <h3 className="flex items-center gap-2 font-semibold text-white">
                 <Stethoscope className="h-4 w-4" />
                 Médico
               </h3>
             </div>
             <div className="p-4">
-              <p className="font-medium text-gray-900">
+              <p className="font-medium text-white">
                 Dr. {doctor.firstName} {doctor.lastName}
               </p>
-              {doctor.specialty && <p className="text-sm text-gray-500">{doctor.specialty}</p>}
+              {doctor.specialty && <p className="text-sm text-white/40">{doctor.specialty}</p>}
               {doctor.licenseNumber && (
-                <p className="mt-1 text-xs text-gray-400">Cédula: {doctor.licenseNumber}</p>
+                <p className="mt-1 text-xs text-white/30">Cédula: {doctor.licenseNumber}</p>
               )}
             </div>
           </div>
 
           {/* Timestamps */}
-          <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
-            <div className="border-b border-gray-200 bg-gray-50 px-4 py-3">
-              <h3 className="flex items-center gap-2 font-semibold text-gray-900">
+          <div className="overflow-hidden rounded-[2rem] border border-white/[0.06] bg-white/[0.03]">
+            <div className="border-b border-white/[0.06] bg-white/[0.02] px-4 py-3">
+              <h3 className="flex items-center gap-2 font-semibold text-white">
                 <Calendar className="h-4 w-4" />
                 Fechas
               </h3>
             </div>
             <div className="space-y-3 p-4">
               <div>
-                <p className="text-xs text-gray-500">Inicio</p>
-                <p className="text-sm text-gray-900">
+                <p className="text-xs text-white/40">Inicio</p>
+                <p className="text-sm text-white">
                   {format(new Date(consultation.startedAt), 'd MMM yyyy, HH:mm', { locale: es })}
                 </p>
               </div>
               {consultation.completedAt && (
                 <div>
-                  <p className="text-xs text-gray-500">Finalización</p>
-                  <p className="text-sm text-gray-900">
+                  <p className="text-xs text-white/40">Finalización</p>
+                  <p className="text-sm text-white">
                     {format(new Date(consultation.completedAt), 'd MMM yyyy, HH:mm', {
                       locale: es,
                     })}

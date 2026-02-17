@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '@clerk/nextjs';
+import { useAuthCompat as useAuth } from '@/hooks/useAuthCompat';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import {
@@ -112,38 +112,38 @@ export default function BillingPage() {
       { bg: string; text: string; icon: React.ReactNode; label: string }
     > = {
       DRAFT: {
-        bg: 'bg-gray-100',
-        text: 'text-gray-700',
+        bg: 'bg-white/[0.06]',
+        text: 'text-white/70',
         icon: <FileText className="h-3 w-3" />,
         label: 'Borrador',
       },
       PENDING: {
-        bg: 'bg-yellow-100',
-        text: 'text-yellow-700',
+        bg: 'bg-amber-500/15',
+        text: 'text-amber-300',
         icon: <Clock className="h-3 w-3" />,
         label: 'Pendiente',
       },
       PAID: {
-        bg: 'bg-green-100',
-        text: 'text-green-700',
+        bg: 'bg-emerald-500/15',
+        text: 'text-emerald-300',
         icon: <CheckCircle className="h-3 w-3" />,
         label: 'Pagada',
       },
       PARTIAL: {
-        bg: 'bg-blue-100',
-        text: 'text-blue-700',
+        bg: 'bg-blue-500/15',
+        text: 'text-blue-300',
         icon: <DollarSign className="h-3 w-3" />,
         label: 'Parcial',
       },
       OVERDUE: {
-        bg: 'bg-red-100',
-        text: 'text-red-700',
+        bg: 'bg-red-500/15',
+        text: 'text-red-300',
         icon: <AlertTriangle className="h-3 w-3" />,
         label: 'Vencida',
       },
       CANCELLED: {
-        bg: 'bg-gray-100',
-        text: 'text-gray-500',
+        bg: 'bg-white/[0.06]',
+        text: 'text-white/40',
         icon: <XCircle className="h-3 w-3" />,
         label: 'Cancelada',
       },
@@ -190,14 +190,14 @@ export default function BillingPage() {
       {/* Header */}
       <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Facturación</h1>
-          <p className="text-gray-600">Gestiona facturas, servicios y pagos</p>
+          <h1 className="text-2xl font-bold text-white">Facturación</h1>
+          <p className="text-white/50">Gestiona facturas, servicios y pagos</p>
         </div>
         <div className="flex items-center gap-2">
           {activeTab === 'invoices' ? (
             <Link
               href="/billing/new"
-              className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
+              className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white transition-colors hover:from-blue-600 hover:to-cyan-600"
             >
               <Plus className="h-4 w-4" />
               Nueva Factura
@@ -205,7 +205,7 @@ export default function BillingPage() {
           ) : (
             <button
               onClick={() => setShowServiceModal(true)}
-              className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
+              className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white transition-colors hover:from-blue-600 hover:to-cyan-600"
             >
               <Plus className="h-4 w-4" />
               Nuevo Servicio
@@ -217,53 +217,53 @@ export default function BillingPage() {
       {/* Summary Cards */}
       {summary && (
         <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
-          <div className="rounded-lg border border-gray-200 bg-white p-4">
+          <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100">
-                <TrendingUp className="h-5 w-5 text-green-600" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-500/15">
+                <TrendingUp className="h-5 w-5 text-emerald-400" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">Ingresos</p>
-                <p className="text-xl font-bold text-gray-900">
+                <p className="text-sm text-white/40">Ingresos</p>
+                <p className="text-xl font-bold text-white">
                   {formatCurrency(summary.totalRevenue)}
                 </p>
               </div>
             </div>
           </div>
-          <div className="rounded-lg border border-gray-200 bg-white p-4">
+          <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-yellow-100">
-                <Clock className="h-5 w-5 text-yellow-600" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-500/15">
+                <Clock className="h-5 w-5 text-amber-400" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">Pendiente</p>
-                <p className="text-xl font-bold text-yellow-600">
+                <p className="text-sm text-white/40">Pendiente</p>
+                <p className="text-xl font-bold text-amber-400">
                   {formatCurrency(summary.totalPending)}
                 </p>
               </div>
             </div>
           </div>
-          <div className="rounded-lg border border-gray-200 bg-white p-4">
+          <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-100">
-                <AlertTriangle className="h-5 w-5 text-red-600" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-red-500/15">
+                <AlertTriangle className="h-5 w-5 text-red-400" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">Vencido</p>
-                <p className="text-xl font-bold text-red-600">
+                <p className="text-sm text-white/40">Vencido</p>
+                <p className="text-xl font-bold text-red-400">
                   {formatCurrency(summary.totalOverdue)}
                 </p>
               </div>
             </div>
           </div>
-          <div className="rounded-lg border border-gray-200 bg-white p-4">
+          <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-                <Receipt className="h-5 w-5 text-blue-600" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-500/15">
+                <Receipt className="h-5 w-5 text-blue-400" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">Facturas</p>
-                <p className="text-xl font-bold text-gray-900">{summary.invoiceCount}</p>
+                <p className="text-sm text-white/40">Facturas</p>
+                <p className="text-xl font-bold text-white">{summary.invoiceCount}</p>
               </div>
             </div>
           </div>
@@ -271,13 +271,13 @@ export default function BillingPage() {
       )}
 
       {/* Tabs */}
-      <div className="mb-6 flex w-fit items-center gap-1 rounded-lg bg-gray-100 p-1">
+      <div className="mb-6 flex w-fit items-center gap-1 rounded-2xl bg-white/[0.06] p-1">
         <button
           onClick={() => setActiveTab('invoices')}
           className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
             activeTab === 'invoices'
-              ? 'bg-white text-gray-900 shadow-sm'
-              : 'text-gray-600 hover:text-gray-900'
+              ? 'bg-white text-white shadow-sm'
+              : 'text-white/50 hover:text-white'
           }`}
         >
           <FileText className="mr-2 inline h-4 w-4" />
@@ -287,8 +287,8 @@ export default function BillingPage() {
           onClick={() => setActiveTab('services')}
           className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
             activeTab === 'services'
-              ? 'bg-white text-gray-900 shadow-sm'
-              : 'text-gray-600 hover:text-gray-900'
+              ? 'bg-white text-white shadow-sm'
+              : 'text-white/50 hover:text-white'
           }`}
         >
           <Banknote className="mr-2 inline h-4 w-4" />
@@ -299,7 +299,7 @@ export default function BillingPage() {
       {/* Search and Filters */}
       <div className="mb-6 flex flex-col gap-4 md:flex-row">
         <div className="relative flex-1">
-          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-white/30" />
           <input
             type="text"
             value={searchTerm}
@@ -307,16 +307,16 @@ export default function BillingPage() {
             placeholder={
               activeTab === 'invoices' ? 'Buscar por paciente o número...' : 'Buscar servicio...'
             }
-            className="w-full rounded-lg border border-gray-300 py-2 pr-4 pl-10 focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-2xl border border-white/[0.08] py-2 pr-4 pl-10 focus:ring-2 focus:ring-blue-500/20"
           />
         </div>
         {activeTab === 'invoices' && (
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`flex items-center gap-2 rounded-lg border px-4 py-2 transition-colors ${
+            className={`flex items-center gap-2 rounded-2xl border px-4 py-2 transition-colors ${
               showFilters || statusFilter !== 'ALL'
-                ? 'border-blue-500 bg-blue-50 text-blue-700'
-                : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                ? 'border-blue-500 bg-blue-50 text-blue-300'
+                : 'border-white/[0.08] text-white/70 hover:bg-white/[0.02]'
             }`}
           >
             <Filter className="h-4 w-4" />
@@ -328,8 +328,8 @@ export default function BillingPage() {
 
       {/* Filter Panel */}
       {showFilters && activeTab === 'invoices' && (
-        <div className="mb-6 rounded-lg border border-gray-200 bg-white p-4">
-          <label className="mb-2 block text-sm font-medium text-gray-700">Estado</label>
+        <div className="mb-6 rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
+          <label className="mb-2 block text-sm font-medium text-white/70">Estado</label>
           <div className="flex flex-wrap gap-2">
             {[
               { value: 'ALL', label: 'Todos' },
@@ -344,8 +344,8 @@ export default function BillingPage() {
                 onClick={() => setStatusFilter(option.value as StatusFilter)}
                 className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
                   statusFilter === option.value
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white'
+                    : 'bg-white/[0.06] text-white/70 hover:bg-white/10'
                 }`}
               >
                 {option.label}
@@ -361,9 +361,9 @@ export default function BillingPage() {
       ) : activeTab === 'invoices' ? (
         /* Invoices List */
         filteredInvoices.length === 0 ? (
-          <div className="rounded-lg border border-gray-200 bg-white py-12 text-center">
-            <FileText className="mx-auto mb-3 h-12 w-12 text-gray-300" />
-            <p className="mb-4 text-gray-500">
+          <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] py-12 text-center">
+            <FileText className="mx-auto mb-3 h-12 w-12 text-white/20" />
+            <p className="mb-4 text-white/40">
               {searchTerm || statusFilter !== 'ALL'
                 ? 'No se encontraron facturas'
                 : 'No hay facturas'}
@@ -371,7 +371,7 @@ export default function BillingPage() {
             {!searchTerm && statusFilter === 'ALL' && (
               <Link
                 href="/billing/new"
-                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600"
               >
                 <Plus className="h-4 w-4" />
                 Crear primera factura
@@ -379,55 +379,55 @@ export default function BillingPage() {
             )}
           </div>
         ) : (
-          <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
+          <div className="overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.03]">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-white/[0.02]">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-white/40 uppercase">
                     Factura
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-white/40 uppercase">
                     Paciente
                   </th>
-                  <th className="hidden px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase md:table-cell">
+                  <th className="hidden px-4 py-3 text-left text-xs font-medium text-white/40 uppercase md:table-cell">
                     Fecha
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-white/40 uppercase">
                     Total
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-white/40 uppercase">
                     Estado
                   </th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-4 py-3 text-right text-xs font-medium text-white/40 uppercase">
                     Acciones
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-white/[0.04]">
                 {filteredInvoices.map((invoice) => (
-                  <tr key={invoice.id} className="hover:bg-gray-50">
+                  <tr key={invoice.id} className="hover:bg-white/[0.02]">
                     <td className="px-4 py-3">
-                      <p className="font-medium text-gray-900">{invoice.invoiceNumber}</p>
+                      <p className="font-medium text-white">{invoice.invoiceNumber}</p>
                     </td>
                     <td className="px-4 py-3">
                       {invoice.patient ? (
                         <Link
                           href={`/patients/${invoice.patient.id}`}
-                          className="text-blue-600 hover:text-blue-700"
+                          className="text-blue-400 hover:text-blue-300"
                         >
                           {invoice.patient.firstName} {invoice.patient.lastName}
                         </Link>
                       ) : (
-                        <span className="text-gray-500">-</span>
+                        <span className="text-white/40">-</span>
                       )}
                     </td>
                     <td className="hidden px-4 py-3 md:table-cell">
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-white/40">
                         {format(new Date(invoice.issueDate), 'd MMM yyyy', { locale: es })}
                       </p>
                     </td>
                     <td className="px-4 py-3">
-                      <p className="font-medium text-gray-900">
+                      <p className="font-medium text-white">
                         {formatCurrency(invoice.total, invoice.currency)}
                       </p>
                     </td>
@@ -442,7 +442,7 @@ export default function BillingPage() {
                               setSelectedInvoice(invoice);
                               setShowPaymentModal(true);
                             }}
-                            className="rounded-lg p-2 text-green-600 hover:bg-green-50"
+                            className="rounded-2xl p-2 text-emerald-400 hover:bg-green-50"
                             title="Registrar pago"
                           >
                             <CreditCard className="h-4 w-4" />
@@ -451,7 +451,7 @@ export default function BillingPage() {
                         {invoice.status !== 'CANCELLED' && invoice.status !== 'PAID' && (
                           <button
                             onClick={() => handleCancelInvoice(invoice.id)}
-                            className="rounded-lg p-2 text-red-600 hover:bg-red-50"
+                            className="rounded-2xl p-2 text-red-400 hover:bg-red-50"
                             title="Cancelar factura"
                           >
                             <XCircle className="h-4 w-4" />
@@ -459,7 +459,7 @@ export default function BillingPage() {
                         )}
                         <Link
                           href={`/billing/${invoice.id}`}
-                          className="rounded-lg p-2 text-gray-600 hover:bg-gray-100"
+                          className="rounded-2xl p-2 text-white/50 hover:bg-white/[0.06]"
                         >
                           <ChevronRight className="h-4 w-4" />
                         </Link>
@@ -473,15 +473,15 @@ export default function BillingPage() {
         )
       ) : /* Services List */
       filteredServices.length === 0 ? (
-        <div className="rounded-lg border border-gray-200 bg-white py-12 text-center">
-          <Banknote className="mx-auto mb-3 h-12 w-12 text-gray-300" />
-          <p className="mb-4 text-gray-500">
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] py-12 text-center">
+          <Banknote className="mx-auto mb-3 h-12 w-12 text-white/20" />
+          <p className="mb-4 text-white/40">
             {searchTerm ? 'No se encontraron servicios' : 'No hay servicios'}
           </p>
           {!searchTerm && (
             <button
               onClick={() => setShowServiceModal(true)}
-              className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+              className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600"
             >
               <Plus className="h-4 w-4" />
               Crear primer servicio
@@ -493,34 +493,36 @@ export default function BillingPage() {
           {filteredServices.map((service) => (
             <div
               key={service.id}
-              className="rounded-lg border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md"
+              className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4 transition-shadow hover:shadow-md"
             >
               <div className="flex items-start justify-between">
                 <div>
-                  <h3 className="font-medium text-gray-900">{service.name}</h3>
-                  {service.code && <p className="text-xs text-gray-500">Código: {service.code}</p>}
+                  <h3 className="font-medium text-white">{service.name}</h3>
+                  {service.code && <p className="text-xs text-white/40">Código: {service.code}</p>}
                 </div>
                 <span
                   className={`rounded-full px-2 py-1 text-xs font-medium ${
-                    service.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
+                    service.isActive
+                      ? 'bg-emerald-500/15 text-emerald-300'
+                      : 'bg-white/[0.06] text-white/40'
                   }`}
                 >
                   {service.isActive ? 'Activo' : 'Inactivo'}
                 </span>
               </div>
               {service.description && (
-                <p className="mt-2 line-clamp-2 text-sm text-gray-600">{service.description}</p>
+                <p className="mt-2 line-clamp-2 text-sm text-white/50">{service.description}</p>
               )}
               <div className="mt-4 flex items-center justify-between border-t pt-4">
-                <p className="text-lg font-bold text-gray-900">
+                <p className="text-lg font-bold text-white">
                   {formatCurrency(service.price, service.currency)}
                 </p>
                 {service.duration && (
-                  <p className="text-sm text-gray-500">{service.duration} min</p>
+                  <p className="text-sm text-white/40">{service.duration} min</p>
                 )}
               </div>
               {service.category && (
-                <span className="mt-2 inline-block rounded bg-gray-100 px-2 py-1 text-xs text-gray-600">
+                <span className="mt-2 inline-block rounded bg-white/[0.06] px-2 py-1 text-xs text-white/50">
                   {service.category}
                 </span>
               )}
@@ -587,12 +589,12 @@ function PaymentModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-md rounded-xl bg-white p-6">
-        <h2 className="mb-4 text-lg font-semibold text-gray-900">Registrar Pago</h2>
+      <div className="w-full max-w-md rounded-xl bg-white/[0.03] p-6">
+        <h2 className="mb-4 text-lg font-semibold text-white">Registrar Pago</h2>
 
-        <div className="mb-4 rounded-lg bg-gray-50 p-4">
-          <p className="text-sm text-gray-500">Factura: {invoice.invoiceNumber}</p>
-          <p className="text-lg font-bold text-gray-900">
+        <div className="mb-4 rounded-2xl bg-white/[0.02] p-4">
+          <p className="text-sm text-white/40">Factura: {invoice.invoiceNumber}</p>
+          <p className="text-lg font-bold text-white">
             Pendiente:{' '}
             {new Intl.NumberFormat('es-MX', {
               style: 'currency',
@@ -603,7 +605,7 @@ function PaymentModal({
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Monto</label>
+            <label className="mb-1 block text-sm font-medium text-white/70">Monto</label>
             <input
               type="number"
               step="0.01"
@@ -611,17 +613,17 @@ function PaymentModal({
               max={pendingAmount}
               value={amount}
               onChange={(e) => setAmount(parseFloat(e.target.value))}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:ring-2 focus:ring-blue-500/20"
               required
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Método de pago</label>
+            <label className="mb-1 block text-sm font-medium text-white/70">Método de pago</label>
             <select
               value={method}
               onChange={(e) => setMethod(e.target.value as typeof method)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:ring-2 focus:ring-blue-500/20"
             >
               <option value="CASH">Efectivo</option>
               <option value="CARD">Tarjeta</option>
@@ -635,14 +637,14 @@ function PaymentModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50"
+              className="flex-1 rounded-2xl border border-white/[0.08] px-4 py-2 text-white/70 hover:bg-white/[0.02]"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
+              className="flex-1 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600 disabled:opacity-50"
             >
               {isSubmitting ? <Loader2 className="mx-auto h-4 w-4 animate-spin" /> : 'Registrar'}
             </button>
@@ -695,50 +697,50 @@ function ServiceModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-md rounded-xl bg-white p-6">
-        <h2 className="mb-4 text-lg font-semibold text-gray-900">Nuevo Servicio</h2>
+      <div className="w-full max-w-md rounded-xl bg-white/[0.03] p-6">
+        <h2 className="mb-4 text-lg font-semibold text-white">Nuevo Servicio</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Nombre *</label>
+            <label className="mb-1 block text-sm font-medium text-white/70">Nombre *</label>
             <input
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:ring-2 focus:ring-blue-500/20"
               required
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Descripción</label>
+            <label className="mb-1 block text-sm font-medium text-white/70">Descripción</label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               rows={2}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:ring-2 focus:ring-blue-500/20"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Código</label>
+              <label className="mb-1 block text-sm font-medium text-white/70">Código</label>
               <input
                 type="text"
                 value={formData.code}
                 onChange={(e) => setFormData({ ...formData, code: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:ring-2 focus:ring-blue-500/20"
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Precio *</label>
+              <label className="mb-1 block text-sm font-medium text-white/70">Precio *</label>
               <input
                 type="number"
                 step="0.01"
                 min="0"
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:ring-2 focus:ring-blue-500/20"
                 required
               />
             </div>
@@ -746,22 +748,22 @@ function ServiceModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Duración (min)</label>
+              <label className="mb-1 block text-sm font-medium text-white/70">Duración (min)</label>
               <input
                 type="number"
                 min="0"
                 value={formData.duration}
                 onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:ring-2 focus:ring-blue-500/20"
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Categoría</label>
+              <label className="mb-1 block text-sm font-medium text-white/70">Categoría</label>
               <input
                 type="text"
                 value={formData.category}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:ring-2 focus:ring-blue-500/20"
               />
             </div>
           </div>
@@ -770,14 +772,14 @@ function ServiceModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50"
+              className="flex-1 rounded-2xl border border-white/[0.08] px-4 py-2 text-white/70 hover:bg-white/[0.02]"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
+              className="flex-1 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600 disabled:opacity-50"
             >
               {isSubmitting ? <Loader2 className="mx-auto h-4 w-4 animate-spin" /> : 'Crear'}
             </button>

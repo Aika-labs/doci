@@ -17,8 +17,8 @@ export function LoadingSpinner({ size = 'md', text, fullPage = false }: LoadingS
 
   const content = (
     <div className="flex flex-col items-center justify-center gap-2">
-      <Loader2 className={`animate-spin text-blue-600 ${sizeClasses[size]}`} />
-      {text && <p className="text-sm text-gray-500">{text}</p>}
+      <Loader2 className={`animate-spin text-blue-400 ${sizeClasses[size]}`} />
+      {text && <p className="text-sm text-white/40">{text}</p>}
     </div>
   );
 

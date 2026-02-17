@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '@clerk/nextjs';
+import { useAuthCompat as useAuth } from '@/hooks/useAuthCompat';
 import Link from 'next/link';
 import { format, subDays, startOfDay, endOfDay } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -114,9 +114,9 @@ export default function ConsultationsPage() {
 
   const getStatusBadge = (status: string) => {
     const styles: Record<string, string> = {
-      IN_PROGRESS: 'bg-yellow-100 text-yellow-800',
-      COMPLETED: 'bg-green-100 text-green-800',
-      CANCELLED: 'bg-red-100 text-red-800',
+      IN_PROGRESS: 'bg-amber-500/15 text-yellow-800',
+      COMPLETED: 'bg-emerald-500/15 text-green-800',
+      CANCELLED: 'bg-red-500/15 text-red-800',
     };
     const labels: Record<string, string> = {
       IN_PROGRESS: 'En progreso',
@@ -125,7 +125,7 @@ export default function ConsultationsPage() {
     };
     return (
       <span
-        className={`rounded-full px-2 py-1 text-xs font-medium ${styles[status] || 'bg-gray-100 text-gray-800'}`}
+        className={`rounded-full px-2 py-1 text-xs font-medium ${styles[status] || 'bg-white/[0.06] text-white/90'}`}
       >
         {labels[status] || status}
       </span>
@@ -143,12 +143,12 @@ export default function ConsultationsPage() {
       {/* Header */}
       <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Consultas</h1>
-          <p className="text-gray-600">Historial de consultas médicas</p>
+          <h1 className="text-2xl font-bold text-white">Consultas</h1>
+          <p className="text-white/50">Historial de consultas médicas</p>
         </div>
         <Link
           href="/consultations/new"
-          className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
+          className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white transition-colors hover:from-blue-600 hover:to-cyan-600"
         >
           <Mic className="h-4 w-4" />
           Nueva Consulta
@@ -157,38 +157,38 @@ export default function ConsultationsPage() {
 
       {/* Stats */}
       <div className="mb-6 grid grid-cols-3 gap-4">
-        <div className="rounded-lg border border-gray-200 bg-white p-4">
-          <p className="text-sm text-gray-500">Total</p>
-          <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
+          <p className="text-sm text-white/40">Total</p>
+          <p className="text-2xl font-bold text-white">{stats.total}</p>
         </div>
-        <div className="rounded-lg border border-gray-200 bg-white p-4">
-          <p className="text-sm text-gray-500">Completadas</p>
-          <p className="text-2xl font-bold text-green-600">{stats.completed}</p>
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
+          <p className="text-sm text-white/40">Completadas</p>
+          <p className="text-2xl font-bold text-emerald-400">{stats.completed}</p>
         </div>
-        <div className="rounded-lg border border-gray-200 bg-white p-4">
-          <p className="text-sm text-gray-500">En progreso</p>
-          <p className="text-2xl font-bold text-yellow-600">{stats.inProgress}</p>
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
+          <p className="text-sm text-white/40">En progreso</p>
+          <p className="text-2xl font-bold text-amber-400">{stats.inProgress}</p>
         </div>
       </div>
 
       {/* Search and Filters */}
       <div className="mb-6 flex flex-col gap-4 md:flex-row">
         <div className="relative flex-1">
-          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-white/30" />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Buscar por paciente o diagnóstico..."
-            className="w-full rounded-lg border border-gray-300 py-2 pr-4 pl-10 focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-2xl border border-white/[0.08] py-2 pr-4 pl-10 focus:ring-2 focus:ring-blue-500/20"
           />
         </div>
         <button
           onClick={() => setShowFilters(!showFilters)}
-          className={`flex items-center gap-2 rounded-lg border px-4 py-2 transition-colors ${
+          className={`flex items-center gap-2 rounded-2xl border px-4 py-2 transition-colors ${
             showFilters || statusFilter !== 'ALL' || dateFilter !== 'ALL'
-              ? 'border-blue-500 bg-blue-50 text-blue-700'
-              : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+              ? 'border-blue-500 bg-blue-50 text-blue-300'
+              : 'border-white/[0.08] text-white/70 hover:bg-white/[0.02]'
           }`}
         >
           <Filter className="h-4 w-4" />
@@ -201,10 +201,10 @@ export default function ConsultationsPage() {
 
       {/* Filter Panel */}
       {showFilters && (
-        <div className="mb-6 rounded-lg border border-gray-200 bg-white p-4">
+        <div className="mb-6 rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700">Estado</label>
+              <label className="mb-2 block text-sm font-medium text-white/70">Estado</label>
               <div className="flex flex-wrap gap-2">
                 {[
                   { value: 'ALL', label: 'Todos' },
@@ -217,8 +217,8 @@ export default function ConsultationsPage() {
                     onClick={() => setStatusFilter(option.value as StatusFilter)}
                     className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
                       statusFilter === option.value
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white'
+                        : 'bg-white/[0.06] text-white/70 hover:bg-white/10'
                     }`}
                   >
                     {option.label}
@@ -227,7 +227,7 @@ export default function ConsultationsPage() {
               </div>
             </div>
             <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700">Período</label>
+              <label className="mb-2 block text-sm font-medium text-white/70">Período</label>
               <div className="flex flex-wrap gap-2">
                 {[
                   { value: 'ALL', label: 'Todo' },
@@ -240,8 +240,8 @@ export default function ConsultationsPage() {
                     onClick={() => setDateFilter(option.value as DateFilter)}
                     className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
                       dateFilter === option.value
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white'
+                        : 'bg-white/[0.06] text-white/70 hover:bg-white/10'
                     }`}
                   >
                     {option.label}
@@ -256,7 +256,7 @@ export default function ConsultationsPage() {
                 setStatusFilter('ALL');
                 setDateFilter('ALL');
               }}
-              className="mt-4 text-sm text-blue-600 hover:text-blue-700"
+              className="mt-4 text-sm text-blue-400 hover:text-blue-300"
             >
               Limpiar filtros
             </button>
@@ -267,17 +267,17 @@ export default function ConsultationsPage() {
       {/* Consultations List */}
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+          <Loader2 className="h-8 w-8 animate-spin text-blue-400" />
         </div>
       ) : filteredConsultations.length === 0 ? (
-        <div className="rounded-lg border border-gray-200 bg-white py-12 text-center">
-          <FileText className="mx-auto h-12 w-12 text-gray-400" />
-          <h3 className="mt-4 text-lg font-medium text-gray-900">
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] py-12 text-center">
+          <FileText className="mx-auto h-12 w-12 text-white/30" />
+          <h3 className="mt-4 text-lg font-medium text-white">
             {searchTerm || statusFilter !== 'ALL' || dateFilter !== 'ALL'
               ? 'No se encontraron consultas'
               : 'No hay consultas'}
           </h3>
-          <p className="mt-2 text-gray-500">
+          <p className="mt-2 text-white/40">
             {searchTerm || statusFilter !== 'ALL' || dateFilter !== 'ALL'
               ? 'Intenta con otros filtros de búsqueda'
               : 'Comienza creando tu primera consulta con asistencia de IA.'}
@@ -285,7 +285,7 @@ export default function ConsultationsPage() {
           {!searchTerm && statusFilter === 'ALL' && dateFilter === 'ALL' && (
             <Link
               href="/consultations/new"
-              className="mt-4 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
+              className="mt-4 inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white transition-colors hover:from-blue-600 hover:to-cyan-600"
             >
               <Plus className="h-4 w-4" />
               Nueva Consulta
@@ -298,27 +298,27 @@ export default function ConsultationsPage() {
             <Link
               key={consultation.id}
               href={`/consultations/${consultation.id}`}
-              className="block rounded-lg border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md"
+              className="block rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4 transition-shadow hover:shadow-md"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
+                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-500/15">
                     {consultation.patient ? (
-                      <span className="font-semibold text-blue-600">
+                      <span className="font-semibold text-blue-400">
                         {consultation.patient.firstName[0]}
                         {consultation.patient.lastName[0]}
                       </span>
                     ) : (
-                      <User className="h-6 w-6 text-blue-600" />
+                      <User className="h-6 w-6 text-blue-400" />
                     )}
                   </div>
                   <div className="min-w-0">
-                    <h3 className="truncate font-medium text-gray-900">
+                    <h3 className="truncate font-medium text-white">
                       {consultation.patient
                         ? `${consultation.patient.firstName} ${consultation.patient.lastName}`
                         : 'Paciente'}
                     </h3>
-                    <div className="flex flex-wrap items-center gap-2 text-sm text-gray-500">
+                    <div className="flex flex-wrap items-center gap-2 text-sm text-white/40">
                       <span className="flex items-center gap-1">
                         <Calendar className="h-3.5 w-3.5" />
                         {format(
@@ -330,16 +330,16 @@ export default function ConsultationsPage() {
                       {getStatusBadge(consultation.status)}
                     </div>
                     {consultation.user && (
-                      <p className="mt-1 text-xs text-gray-400">
+                      <p className="mt-1 text-xs text-white/30">
                         Dr. {consultation.user.firstName} {consultation.user.lastName}
                       </p>
                     )}
                   </div>
                 </div>
-                <ChevronRight className="h-5 w-5 flex-shrink-0 text-gray-400" />
+                <ChevronRight className="h-5 w-5 flex-shrink-0 text-white/30" />
               </div>
               {consultation.clinicalData?.soapNotes?.assessment && (
-                <p className="mt-3 line-clamp-2 pl-16 text-sm text-gray-600">
+                <p className="mt-3 line-clamp-2 pl-16 text-sm text-white/50">
                   <span className="font-medium">Dx:</span>{' '}
                   {consultation.clinicalData.soapNotes.assessment}
                 </p>
