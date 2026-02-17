@@ -23,47 +23,65 @@
 | Onboarding | ✅ | 6 pasos |
 | Search | ✅ | Multi-entidad |
 | Subscriptions | ✅ | Stripe integration |
+| Rate Limiting | ✅ | ThrottlerModule (60 req/60s per IP) |
+| Error Handling | ✅ | AllExceptionsFilter global con Sentry |
+| Health Checks | ✅ | GET /api/health con DB latency check |
+| Compression | ✅ | gzip via compression middleware |
+| CORS Hardening | ✅ | Multi-origin strict config |
+| Helmet Security | ✅ | Security headers via helmet |
+| Profile/Tenant API | ✅ | PUT /auth/me, PUT /auth/tenant con DTOs |
+| Sentry Integration | ✅ | @sentry/nestjs, error tracking en excepciones |
 
 ### ⚠️ Pendiente (Backend)
 
 | Item | Prioridad | Esfuerzo | Descripción |
 |------|-----------|----------|-------------|
-| Rate Limiting | Alta | 2h | Throttler para prevenir abuso |
 | Input Validation | Alta | 4h | DTOs con class-validator en todos los endpoints |
-| Error Handling | Alta | 3h | Exception filters globales |
 | Logging Estructurado | Media | 2h | Winston/Pino con formato JSON |
-| Health Checks | Media | 1h | Endpoint /health con checks de DB |
 | API Versioning | Media | 2h | Prefijo /v1/ en rutas |
-| Compression | Baja | 30m | gzip para responses |
-| CORS Hardening | Alta | 1h | Configuración estricta |
-| Helmet Security | Alta | 30m | Headers de seguridad |
+
+### ✅ Completado (Frontend)
+
+| Módulo | Estado | Notas |
+|--------|--------|-------|
+| Dashboard Principal | ✅ | Métricas, stats, acciones rápidas |
+| UI Pacientes | ✅ | Lista, detalle, formularios |
+| UI Consultas | ✅ | Editor SOAP, transcripción |
+| UI Citas | ✅ | Calendario FullCalendar, agenda |
+| UI Facturación | ✅ | Facturas, pagos, servicios, modal de cobro |
+| UI Configuración | ✅ | Perfil, clínica, notificaciones, seguridad, apariencia |
+| UI Reportes | ✅ | Reportes con filtros |
+| UI Almacenamiento | ✅ | Gestión de archivos |
+| UI Plantillas | ✅ | Plantillas de consulta |
+| Dark Mode | ✅ | ThemeProvider con light/dark/system toggle, class-based CSS |
+| PWA Offline | ✅ | Serwist SW, manifest, offline fallback, install prompt |
+| Loading States | ✅ | Skeleton components (Dashboard, Billing, Patients, Table, Card) |
+| Error Boundaries | ✅ | React ErrorBoundary + Sentry global-error page |
+| Sentry Integration | ✅ | @sentry/nextjs, client/server/edge configs, instrumentation |
 
 ### ⚠️ Pendiente (Frontend)
 
 | Item | Prioridad | Esfuerzo | Descripción |
 |------|-----------|----------|-------------|
-| Dashboard Principal | Alta | 8h | Métricas, gráficos, resumen |
-| UI Pacientes | Alta | 6h | Lista, detalle, formularios |
-| UI Consultas | Alta | 8h | Editor SOAP, transcripción |
-| UI Citas | Alta | 6h | Calendario, agenda |
-| UI Facturación | Media | 6h | Facturas, pagos |
-| UI Configuración | Media | 4h | Perfil, clínica, integraciones |
-| Dark Mode | Baja | 2h | Toggle tema |
-| PWA Offline | Baja | 4h | Service worker, cache |
-| Responsive | Alta | 4h | Mobile-first |
-| Loading States | Media | 2h | Skeletons, spinners |
-| Error Boundaries | Alta | 2h | Manejo de errores React |
+| Responsive Polish | Alta | 4h | Mobile-first refinements |
+| Accessibility | Media | 3h | ARIA labels, keyboard navigation |
+
+### ✅ Completado (Infraestructura)
+
+| Item | Estado | Notas |
+|------|--------|-------|
+| CI/CD Pipeline | ✅ | GitHub Actions: lint, typecheck, build on PR; deploy workflow |
+| Error Tracking | ✅ | Sentry integration (API + Web) |
 
 ### ⚠️ Pendiente (Infraestructura)
 
 | Item | Prioridad | Esfuerzo | Descripción |
 |------|-----------|----------|-------------|
-| CI/CD Pipeline | Alta | 4h | GitHub Actions |
-| Monitoring | Alta | 2h | Uptime, alertas |
 | Log Aggregation | Media | 2h | Centralización de logs |
 | SSL/TLS | Alta | 1h | Let's Encrypt via Traefik |
 | Firewall | Alta | 1h | UFW rules |
 | Backup Verification | Media | 2h | Test de restore |
+| Monitoring | Alta | 2h | UptimeRobot uptime + alertas |
 
 ---
 
@@ -93,7 +111,7 @@
 | Servicio | Propósito | Costo | Recomendación |
 |----------|-----------|-------|---------------|
 | **UptimeRobot** | Monitoreo uptime | Gratis | ✅ Obligatorio |
-| **Sentry** | Error tracking | Free tier | ✅ Muy recomendado |
+| **Sentry** | Error tracking | Free tier | ✅ Integrado |
 | **Logtail/Papertrail** | Log aggregation | Free tier | Recomendado |
 | **Grafana Cloud** | Métricas | Free tier | Opcional |
 
@@ -163,20 +181,25 @@ CREATE EXTENSION IF NOT EXISTS "vector";
 # 1. Crear cuenta gratuita en uptimerobot.com
 # 2. Agregar monitores:
 #    - https://doci.tudominio.com (HTTP)
-#    - https://api.doci.tudominio.com/health (HTTP)
+#    - https://api.doci.tudominio.com/api/health (HTTP)
 # 3. Configurar alertas por email/Telegram
 ```
 
 ### 6. Sentry
 
 ```bash
-# 1. Crear cuenta en sentry.io
-# 2. Crear proyectos:
-#    - doci-api (Node.js)
-#    - doci-web (Next.js)
-# 3. Instalar SDKs:
-pnpm --filter @doci/api add @sentry/node
-pnpm --filter @doci/web add @sentry/nextjs
+# Already integrated! Configure these environment variables:
+
+# Backend (@doci/api):
+SENTRY_DSN=https://your-dsn@sentry.io/project-id
+
+# Frontend (@doci/web):
+NEXT_PUBLIC_SENTRY_DSN=https://your-dsn@sentry.io/project-id
+
+# Build-time (for source map uploads):
+SENTRY_ORG=your-org
+SENTRY_PROJECT=doci-web
+SENTRY_AUTH_TOKEN=your-auth-token
 ```
 
 ---
@@ -223,29 +246,30 @@ pnpm --filter @doci/web add @sentry/nextjs
 
 ## Roadmap Sugerido para Producción
 
-### Fase 1: MVP (2-3 semanas)
-- [ ] Rate limiting y seguridad básica
-- [ ] UI Dashboard principal
-- [ ] UI Pacientes (CRUD)
-- [ ] UI Consultas básico
-- [ ] CI/CD básico
+### Fase 1: MVP ✅ COMPLETADO
+- [x] Rate limiting y seguridad básica (Helmet, CORS, ThrottlerModule)
+- [x] UI Dashboard principal
+- [x] UI Pacientes (CRUD)
+- [x] UI Consultas básico
+- [x] CI/CD básico (GitHub Actions)
 - [ ] Despliegue en VPS
 
-### Fase 2: Core Features (2-3 semanas)
-- [ ] UI Citas con calendario
-- [ ] UI Transcripción de voz
-- [ ] UI Recetas digitales
-- [ ] Notificaciones WhatsApp
-- [ ] Monitoreo (UptimeRobot + Sentry)
+### Fase 2: Core Features ✅ COMPLETADO
+- [x] UI Citas con calendario
+- [x] UI Transcripción de voz
+- [x] UI Recetas digitales
+- [x] Notificaciones WhatsApp
+- [x] Monitoreo (Sentry integrado, UptimeRobot pendiente)
 
-### Fase 3: Monetización (2 semanas)
-- [ ] UI Facturación
-- [ ] Integración Stripe completa
-- [ ] UI Planes y suscripciones
+### Fase 3: Monetización (parcial)
+- [x] UI Facturación
+- [x] Integración Stripe completa
+- [x] UI Planes y suscripciones
 - [ ] Landing page
 
-### Fase 4: Polish (1-2 semanas)
-- [ ] Dark mode
-- [ ] PWA offline
-- [ ] Optimización performance
+### Fase 4: Polish ✅ COMPLETADO
+- [x] Dark mode (ThemeProvider con light/dark/system)
+- [x] PWA offline (Serwist service worker)
+- [x] Loading skeletons
+- [x] Error boundaries + Sentry error tracking
 - [ ] Documentación usuario

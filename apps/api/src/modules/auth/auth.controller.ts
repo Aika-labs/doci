@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Put, Post, Body } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { CurrentUser, CurrentUserData } from '../../common/decorators';
 import { Public } from '../../common/decorators/public.decorator';
+import { UpdateProfileDto, UpdateTenantDto } from './dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -13,16 +14,17 @@ export class AuthController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get current user profile with tenant info' })
   async getCurrentUser(@CurrentUser() user: CurrentUserData) {
-    // User is already populated by the guard with full tenant info
-    return {
-      id: user.id,
-      clerkId: user.clerkId,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      role: user.role,
-      tenant: user.tenant,
-    };
+    return this.authService.getUserByClerkId(user.clerkId);
+  }
+
+  @Put('me')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update current user profile' })
+  async updateCurrentUser(
+    @CurrentUser() user: CurrentUserData,
+    @Body() dto: UpdateProfileDto,
+  ) {
+    return this.authService.updateProfile(user.id, dto);
   }
 
   @Get('tenant')
@@ -30,6 +32,16 @@ export class AuthController {
   @ApiOperation({ summary: 'Get current tenant info' })
   async getCurrentTenant(@CurrentUser() user: CurrentUserData) {
     return user.tenant;
+  }
+
+  @Put('tenant')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update current tenant settings' })
+  async updateCurrentTenant(
+    @CurrentUser() user: CurrentUserData,
+    @Body() dto: UpdateTenantDto,
+  ) {
+    return this.authService.updateTenant(user.tenantId, dto);
   }
 
   @Post('sync')
@@ -46,7 +58,6 @@ export class AuthController {
   @Public()
   @ApiOperation({ summary: 'Clerk webhook endpoint' })
   async handleWebhook(@Body() payload: Record<string, unknown>) {
-    // Handle Clerk webhooks (user.created, user.updated, etc.)
     const eventType = payload.type as string;
 
     switch (eventType) {

@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useAuth, useUser } from '@clerk/nextjs';
 import { Building2, User, Bell, Shield, Palette, Save, Loader2 } from 'lucide-react';
 import { useToast } from '@/components/ui';
+import { useTheme } from '@/components/ThemeProvider';
 import { settingsApi, UserProfile, TenantSettings } from '@/lib/api';
 
 type SettingsTab = 'profile' | 'clinic' | 'notifications' | 'security' | 'appearance';
@@ -643,15 +644,14 @@ function SecuritySettings() {
 }
 
 function AppearanceSettings({ onSave, isSaving }: LocalSettingsProps) {
+  const { theme, setTheme } = useTheme();
   const [settings, setSettings] = useState({
-    theme: 'light',
     compactMode: false,
     language: 'es',
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Save to localStorage or backend
     onSave();
   };
 
@@ -664,16 +664,16 @@ function AppearanceSettings({ onSave, isSaving }: LocalSettingsProps) {
           <h3 className="text-sm font-medium text-gray-900 mb-3">Tema</h3>
           <div className="flex gap-3">
             {[
-              { value: 'light', label: 'Claro' },
-              { value: 'dark', label: 'Oscuro' },
-              { value: 'system', label: 'Sistema' },
+              { value: 'light' as const, label: 'Claro' },
+              { value: 'dark' as const, label: 'Oscuro' },
+              { value: 'system' as const, label: 'Sistema' },
             ].map((option) => (
               <button
                 key={option.value}
                 type="button"
-                onClick={() => setSettings({ ...settings, theme: option.value })}
+                onClick={() => setTheme(option.value)}
                 className={`px-4 py-2 rounded-lg border text-sm font-medium transition-colors ${
-                  settings.theme === option.value
+                  theme === option.value
                     ? 'border-blue-600 bg-blue-50 text-blue-700'
                     : 'border-gray-300 text-gray-700 hover:bg-gray-50'
                 }`}
