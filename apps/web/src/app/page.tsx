@@ -6,7 +6,6 @@ import {
   ArrowRight,
   Check,
   Stethoscope,
-  Brain,
   HeartPulse,
   Users,
   Clock,
@@ -14,6 +13,7 @@ import {
   BarChart3,
   Lock,
 } from 'lucide-react';
+import HeroSection from './HeroSection';
 
 /* ==========================================================================
    Doci Landing Page
@@ -24,113 +24,8 @@ import {
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-[#0A1628] text-[#E8F4FD] selection:bg-blue-500 selection:text-white">
-      {/* ── Navigation ─────────────────────────────────────────────── */}
-      <nav className="pointer-events-none absolute top-0 left-0 z-50 w-full">
-        {/* Logo */}
-        <div className="absolute top-8 left-8 z-10">
-          <Link href="/" className="pointer-events-auto flex items-center gap-2.5">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-400 shadow-lg shadow-blue-500/25">
-              <span className="text-lg font-bold text-white">D</span>
-            </div>
-            <span className="text-xl font-semibold text-white">Doci</span>
-          </Link>
-        </div>
-
-        {/* Desktop nav */}
-        <div className="pointer-events-auto fixed top-6 right-6 z-50">
-          <div className="flex items-center gap-6 rounded-full border border-white/10 bg-black/20 px-6 py-3 backdrop-blur-sm transition-all duration-300 hover:border-white/20 hover:bg-black/50">
-            <a
-              href="#features"
-              className="text-sm font-medium text-white/90 transition-colors hover:text-blue-400"
-            >
-              Características
-            </a>
-            <a
-              href="#pricing"
-              className="text-sm font-medium text-white/90 transition-colors hover:text-blue-400"
-            >
-              Precios
-            </a>
-            <a
-              href="#impact"
-              className="text-sm font-medium text-white/90 transition-colors hover:text-blue-400"
-            >
-              Impacto
-            </a>
-            <div className="h-4 w-px bg-white/20" />
-            <Link
-              href="#cta"
-              className="text-sm font-semibold text-white transition-colors hover:text-blue-400"
-            >
-              Comenzar
-            </Link>
-          </div>
-        </div>
-      </nav>
-
-      {/* ── Hero Section ───────────────────────────────────────────── */}
-      <header className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6">
-        {/* Background glow */}
-        <div className="absolute top-1/4 left-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/10 blur-[120px]" />
-        <div className="absolute right-0 bottom-0 h-[400px] w-[400px] translate-x-1/3 translate-y-1/3 rounded-full bg-cyan-500/8 blur-[100px]" />
-
-        <div className="relative z-10 mx-auto max-w-5xl text-center">
-          {/* Badge */}
-          <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-blue-400/20 bg-blue-500/10 px-4 py-2 backdrop-blur-sm">
-            <Brain className="h-4 w-4 text-blue-400" />
-            <span className="text-sm font-medium text-blue-300">
-              Potenciado con IA de última generación
-            </span>
-          </div>
-
-          {/* Headline */}
-          <h1 className="text-5xl leading-[1.05] font-medium tracking-tight text-white md:text-7xl lg:text-8xl">
-            Tu consultorio,
-            <br />
-            <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-300 bg-clip-text text-transparent">
-              reimaginado
-            </span>
-          </h1>
-
-          <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-white/60 md:text-xl">
-            El sistema de gestión clínica que usa inteligencia artificial para que dediques más
-            tiempo a tus pacientes y menos a la documentación.
-          </p>
-
-          {/* CTA */}
-          <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Link
-              href="#cta"
-              className="group inline-flex items-center gap-3 rounded-full bg-white px-8 py-4 font-semibold text-[#0A1628] shadow-xl shadow-white/10 transition-all duration-300 hover:scale-105 hover:bg-blue-50"
-            >
-              Prueba gratis 14 días
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-            <Link
-              href="#features"
-              className="inline-flex items-center gap-2 rounded-full border border-white/10 px-8 py-4 font-medium text-white/80 transition-all hover:border-white/30 hover:text-white"
-            >
-              Conoce más
-            </Link>
-          </div>
-
-          {/* Trust badges */}
-          <div className="mt-16 flex flex-wrap items-center justify-center gap-8 text-sm text-white/40">
-            <span className="flex items-center gap-2">
-              <Check className="h-4 w-4 text-blue-400" />
-              Sin tarjeta de crédito
-            </span>
-            <span className="flex items-center gap-2">
-              <Check className="h-4 w-4 text-blue-400" />
-              Configuración en 5 minutos
-            </span>
-            <span className="flex items-center gap-2">
-              <Check className="h-4 w-4 text-blue-400" />
-              Soporte en español
-            </span>
-          </div>
-        </div>
-      </header>
+      {/* ── Hero with scroll-morph animation ────────────────────────── */}
+      <HeroSection />
 
       {/* ── Partners / Trust ───────────────────────────────────────── */}
       <section className="relative z-30 -mt-16 rounded-t-[3rem] bg-white pt-20 pb-20 text-[#0A1628] md:rounded-t-[5rem]">
