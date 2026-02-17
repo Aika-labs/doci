@@ -9,11 +9,21 @@ import {
   Sparkles,
   ArrowRight,
   Check,
-  Play,
-  Zap,
+  Stethoscope,
+  Brain,
+  HeartPulse,
+  Users,
   Clock,
+  Smartphone,
   BarChart3,
+  Lock,
 } from 'lucide-react';
+
+/* ==========================================================================
+   Doci Landing Page
+   Design: Dark medical-blue theme inspired by modern SaaS / ESG layouts.
+   Palette: navy #0A1628, light #E8F4FD, accent #3B82F6
+   ========================================================================== */
 
 export default function HomePage() {
   return (
@@ -25,7 +35,7 @@ export default function HomePage() {
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500 to-cyan-600 shadow-lg shadow-teal-500/25">
               <span className="text-lg font-bold text-white">D</span>
             </div>
-            <span className="text-xl font-semibold text-gray-900">Doci</span>
+            <span className="text-xl font-semibold text-white">Doci</span>
           </Link>
 
           <div className="hidden items-center gap-8 md:flex">
@@ -54,13 +64,14 @@ export default function HomePage() {
               href="/sign-in"
               className="px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"
             >
-              Iniciar sesión
-            </Link>
+              Impacto
+            </a>
+            <div className="h-4 w-px bg-white/20" />
             <Link
               href="/sign-up"
               className="rounded-full bg-gray-900 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-gray-800"
             >
-              Comenzar gratis
+              Comenzar
             </Link>
           </div>
         </div>
@@ -83,7 +94,7 @@ export default function HomePage() {
           <h1 className="text-center text-5xl leading-[1.1] font-bold tracking-tight text-gray-900 md:text-7xl">
             Tu consultorio,
             <br />
-            <span className="bg-gradient-to-r from-teal-600 via-cyan-600 to-blue-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-300 bg-clip-text text-transparent">
               reimaginado
             </span>
           </h1>
@@ -123,6 +134,35 @@ export default function HomePage() {
             <div className="flex items-center gap-2">
               <Check className="h-4 w-4 text-teal-600" />
               Soporte en español
+            </span>
+          </div>
+        </div>
+      </header>
+
+      {/* ── Partners / Trust ───────────────────────────────────────── */}
+      <section className="relative z-30 -mt-16 rounded-t-[3rem] bg-white pt-20 pb-20 text-[#0A1628] md:rounded-t-[5rem]">
+        <div className="mx-auto max-w-7xl px-6 md:px-12">
+          <div className="flex flex-col items-center justify-center gap-12 pt-8">
+            <h2 className="text-center text-3xl font-bold tracking-tight md:text-4xl">
+              Diseñado para médicos modernos
+            </h2>
+            <div className="flex flex-wrap items-center justify-center gap-8 opacity-70 grayscale transition-all duration-500 hover:opacity-100 hover:grayscale-0 md:gap-16">
+              <div className="flex h-12 items-center gap-2">
+                <Shield className="h-8 w-8 text-[#0A1628]" />
+                <span className="text-lg font-bold tracking-tight">HIPAA</span>
+              </div>
+              <div className="flex h-12 items-center gap-2">
+                <Lock className="h-8 w-8 text-[#0A1628]" />
+                <span className="text-lg font-bold tracking-tight">NOM-024</span>
+              </div>
+              <div className="flex h-12 items-center gap-2">
+                <Stethoscope className="h-8 w-8 text-[#0A1628]" />
+                <span className="text-lg font-bold tracking-tight">HL7 FHIR</span>
+              </div>
+              <div className="flex h-12 items-center gap-2">
+                <HeartPulse className="h-8 w-8 text-[#0A1628]" />
+                <span className="text-lg font-bold tracking-tight">COFEPRIS</span>
+              </div>
             </div>
           </div>
         </div>
@@ -276,8 +316,8 @@ export default function HomePage() {
               <h3 className="text-xl font-bold text-gray-900">Básico</h3>
               <p className="mt-2 text-gray-600">Para consultorios individuales</p>
               <div className="mt-6">
-                <span className="text-5xl font-bold text-gray-900">$499</span>
-                <span className="text-gray-600"> MXN/mes</span>
+                <span className="text-5xl font-bold">$499</span>
+                <span className="text-[#0A1628]/60"> MXN/mes</span>
               </div>
               <ul className="mt-8 space-y-4">
                 <PricingFeature>Hasta 100 pacientes</PricingFeature>
@@ -300,10 +340,10 @@ export default function HomePage() {
                 Popular
               </div>
               <h3 className="text-xl font-bold">Profesional</h3>
-              <p className="mt-2 text-white/70">Para clínicas y equipos</p>
+              <p className="mt-2 text-white/60">Para clínicas y equipos</p>
               <div className="mt-6">
                 <span className="text-5xl font-bold">$999</span>
-                <span className="text-white/70"> MXN/mes</span>
+                <span className="text-white/60"> MXN/mes</span>
               </div>
               <ul className="mt-8 space-y-4">
                 <PricingFeature light>Pacientes ilimitados</PricingFeature>
@@ -330,7 +370,7 @@ export default function HomePage() {
           <h2 className="text-4xl font-bold text-gray-900 md:text-5xl">
             Empieza a transformar tu práctica hoy
           </h2>
-          <p className="mt-6 text-xl text-gray-600">
+          <p className="mx-auto mt-6 max-w-xl text-xl text-white/60">
             Únete a cientos de médicos que ya usan Doci para optimizar su consultorio.
           </p>
           <div className="mt-10">
@@ -370,19 +410,97 @@ export default function HomePage() {
               © {new Date().getFullYear()} Doci. Todos los derechos reservados.
             </p>
           </div>
+          <p>© {new Date().getFullYear()} Doci. Todos los derechos reservados.</p>
         </div>
       </footer>
     </div>
   );
 }
 
-function StatCard({ number, label }: { number: string; label: string }) {
+/* ── Sub-components ──────────────────────────────────────────────────── */
+
+function FeatureCard({
+  title,
+  description,
+  stat,
+  statLabel,
+  cta,
+}: {
+  title: string;
+  description: string;
+  stat?: string;
+  statLabel?: string;
+  cta?: string;
+}) {
+  return (
+    <div className="group relative flex cursor-default flex-col gap-12 overflow-hidden rounded-[2.5rem] border border-transparent bg-slate-50 p-10 shadow-sm transition-all duration-500 ease-out hover:-translate-y-2 hover:border-blue-100 hover:bg-blue-50 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)]">
+      <div className="relative z-10 space-y-4">
+        <h3 className="text-4xl font-medium tracking-tight text-[#0A1628] md:text-5xl">{title}</h3>
+        <p className="max-w-md text-lg leading-relaxed font-medium text-[#0A1628]/60">
+          {description}
+        </p>
+      </div>
+      {stat && (
+        <div className="mt-auto border-t border-[#0A1628]/10 pt-8">
+          <span className="text-5xl font-medium tracking-tight text-[#0A1628] md:text-6xl">
+            {stat}
+          </span>
+          {statLabel && (
+            <span className="mt-1 block text-sm font-semibold tracking-wider text-[#0A1628]/50 uppercase">
+              {statLabel}
+            </span>
+          )}
+        </div>
+      )}
+      {cta && (
+        <div className="group/btn mt-auto flex items-center justify-between border-t border-[#0A1628]/10 pt-6">
+          <span className="text-sm font-semibold tracking-wider text-[#0A1628] uppercase">
+            {cta}
+          </span>
+          <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[#0A1628]/10 bg-white transition-all duration-300 group-hover/btn:bg-[#0A1628] group-hover/btn:text-white">
+            <ArrowRight className="h-5 w-5" />
+          </div>
+        </div>
+      )}
+      <div className="absolute -right-10 -bottom-10 h-64 w-64 rounded-full bg-white/40 opacity-0 blur-3xl transition-all duration-700 group-hover:bg-white/60 group-hover:opacity-100" />
+    </div>
+  );
+}
+
+function CapabilityCard({
+  icon,
+  title,
+  description,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) {
   return (
     <div className="text-center">
       <p className="bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-4xl font-bold text-transparent md:text-5xl">
         {number}
       </p>
-      <p className="mt-2 text-gray-600">{label}</p>
+    </div>
+  );
+}
+
+function BenefitCard({
+  icon,
+  title,
+  description,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="group cursor-default rounded-[2rem] bg-slate-50 p-8 transition-all duration-500 hover:bg-[#0A1628] hover:text-[#E8F4FD]">
+      <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-[#0A1628] transition-colors group-hover:bg-white/10 group-hover:text-[#E8F4FD]">
+        {icon}
+      </div>
+      <h3 className="mb-4 text-3xl font-bold tracking-tight">{title}</h3>
+      <p className="text-lg leading-relaxed opacity-60">{description}</p>
     </div>
   );
 }
@@ -397,7 +515,7 @@ function PricingFeature({ children, light }: { children: React.ReactNode; light?
       >
         <Check className={`h-3 w-3 ${light ? 'text-white' : 'text-teal-600'}`} />
       </div>
-      <span className={light ? 'text-white/90' : 'text-gray-700'}>{children}</span>
+      <span className={light ? 'text-white/90' : 'text-[#0A1628]/70'}>{children}</span>
     </li>
   );
 }
