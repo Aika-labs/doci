@@ -25,7 +25,6 @@ import HeroSection from './HeroSection';
 
 /* ==========================================================================
    Doci Landing Page — Venezuela Edition
-   Design: Dark medical-blue theme inspired by modern SaaS / ESG layouts.
    Palette: navy #0A1628, light #E8F4FD, accent #3B82F6
    ========================================================================== */
 
@@ -34,7 +33,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-[#0A1628] text-[#E8F4FD] selection:bg-blue-500 selection:text-white">
       <HeroSection />
 
-      {/* ── Partners / Trust ───────────────────────────────────────── */}
+      {/* Trust / Compliance */}
       <section className="relative z-30 -mt-8 rounded-t-[3rem] bg-white pt-20 pb-20 text-[#0A1628] shadow-[0_-20px_60px_rgba(0,0,0,0.5)] md:-mt-16 md:rounded-t-[5rem]">
         <div className="mx-auto max-w-7xl px-6 md:px-12">
           <div className="flex flex-col items-center justify-center gap-12 pt-8">
@@ -63,7 +62,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Features — Sticky Left + Cards Right ──────────────────── */}
+      {/* Features — Sticky Left + Cards Right */}
       <section id="features" className="bg-white px-6 pb-40 text-[#0A1628] md:px-12">
         <div className="mx-auto grid max-w-7xl grid-cols-1 gap-16 lg:grid-cols-2 lg:gap-24">
           <div className="flex h-fit flex-col justify-start gap-8 lg:sticky lg:top-32 lg:self-start">
@@ -98,7 +97,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Todo en un lugar — Mind-map style (dark) ────────────────── */}
+      {/* Todo en un lugar — Mind-map (dark) */}
       <section className="relative z-30 -mt-16 rounded-t-[3rem] bg-[#0A1628] pt-32 pb-32 text-[#E8F4FD] md:rounded-t-[5rem]">
         <div className="mx-auto max-w-7xl px-6 text-center md:px-12">
           <h2 className="mb-6 text-5xl font-medium tracking-tight md:text-8xl">Todo en un lugar</h2>
@@ -106,10 +105,7 @@ export default function HomePage() {
             Una sola plataforma que reemplaza 5 herramientas diferentes. Menos costos, menos
             complejidad, más eficiencia en cada consulta.
           </p>
-
-          {/* Mind-map: center hub + radiating features */}
           <div className="relative mx-auto max-w-5xl">
-            {/* Center hub */}
             <div className="mx-auto mb-16 flex h-28 w-28 items-center justify-center rounded-full border-2 border-blue-400/30 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 shadow-[0_0_60px_rgba(59,130,246,0.15)] md:h-36 md:w-36">
               <div className="flex flex-col items-center gap-1">
                 <Brain className="h-8 w-8 text-blue-400 md:h-10 md:w-10" />
@@ -118,8 +114,6 @@ export default function HomePage() {
                 </span>
               </div>
             </div>
-
-            {/* Feature grid radiating from center */}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <MindMapNode
                 icon={<Mic className="h-5 w-5" />}
@@ -167,8 +161,6 @@ export default function HomePage() {
                 description="Dermatología, pediatría, ginecología y más. Formularios pre-configurados que se adaptan a ti."
               />
             </div>
-
-            {/* Bottom CTA line */}
             <div className="mt-16 flex flex-col items-center gap-4">
               <div className="h-12 w-px bg-gradient-to-b from-blue-400/40 to-transparent" />
               <p className="max-w-lg text-center text-lg font-medium text-white/80 md:text-xl">
@@ -182,7 +174,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Impacto Real (white) ───────────────────────────────────── */}
+      {/* Resultados Reales (white) */}
       <section className="relative z-20 -mt-16 rounded-t-[3rem] bg-white px-6 pt-24 pb-24 text-[#0A1628] md:rounded-t-[5rem]">
         <div className="mx-auto max-w-7xl">
           <div className="mb-20 grid grid-cols-1 gap-12 lg:grid-cols-2">
@@ -216,7 +208,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Impact Dashboard (dark) ────────────────────────────────── */}
+      {/* Impact Dashboard (dark) */}
       <section id="impact" className="bg-[#0A1628] px-6 py-24 text-[#E8F4FD]">
         <div className="mx-auto max-w-7xl">
           <div className="mb-16 grid grid-cols-1 gap-12 lg:grid-cols-2">
@@ -241,9 +233,7 @@ export default function HomePage() {
                 {[40, 55, 45, 70, 65, 85].map((h, i) => (
                   <div
                     key={i}
-                    className={`group relative w-full cursor-pointer rounded-t-lg transition-all duration-500 hover:bg-blue-400/60 ${
-                      i === 5 ? 'bg-gradient-to-t from-blue-500 to-blue-400/50' : 'bg-white/10'
-                    }`}
+                    className={`group relative w-full cursor-pointer rounded-t-lg transition-all duration-500 hover:bg-blue-400/60 ${i === 5 ? 'bg-gradient-to-t from-blue-500 to-blue-400/50' : 'bg-white/10'}`}
                     style={{ height: `${h}%` }}
                   >
                     <div className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs opacity-0 group-hover:opacity-100">
@@ -277,7 +267,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Pricing ────────────────────────────────────────────────── */}
+      {/* Pricing */}
       <section
         id="pricing"
         className="relative z-20 -mt-16 rounded-t-[3rem] bg-white px-6 pt-32 pb-32 text-[#0A1628] md:rounded-t-[5rem]"
@@ -342,7 +332,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── CTA ────────────────────────────────────────────────────── */}
+      {/* CTA */}
       <section id="cta" className="bg-[#0A1628] px-6 py-32">
         <div className="mx-auto max-w-4xl text-center">
           <h2 className="text-5xl font-bold tracking-tight text-white md:text-7xl">
@@ -366,7 +356,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Footer ─────────────────────────────────────────────────── */}
+      {/* Footer */}
       <footer className="border-t border-white/10 bg-[#0A1628] px-6 py-12 text-center text-sm text-white/30">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 md:flex-row">
           <div className="flex items-center gap-2.5">
@@ -393,7 +383,7 @@ export default function HomePage() {
   );
 }
 
-/* ── Sub-components ──────────────────────────────────────────────────── */
+/* Sub-components */
 
 function FeatureCard({
   title,
@@ -491,9 +481,7 @@ function PricingFeature({ children, light }: { children: React.ReactNode; light?
   return (
     <li className="flex items-center gap-3">
       <div
-        className={`flex h-5 w-5 items-center justify-center rounded-full ${
-          light ? 'bg-blue-500' : 'bg-blue-100'
-        }`}
+        className={`flex h-5 w-5 items-center justify-center rounded-full ${light ? 'bg-blue-500' : 'bg-blue-100'}`}
       >
         <Check className={`h-3 w-3 ${light ? 'text-white' : 'text-blue-600'}`} />
       </div>
