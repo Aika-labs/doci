@@ -32,7 +32,6 @@ import HeroSection from './HeroSection';
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-[#0A1628] text-[#E8F4FD] selection:bg-blue-500 selection:text-white">
-      {/* ── Hero with scroll-morph animation ────────────────────────── */}
       <HeroSection />
 
       {/* ── Partners / Trust ───────────────────────────────────────── */}
@@ -67,7 +66,6 @@ export default function HomePage() {
       {/* ── Features — Sticky Left + Cards Right ──────────────────── */}
       <section id="features" className="bg-white px-6 pb-40 text-[#0A1628] md:px-12">
         <div className="mx-auto grid max-w-7xl grid-cols-1 gap-16 lg:grid-cols-2 lg:gap-24">
-          {/* Sticky left */}
           <div className="flex h-fit flex-col justify-start gap-8 lg:sticky lg:top-32 lg:self-start">
             <h2 className="text-5xl leading-[0.95] font-medium tracking-tight md:text-6xl lg:text-7xl">
               Inteligencia
@@ -79,8 +77,6 @@ export default function HomePage() {
               organizan tu consulta y te devuelven horas de tu día.
             </p>
           </div>
-
-          {/* Cards right */}
           <div className="flex flex-col gap-10">
             <FeatureCard
               title="Notas clínicas con IA"
@@ -200,7 +196,6 @@ export default function HomePage() {
               más pacientes atendidos, mejor calidad de vida profesional.
             </p>
           </div>
-
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             <BenefitCard
               icon={<Users className="h-7 w-7" />}
@@ -233,9 +228,7 @@ export default function HomePage() {
               en Venezuela.
             </p>
           </div>
-
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            {/* Chart area */}
             <div className="flex h-[400px] flex-col justify-between rounded-[2rem] border border-white/10 bg-white/5 p-8 md:col-span-2">
               <div className="flex items-start justify-between">
                 <h3 className="text-2xl font-bold text-white">Consultas procesadas</h3>
@@ -261,8 +254,6 @@ export default function HomePage() {
               </div>
               <div className="mt-4 text-sm text-white/40">Últimos 6 años de crecimiento</div>
             </div>
-
-            {/* Stats column */}
             <div className="flex flex-col gap-8">
               <div className="flex flex-1 flex-col justify-center gap-2 rounded-[2rem] border border-white/10 bg-white/5 p-8 transition-colors hover:bg-white/10">
                 <span className="text-6xl font-bold tracking-tighter text-white">50k+</span>
@@ -286,7 +277,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Pricing Section ────────────────────────────────────────── */}
+      {/* ── Pricing ────────────────────────────────────────────────── */}
       <section
         id="pricing"
         className="relative z-20 -mt-16 rounded-t-[3rem] bg-white px-6 pt-32 pb-32 text-[#0A1628] md:rounded-t-[5rem]"
@@ -300,9 +291,7 @@ export default function HomePage() {
               Precios accesibles para el médico venezolano. Sin sorpresas, cancela cuando quieras.
             </p>
           </div>
-
           <div className="grid gap-8 md:grid-cols-2">
-            {/* Basic */}
             <div className="rounded-[2rem] border border-gray-200 bg-white p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl md:p-10">
               <h3 className="text-xl font-bold">Esencial</h3>
               <p className="mt-2 text-[#0A1628]/60">Para consultorios individuales</p>
@@ -324,8 +313,6 @@ export default function HomePage() {
                 Comenzar gratis
               </Link>
             </div>
-
-            {/* Pro */}
             <div className="relative overflow-hidden rounded-[2rem] bg-[#0A1628] p-8 text-white transition-all duration-300 hover:-translate-y-2 hover:shadow-xl md:p-10">
               <div className="absolute top-6 right-6 rounded-full bg-blue-500 px-3 py-1 text-xs font-semibold">
                 Más popular
@@ -355,7 +342,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── CTA Section (dark) ─────────────────────────────────────── */}
+      {/* ── CTA ────────────────────────────────────────────────────── */}
       <section id="cta" className="bg-[#0A1628] px-6 py-32">
         <div className="mx-auto max-w-4xl text-center">
           <h2 className="text-5xl font-bold tracking-tight text-white md:text-7xl">
