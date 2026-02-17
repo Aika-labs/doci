@@ -40,36 +40,51 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  const addToast = useCallback((toast: Omit<Toast, 'id'>) => {
-    const id = Math.random().toString(36).substring(2, 9);
-    const newToast = { ...toast, id };
-    
-    setToasts((prev) => [...prev, newToast]);
+  const addToast = useCallback(
+    (toast: Omit<Toast, 'id'>) => {
+      const id = Math.random().toString(36).substring(2, 9);
+      const newToast = { ...toast, id };
 
-    // Auto remove after duration
-    const duration = toast.duration ?? 5000;
-    if (duration > 0) {
-      setTimeout(() => {
-        removeToast(id);
-      }, duration);
-    }
-  }, [removeToast]);
+      setToasts((prev) => [...prev, newToast]);
 
-  const success = useCallback((title: string, message?: string) => {
-    addToast({ type: 'success', title, message });
-  }, [addToast]);
+      // Auto remove after duration
+      const duration = toast.duration ?? 5000;
+      if (duration > 0) {
+        setTimeout(() => {
+          removeToast(id);
+        }, duration);
+      }
+    },
+    [removeToast]
+  );
 
-  const error = useCallback((title: string, message?: string) => {
-    addToast({ type: 'error', title, message, duration: 8000 });
-  }, [addToast]);
+  const success = useCallback(
+    (title: string, message?: string) => {
+      addToast({ type: 'success', title, message });
+    },
+    [addToast]
+  );
 
-  const warning = useCallback((title: string, message?: string) => {
-    addToast({ type: 'warning', title, message });
-  }, [addToast]);
+  const error = useCallback(
+    (title: string, message?: string) => {
+      addToast({ type: 'error', title, message, duration: 8000 });
+    },
+    [addToast]
+  );
 
-  const info = useCallback((title: string, message?: string) => {
-    addToast({ type: 'info', title, message });
-  }, [addToast]);
+  const warning = useCallback(
+    (title: string, message?: string) => {
+      addToast({ type: 'warning', title, message });
+    },
+    [addToast]
+  );
+
+  const info = useCallback(
+    (title: string, message?: string) => {
+      addToast({ type: 'info', title, message });
+    },
+    [addToast]
+  );
 
   return (
     <ToastContext.Provider value={{ toasts, addToast, removeToast, success, error, warning, info }}>
@@ -83,7 +98,7 @@ function ToastContainer({ toasts, onRemove }: { toasts: Toast[]; onRemove: (id: 
   if (toasts.length === 0) return null;
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm">
+    <div className="fixed right-4 bottom-4 z-50 flex max-w-sm flex-col gap-2">
       {toasts.map((toast) => (
         <ToastItem key={toast.id} toast={toast} onRemove={() => onRemove(toast.id)} />
       ))}
@@ -108,20 +123,15 @@ function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: () => void }) 
 
   return (
     <div
-      className={`flex items-start gap-3 p-4 rounded-lg border shadow-lg animate-in slide-in-from-right-5 ${styles[toast.type]}`}
+      className={`animate-in slide-in-from-right-5 flex items-start gap-3 rounded-lg border p-4 shadow-lg ${styles[toast.type]}`}
       role="alert"
     >
       {icons[toast.type]}
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0 flex-1">
         <p className="font-medium text-gray-900">{toast.title}</p>
-        {toast.message && (
-          <p className="text-sm text-gray-600 mt-0.5">{toast.message}</p>
-        )}
+        {toast.message && <p className="mt-0.5 text-sm text-gray-600">{toast.message}</p>}
       </div>
-      <button
-        onClick={onRemove}
-        className="p-1 text-gray-400 hover:text-gray-600 rounded"
-      >
+      <button onClick={onRemove} className="rounded p-1 text-gray-400 hover:text-gray-600">
         <X className="h-4 w-4" />
       </button>
     </div>

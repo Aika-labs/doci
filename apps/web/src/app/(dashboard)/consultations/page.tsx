@@ -60,11 +60,11 @@ export default function ConsultationsPage() {
       if (!token) return;
 
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
-      
+
       // Build query params
       const params = new URLSearchParams();
       params.append('limit', '100');
-      
+
       if (statusFilter !== 'ALL') {
         params.append('status', statusFilter);
       }
@@ -124,7 +124,9 @@ export default function ConsultationsPage() {
       CANCELLED: 'Cancelada',
     };
     return (
-      <span className={`px-2 py-1 text-xs font-medium rounded-full ${styles[status] || 'bg-gray-100 text-gray-800'}`}>
+      <span
+        className={`rounded-full px-2 py-1 text-xs font-medium ${styles[status] || 'bg-gray-100 text-gray-800'}`}
+      >
         {labels[status] || status}
       </span>
     );
@@ -139,14 +141,14 @@ export default function ConsultationsPage() {
   return (
     <div>
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+      <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Consultas</h1>
           <p className="text-gray-600">Historial de consultas médicas</p>
         </div>
         <Link
           href="/consultations/new"
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
         >
           <Mic className="h-4 w-4" />
           Nueva Consulta
@@ -154,36 +156,36 @@ export default function ConsultationsPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
+      <div className="mb-6 grid grid-cols-3 gap-4">
+        <div className="rounded-lg border border-gray-200 bg-white p-4">
           <p className="text-sm text-gray-500">Total</p>
           <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
         </div>
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
+        <div className="rounded-lg border border-gray-200 bg-white p-4">
           <p className="text-sm text-gray-500">Completadas</p>
           <p className="text-2xl font-bold text-green-600">{stats.completed}</p>
         </div>
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
+        <div className="rounded-lg border border-gray-200 bg-white p-4">
           <p className="text-sm text-gray-500">En progreso</p>
           <p className="text-2xl font-bold text-yellow-600">{stats.inProgress}</p>
         </div>
       </div>
 
       {/* Search and Filters */}
-      <div className="flex flex-col md:flex-row gap-4 mb-6">
+      <div className="mb-6 flex flex-col gap-4 md:flex-row">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Buscar por paciente o diagnóstico..."
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border border-gray-300 py-2 pr-4 pl-10 focus:ring-2 focus:ring-blue-500"
           />
         </div>
         <button
           onClick={() => setShowFilters(!showFilters)}
-          className={`flex items-center gap-2 px-4 py-2 border rounded-lg transition-colors ${
+          className={`flex items-center gap-2 rounded-lg border px-4 py-2 transition-colors ${
             showFilters || statusFilter !== 'ALL' || dateFilter !== 'ALL'
               ? 'border-blue-500 bg-blue-50 text-blue-700'
               : 'border-gray-300 text-gray-700 hover:bg-gray-50'
@@ -192,17 +194,17 @@ export default function ConsultationsPage() {
           <Filter className="h-4 w-4" />
           Filtros
           {(statusFilter !== 'ALL' || dateFilter !== 'ALL') && (
-            <span className="w-2 h-2 bg-blue-600 rounded-full" />
+            <span className="h-2 w-2 rounded-full bg-blue-600" />
           )}
         </button>
       </div>
 
       {/* Filter Panel */}
       {showFilters && (
-        <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="mb-6 rounded-lg border border-gray-200 bg-white p-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Estado</label>
+              <label className="mb-2 block text-sm font-medium text-gray-700">Estado</label>
               <div className="flex flex-wrap gap-2">
                 {[
                   { value: 'ALL', label: 'Todos' },
@@ -213,7 +215,7 @@ export default function ConsultationsPage() {
                   <button
                     key={option.value}
                     onClick={() => setStatusFilter(option.value as StatusFilter)}
-                    className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                    className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
                       statusFilter === option.value
                         ? 'bg-blue-600 text-white'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -225,7 +227,7 @@ export default function ConsultationsPage() {
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Período</label>
+              <label className="mb-2 block text-sm font-medium text-gray-700">Período</label>
               <div className="flex flex-wrap gap-2">
                 {[
                   { value: 'ALL', label: 'Todo' },
@@ -236,7 +238,7 @@ export default function ConsultationsPage() {
                   <button
                     key={option.value}
                     onClick={() => setDateFilter(option.value as DateFilter)}
-                    className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                    className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
                       dateFilter === option.value
                         ? 'bg-blue-600 text-white'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -268,7 +270,7 @@ export default function ConsultationsPage() {
           <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
         </div>
       ) : filteredConsultations.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
+        <div className="rounded-lg border border-gray-200 bg-white py-12 text-center">
           <FileText className="mx-auto h-12 w-12 text-gray-400" />
           <h3 className="mt-4 text-lg font-medium text-gray-900">
             {searchTerm || statusFilter !== 'ALL' || dateFilter !== 'ALL'
@@ -283,7 +285,7 @@ export default function ConsultationsPage() {
           {!searchTerm && statusFilter === 'ALL' && dateFilter === 'ALL' && (
             <Link
               href="/consultations/new"
-              className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="mt-4 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
             >
               <Plus className="h-4 w-4" />
               Nueva Consulta
@@ -296,21 +298,22 @@ export default function ConsultationsPage() {
             <Link
               key={consultation.id}
               href={`/consultations/${consultation.id}`}
-              className="block bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow"
+              className="block rounded-lg border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
                     {consultation.patient ? (
-                      <span className="text-blue-600 font-semibold">
-                        {consultation.patient.firstName[0]}{consultation.patient.lastName[0]}
+                      <span className="font-semibold text-blue-600">
+                        {consultation.patient.firstName[0]}
+                        {consultation.patient.lastName[0]}
                       </span>
                     ) : (
                       <User className="h-6 w-6 text-blue-600" />
                     )}
                   </div>
                   <div className="min-w-0">
-                    <h3 className="font-medium text-gray-900 truncate">
+                    <h3 className="truncate font-medium text-gray-900">
                       {consultation.patient
                         ? `${consultation.patient.firstName} ${consultation.patient.lastName}`
                         : 'Paciente'}
@@ -318,22 +321,27 @@ export default function ConsultationsPage() {
                     <div className="flex flex-wrap items-center gap-2 text-sm text-gray-500">
                       <span className="flex items-center gap-1">
                         <Calendar className="h-3.5 w-3.5" />
-                        {format(new Date(consultation.startedAt || consultation.createdAt), "d MMM yyyy, HH:mm", { locale: es })}
+                        {format(
+                          new Date(consultation.startedAt || consultation.createdAt),
+                          'd MMM yyyy, HH:mm',
+                          { locale: es }
+                        )}
                       </span>
                       {getStatusBadge(consultation.status)}
                     </div>
                     {consultation.user && (
-                      <p className="text-xs text-gray-400 mt-1">
+                      <p className="mt-1 text-xs text-gray-400">
                         Dr. {consultation.user.firstName} {consultation.user.lastName}
                       </p>
                     )}
                   </div>
                 </div>
-                <ChevronRight className="h-5 w-5 text-gray-400 flex-shrink-0" />
+                <ChevronRight className="h-5 w-5 flex-shrink-0 text-gray-400" />
               </div>
               {consultation.clinicalData?.soapNotes?.assessment && (
-                <p className="mt-3 text-sm text-gray-600 line-clamp-2 pl-16">
-                  <span className="font-medium">Dx:</span> {consultation.clinicalData.soapNotes.assessment}
+                <p className="mt-3 line-clamp-2 pl-16 text-sm text-gray-600">
+                  <span className="font-medium">Dx:</span>{' '}
+                  {consultation.clinicalData.soapNotes.assessment}
                 </p>
               )}
             </Link>

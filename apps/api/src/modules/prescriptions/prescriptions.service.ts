@@ -91,7 +91,7 @@ export class PrescriptionsService {
       diagnosis?: string;
       instructions?: string;
       expiresAt?: string;
-    },
+    }
   ) {
     // Verify consultation belongs to tenant
     const consultation = await this.prisma.consultation.findFirst({
@@ -151,8 +151,11 @@ export class PrescriptionsService {
       doc.on('error', reject);
 
       // Header
-      doc.fontSize(20).font('Helvetica-Bold').text(tenant?.name || 'Consultorio Médico', { align: 'center' });
-      
+      doc
+        .fontSize(20)
+        .font('Helvetica-Bold')
+        .text(tenant?.name || 'Consultorio Médico', { align: 'center' });
+
       // Get address from tenant settings if available
       const settings = tenant?.settings as Record<string, unknown> | null;
       if (settings?.address) {
@@ -168,21 +171,27 @@ export class PrescriptionsService {
       doc.moveDown();
 
       // Security code
-      doc.fontSize(8).font('Helvetica').text(`Código de verificación: ${prescription.securityCode}`, { align: 'right' });
-      
+      doc
+        .fontSize(8)
+        .font('Helvetica')
+        .text(`Código de verificación: ${prescription.securityCode}`, { align: 'right' });
+
       // Date
-      doc.fontSize(10).text(`Fecha: ${new Date().toLocaleDateString('es-MX', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      })}`, { align: 'right' });
+      doc.fontSize(10).text(
+        `Fecha: ${new Date().toLocaleDateString('es-MX', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        })}`,
+        { align: 'right' }
+      );
       doc.moveDown();
 
       // Patient info
       doc.fontSize(12).font('Helvetica-Bold').text('DATOS DEL PACIENTE');
       doc.fontSize(10).font('Helvetica');
       doc.text(`Nombre: ${patient.firstName} ${patient.lastName}`);
-      
+
       if (patient.birthDate) {
         const birthDate = new Date(patient.birthDate);
         const age = Math.floor((Date.now() - birthDate.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
@@ -203,7 +212,10 @@ export class PrescriptionsService {
 
       const medications = prescription.medications as unknown as MedicationItem[];
       medications.forEach((med, index) => {
-        doc.fontSize(11).font('Helvetica-Bold').text(`${index + 1}. ${med.name}`);
+        doc
+          .fontSize(11)
+          .font('Helvetica-Bold')
+          .text(`${index + 1}. ${med.name}`);
         doc.fontSize(10).font('Helvetica');
         doc.text(`   Dosis: ${med.dose}`);
         doc.text(`   Frecuencia: ${med.frequency}`);
@@ -227,20 +239,23 @@ export class PrescriptionsService {
       // Validity
       if (prescription.expiresAt) {
         doc.moveDown();
-        doc.fontSize(10).font('Helvetica-Oblique').text(
-          `Esta receta es válida hasta: ${new Date(prescription.expiresAt).toLocaleDateString('es-MX')}`,
-          { align: 'center' }
-        );
+        doc
+          .fontSize(10)
+          .font('Helvetica-Oblique')
+          .text(
+            `Esta receta es válida hasta: ${new Date(prescription.expiresAt).toLocaleDateString('es-MX')}`,
+            { align: 'center' }
+          );
       }
 
       // Footer - Doctor signature
       doc.moveDown(3);
       doc.fontSize(10).font('Helvetica');
-      
+
       // Signature line
       const signatureY = doc.y;
       doc.moveTo(200, signatureY).lineTo(400, signatureY).stroke();
-      
+
       doc.moveDown(0.5);
       doc.text(`Dr(a). ${doctor.firstName} ${doctor.lastName}`, { align: 'center' });
       if (doctor.specialty) {

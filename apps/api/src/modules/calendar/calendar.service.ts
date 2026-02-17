@@ -38,13 +38,13 @@ export class CalendarService {
 
   constructor(
     private prisma: PrismaService,
-    private configService: ConfigService,
+    private configService: ConfigService
   ) {
     // Initialize Google OAuth client
     this.googleOAuth2Client = new google.auth.OAuth2(
       this.configService.get<string>('GOOGLE_CLIENT_ID'),
       this.configService.get<string>('GOOGLE_CLIENT_SECRET'),
-      this.configService.get<string>('GOOGLE_REDIRECT_URI'),
+      this.configService.get<string>('GOOGLE_REDIRECT_URI')
     );
 
     // Initialize Microsoft MSAL client
@@ -232,7 +232,7 @@ export class CalendarService {
    */
   async listEvents(
     userId: string,
-    options?: { startDate?: Date; endDate?: Date; maxResults?: number },
+    options?: { startDate?: Date; endDate?: Date; maxResults?: number }
   ): Promise<CalendarEvent[]> {
     const integration = await this.getIntegration(userId);
 
@@ -254,7 +254,7 @@ export class CalendarService {
       startTime: Date;
       endTime: Date;
       notes?: string;
-    },
+    }
   ): Promise<string | null> {
     const integration = await this.prisma.calendarIntegration.findUnique({
       where: { userId },
@@ -319,7 +319,7 @@ export class CalendarService {
   private async updateGoogleEvent(
     accessToken: string,
     eventId: string,
-    event: Partial<CalendarEvent>,
+    event: Partial<CalendarEvent>
   ): Promise<void> {
     this.googleOAuth2Client.setCredentials({ access_token: accessToken });
     const calendar = google.calendar({ version: 'v3', auth: this.googleOAuth2Client });
@@ -361,7 +361,7 @@ export class CalendarService {
 
   private async listGoogleEvents(
     accessToken: string,
-    options?: { startDate?: Date; endDate?: Date; maxResults?: number },
+    options?: { startDate?: Date; endDate?: Date; maxResults?: number }
   ): Promise<CalendarEvent[]> {
     this.googleOAuth2Client.setCredentials({ access_token: accessToken });
     const calendar = google.calendar({ version: 'v3', auth: this.googleOAuth2Client });
@@ -430,7 +430,7 @@ export class CalendarService {
   private async updateOutlookEvent(
     accessToken: string,
     eventId: string,
-    event: Partial<CalendarEvent>,
+    event: Partial<CalendarEvent>
   ): Promise<void> {
     const updateData: Record<string, unknown> = {};
 
@@ -483,7 +483,7 @@ export class CalendarService {
 
   private async listOutlookEvents(
     _accessToken: string,
-    options?: { startDate?: Date; endDate?: Date; maxResults?: number },
+    options?: { startDate?: Date; endDate?: Date; maxResults?: number }
   ): Promise<CalendarEvent[]> {
     const startDate = options?.startDate || new Date();
     const endDate = options?.endDate || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
@@ -494,7 +494,7 @@ export class CalendarService {
         headers: {
           Authorization: `Bearer ${_accessToken}`,
         },
-      },
+      }
     );
 
     if (!response.ok) {
@@ -520,7 +520,7 @@ export class CalendarService {
         endTime: new Date(item.end?.dateTime || ''),
         location: item.location?.displayName || undefined,
         attendees: item.attendees?.map((a) => a.emailAddress?.address).filter(Boolean),
-      }),
+      })
     );
   }
 

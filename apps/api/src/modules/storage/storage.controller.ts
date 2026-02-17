@@ -30,7 +30,7 @@ export class StorageController {
     @UploadedFile() file: Express.Multer.File,
     @Body('patientId') patientId: string,
     @Body('fileType') fileType?: FileType,
-    @Body('description') description?: string,
+    @Body('description') description?: string
   ) {
     return this.storageService.uploadFile(ctx, file, {
       patientId,
@@ -44,7 +44,7 @@ export class StorageController {
   async getPatientFiles(
     @CurrentTenant() ctx: TenantContext,
     @Param('patientId') patientId: string,
-    @Query('type') type?: FileType,
+    @Query('type') type?: FileType
   ) {
     return this.storageService.getPatientFiles(ctx, patientId, { type });
   }
@@ -60,12 +60,12 @@ export class StorageController {
   async getSignedUrl(
     @CurrentTenant() ctx: TenantContext,
     @Param('id') id: string,
-    @Query('expiresIn') expiresIn?: string,
+    @Query('expiresIn') expiresIn?: string
   ) {
     return this.storageService.getSignedUrl(
       ctx,
       id,
-      expiresIn ? parseInt(expiresIn, 10) : undefined,
+      expiresIn ? parseInt(expiresIn, 10) : undefined
     );
   }
 

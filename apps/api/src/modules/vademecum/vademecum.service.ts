@@ -39,7 +39,7 @@ export class VademecumService {
 
   constructor(
     private prisma: PrismaService,
-    private configService: ConfigService,
+    private configService: ConfigService
   ) {
     this.openai = new OpenAI({
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),
@@ -51,7 +51,7 @@ export class VademecumService {
    */
   async ingestPDF(
     fileBuffer: Buffer,
-    fuente: string = 'PDF',
+    fuente: string = 'PDF'
   ): Promise<{ processed: number; errors: number }> {
     this.logger.log('Starting PDF ingestion...');
 
@@ -163,8 +163,10 @@ export class VademecumService {
    * Check drug interactions
    */
   async checkInteractions(
-    medicamentos: string[],
-  ): Promise<Array<{ medicamento1: string; medicamento2: string; efecto: string; severidad: string }>> {
+    medicamentos: string[]
+  ): Promise<
+    Array<{ medicamento1: string; medicamento2: string; efecto: string; severidad: string }>
+  > {
     const interactions: Array<{
       medicamento1: string;
       medicamento2: string;
@@ -182,7 +184,7 @@ export class VademecumService {
           (m) =>
             m.toLowerCase() !== med.toLowerCase() &&
             (m.toLowerCase().includes(interaccion.medicamento.toLowerCase()) ||
-              interaccion.medicamento.toLowerCase().includes(m.toLowerCase())),
+              interaccion.medicamento.toLowerCase().includes(m.toLowerCase()))
         );
 
         if (interactingDrug) {
@@ -203,8 +205,8 @@ export class VademecumService {
         self.findIndex(
           (t) =>
             (t.medicamento1 === item.medicamento1 && t.medicamento2 === item.medicamento2) ||
-            (t.medicamento1 === item.medicamento2 && t.medicamento2 === item.medicamento1),
-        ),
+            (t.medicamento1 === item.medicamento2 && t.medicamento2 === item.medicamento1)
+        )
     );
 
     return unique;
@@ -229,7 +231,7 @@ export class VademecumService {
       contexts.push('\n## ALERTAS DE INTERACCIONES');
       for (const i of interactions) {
         contexts.push(
-          `⚠️ ${i.medicamento1} + ${i.medicamento2}: ${i.efecto} (Severidad: ${i.severidad})`,
+          `⚠️ ${i.medicamento1} + ${i.medicamento2}: ${i.efecto} (Severidad: ${i.severidad})`
         );
       }
     }
@@ -330,11 +332,21 @@ export class VademecumService {
 
   private extractMetadataFromSection(section: string): MedicamentoMetadata {
     return {
-      indicaciones: this.extractList(section, /indicaciones?[:\s]+([^]*?)(?=contraindicaciones?|dosis|$)/i),
-      contraindicaciones: this.extractList(section, /contraindicaciones?[:\s]+([^]*?)(?=interacciones?|efectos|$)/i),
-      efectosAdversos: this.extractList(section, /efectos?\s*(?:adversos?|secundarios?)[:\s]+([^]*?)(?=interacciones?|dosis|$)/i),
+      indicaciones: this.extractList(
+        section,
+        /indicaciones?[:\s]+([^]*?)(?=contraindicaciones?|dosis|$)/i
+      ),
+      contraindicaciones: this.extractList(
+        section,
+        /contraindicaciones?[:\s]+([^]*?)(?=interacciones?|efectos|$)/i
+      ),
+      efectosAdversos: this.extractList(
+        section,
+        /efectos?\s*(?:adversos?|secundarios?)[:\s]+([^]*?)(?=interacciones?|dosis|$)/i
+      ),
       dosisAdultos: this.extractField(section, /dosis\s*(?:adultos?)?[:\s]+([^\n]+)/i) || undefined,
-      dosisPediatrica: this.extractField(section, /dosis\s*pedi[aá]trica[:\s]+([^\n]+)/i) || undefined,
+      dosisPediatrica:
+        this.extractField(section, /dosis\s*pedi[aá]trica[:\s]+([^\n]+)/i) || undefined,
       embarazoLactancia: this.extractField(section, /embarazo[:\s]+([^\n]+)/i) || undefined,
       interacciones: this.extractInteracciones(section),
     };
@@ -343,7 +355,7 @@ export class VademecumService {
   private buildContenidoFromSection(
     nombre: string,
     section: string,
-    metadata: MedicamentoMetadata,
+    metadata: MedicamentoMetadata
   ): string {
     const parts = [`Medicamento: ${nombre}`];
 
@@ -365,7 +377,7 @@ export class VademecumService {
 
     if (metadata.interacciones?.length) {
       parts.push(
-        `\nINTERACCIONES:\n${metadata.interacciones.map((i) => `- ${i.medicamento}: ${i.efecto}`).join('\n')}`,
+        `\nINTERACCIONES:\n${metadata.interacciones.map((i) => `- ${i.medicamento}: ${i.efecto}`).join('\n')}`
       );
     }
 
@@ -406,7 +418,7 @@ export class VademecumService {
   }
 
   private extractInteracciones(
-    text: string,
+    text: string
   ): Array<{ medicamento: string; efecto: string; severidad?: string }> {
     const interacciones: Array<{ medicamento: string; efecto: string; severidad?: string }> = [];
 

@@ -41,9 +41,11 @@ export function PatientForm({ patient, onSubmit, onCancel, isLoading }: PatientF
           notes: patient.notes || '',
           emergencyContactName: (patient.emergencyContact as Record<string, string>)?.name || '',
           emergencyContactPhone: (patient.emergencyContact as Record<string, string>)?.phone || '',
-          emergencyContactRelation: (patient.emergencyContact as Record<string, string>)?.relation || '',
+          emergencyContactRelation:
+            (patient.emergencyContact as Record<string, string>)?.relation || '',
           insuranceProvider: (patient.insuranceInfo as Record<string, string>)?.provider || '',
-          insurancePolicyNumber: (patient.insuranceInfo as Record<string, string>)?.policyNumber || '',
+          insurancePolicyNumber:
+            (patient.insuranceInfo as Record<string, string>)?.policyNumber || '',
         }
       : {
           gender: 'MALE',
@@ -64,17 +66,15 @@ export function PatientForm({ patient, onSubmit, onCancel, isLoading }: PatientF
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {/* Información Personal */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Información Personal</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="rounded-lg border border-gray-200 bg-white p-6">
+        <h3 className="mb-4 text-lg font-semibold text-gray-900">Información Personal</h3>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Nombre *
-            </label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Nombre *</label>
             <input
               {...register('firstName')}
               type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
               placeholder="Juan"
             />
             {errors.firstName && (
@@ -83,13 +83,11 @@ export function PatientForm({ patient, onSubmit, onCancel, isLoading }: PatientF
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Apellido *
-            </label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Apellido *</label>
             <input
               {...register('lastName')}
               type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
               placeholder="Pérez"
             />
             {errors.lastName && (
@@ -98,13 +96,13 @@ export function PatientForm({ patient, onSubmit, onCancel, isLoading }: PatientF
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="mb-1 block text-sm font-medium text-gray-700">
               Fecha de Nacimiento *
             </label>
             <input
               {...register('dateOfBirth')}
               type="date"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
             />
             {errors.dateOfBirth && (
               <p className="mt-1 text-sm text-red-600">{errors.dateOfBirth.message}</p>
@@ -112,59 +110,45 @@ export function PatientForm({ patient, onSubmit, onCancel, isLoading }: PatientF
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Género *
-            </label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Género *</label>
             <select
               {...register('gender')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
             >
               <option value="MALE">Masculino</option>
               <option value="FEMALE">Femenino</option>
               <option value="OTHER">Otro</option>
             </select>
-            {errors.gender && (
-              <p className="mt-1 text-sm text-red-600">{errors.gender.message}</p>
-            )}
+            {errors.gender && <p className="mt-1 text-sm text-red-600">{errors.gender.message}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email
-            </label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Email</label>
             <input
               {...register('email')}
               type="email"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
               placeholder="juan@ejemplo.com"
             />
-            {errors.email && (
-              <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
-            )}
+            {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Teléfono
-            </label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Teléfono</label>
             <input
               {...register('phone')}
               type="tel"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
               placeholder="+52 55 1234 5678"
             />
-            {errors.phone && (
-              <p className="mt-1 text-sm text-red-600">{errors.phone.message}</p>
-            )}
+            {errors.phone && <p className="mt-1 text-sm text-red-600">{errors.phone.message}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Tipo de Sangre
-            </label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Tipo de Sangre</label>
             <select
               {...register('bloodType')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Seleccionar...</option>
               <option value="A+">A+</option>
@@ -181,43 +165,41 @@ export function PatientForm({ patient, onSubmit, onCancel, isLoading }: PatientF
       </div>
 
       {/* Información Médica */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Información Médica</h3>
+      <div className="rounded-lg border border-gray-200 bg-white p-6">
+        <h3 className="mb-4 text-lg font-semibold text-gray-900">Información Médica</h3>
         <div className="grid grid-cols-1 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Alergias
-            </label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Alergias</label>
             <input
               {...register('allergies')}
               type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
               placeholder="Penicilina, Mariscos (separar con comas)"
             />
             <p className="mt-1 text-xs text-gray-500">Separar múltiples alergias con comas</p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="mb-1 block text-sm font-medium text-gray-700">
               Medicamentos Actuales
             </label>
             <input
               {...register('currentMedications')}
               type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
               placeholder="Metformina 500mg, Losartán 50mg (separar con comas)"
             />
             <p className="mt-1 text-xs text-gray-500">Separar múltiples medicamentos con comas</p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="mb-1 block text-sm font-medium text-gray-700">
               Notas Adicionales
             </label>
             <textarea
               {...register('notes')}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
               placeholder="Información adicional relevante..."
             />
           </div>
@@ -225,65 +207,55 @@ export function PatientForm({ patient, onSubmit, onCancel, isLoading }: PatientF
       </div>
 
       {/* Dirección */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Dirección</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="rounded-lg border border-gray-200 bg-white p-6">
+        <h3 className="mb-4 text-lg font-semibold text-gray-900">Dirección</h3>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Dirección
-            </label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Dirección</label>
             <input
               {...register('address')}
               type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
               placeholder="Calle y número"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Ciudad
-            </label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Ciudad</label>
             <input
               {...register('city')}
               type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
               placeholder="Ciudad de México"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Estado
-            </label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Estado</label>
             <input
               {...register('state')}
               type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
               placeholder="CDMX"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              País
-            </label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">País</label>
             <input
               {...register('country')}
               type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
               placeholder="México"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Código Postal
-            </label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Código Postal</label>
             <input
               {...register('postalCode')}
               type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
               placeholder="06600"
             />
           </div>
@@ -291,41 +263,35 @@ export function PatientForm({ patient, onSubmit, onCancel, isLoading }: PatientF
       </div>
 
       {/* Contacto de Emergencia */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Contacto de Emergencia</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="rounded-lg border border-gray-200 bg-white p-6">
+        <h3 className="mb-4 text-lg font-semibold text-gray-900">Contacto de Emergencia</h3>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Nombre
-            </label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Nombre</label>
             <input
               {...register('emergencyContactName')}
               type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
               placeholder="María García"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Teléfono
-            </label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Teléfono</label>
             <input
               {...register('emergencyContactPhone')}
               type="tel"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
               placeholder="+52 55 9876 5432"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Relación
-            </label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Relación</label>
             <input
               {...register('emergencyContactRelation')}
               type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
               placeholder="Esposa"
             />
           </div>
@@ -333,29 +299,25 @@ export function PatientForm({ patient, onSubmit, onCancel, isLoading }: PatientF
       </div>
 
       {/* Seguro Médico */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Seguro Médico</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="rounded-lg border border-gray-200 bg-white p-6">
+        <h3 className="mb-4 text-lg font-semibold text-gray-900">Seguro Médico</h3>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Aseguradora
-            </label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Aseguradora</label>
             <input
               {...register('insuranceProvider')}
               type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
               placeholder="GNP Seguros"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Número de Póliza
-            </label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Número de Póliza</label>
             <input
               {...register('insurancePolicyNumber')}
               type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
               placeholder="POL-123456"
             />
           </div>
@@ -367,14 +329,14 @@ export function PatientForm({ patient, onSubmit, onCancel, isLoading }: PatientF
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+          className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-700 transition-colors hover:bg-gray-50"
         >
           Cancelar
         </button>
         <button
           type="submit"
           disabled={isLoading}
-          className="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isLoading ? 'Guardando...' : patient ? 'Actualizar' : 'Crear Paciente'}
         </button>

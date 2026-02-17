@@ -82,10 +82,9 @@ export default function ReportsPage() {
       );
 
       // Fetch patients
-      const patientsRes = await fetch(
-        `${apiUrl}/patients?limit=1000`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const patientsRes = await fetch(`${apiUrl}/patients?limit=1000`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       // Fetch appointments
       const appointmentsRes = await fetch(
@@ -94,12 +93,15 @@ export default function ReportsPage() {
       );
 
       // Fetch prescriptions
-      const prescriptionsRes = await fetch(
-        `${apiUrl}/prescriptions`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const prescriptionsRes = await fetch(`${apiUrl}/prescriptions`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-      let consultations: Array<{ createdAt: string; startedAt?: string; clinicalData?: { soapNotes?: { assessment?: string } } }> = [];
+      let consultations: Array<{
+        createdAt: string;
+        startedAt?: string;
+        clinicalData?: { soapNotes?: { assessment?: string } };
+      }> = [];
       let patients: Array<{ id: string; createdAt: string; gender: string }> = [];
       let appointments: Array<{ status: string }> = [];
       let prescriptions: Array<{ createdAt: string }> = [];
@@ -183,8 +185,11 @@ export default function ReportsPage() {
           patientConsultations[patientId] = (patientConsultations[patientId] || 0) + 1;
         }
       });
-      const returningPatients = Object.values(patientConsultations).filter((count) => count > 1).length;
-      const patientRetention = patients.length > 0 ? (returningPatients / patients.length) * 100 : 0;
+      const returningPatients = Object.values(patientConsultations).filter(
+        (count) => count > 1
+      ).length;
+      const patientRetention =
+        patients.length > 0 ? (returningPatients / patients.length) * 100 : 0;
 
       // Growth rate (compare new patients this period vs previous)
       const periodDays = days.length;
@@ -192,9 +197,12 @@ export default function ReportsPage() {
       const previousNewPatients = patients.filter(
         (p) => new Date(p.createdAt) >= previousStart && new Date(p.createdAt) < start
       ).length;
-      const growthRate = previousNewPatients > 0 
-        ? ((newPatients - previousNewPatients) / previousNewPatients) * 100 
-        : newPatients > 0 ? 100 : 0;
+      const growthRate =
+        previousNewPatients > 0
+          ? ((newPatients - previousNewPatients) / previousNewPatients) * 100
+          : newPatients > 0
+            ? 100
+            : 0;
 
       setStats({
         totalConsultations: consultations.length,
@@ -254,7 +262,7 @@ export default function ReportsPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex min-h-[400px] items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
       </div>
     );
@@ -265,7 +273,7 @@ export default function ReportsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Reportes y Estadísticas</h1>
           <p className="text-gray-600">Análisis de la actividad de tu clínica</p>
@@ -276,7 +284,7 @@ export default function ReportsPage() {
             <select
               value={dateRange}
               onChange={(e) => setDateRange(e.target.value as DateRange)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500"
             >
               {dateRangeOptions.map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -288,7 +296,7 @@ export default function ReportsPage() {
           <button
             onClick={handleExportCSV}
             disabled={isExporting}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
           >
             <Download className="h-4 w-4" />
             {isExporting ? 'Exportando...' : 'Exportar CSV'}
@@ -297,7 +305,7 @@ export default function ReportsPage() {
       </div>
 
       {/* Key Metrics */}
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
         <MetricCard
           icon={FileText}
           label="Consultas"
@@ -339,28 +347,28 @@ export default function ReportsPage() {
       </div>
 
       {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Consultations Chart */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <div className="flex items-center justify-between mb-6">
+        <div className="rounded-xl border border-gray-200 bg-white p-6">
+          <div className="mb-6 flex items-center justify-between">
             <h2 className="text-lg font-semibold text-gray-900">Consultas por día</h2>
             <div className="flex items-center gap-2 text-sm text-gray-500">
               <Activity className="h-4 w-4" />
               <span>Promedio: {stats?.avgConsultationsPerDay.toFixed(1)}/día</span>
             </div>
           </div>
-          <div className="h-48 flex items-end gap-1">
+          <div className="flex h-48 items-end gap-1">
             {stats?.consultationsByDay.slice(-14).map((day, i) => (
-              <div key={i} className="flex-1 flex flex-col items-center gap-1">
+              <div key={i} className="flex flex-1 flex-col items-center gap-1">
                 <div
-                  className="w-full bg-blue-500 rounded-t transition-all hover:bg-blue-600"
+                  className="w-full rounded-t bg-blue-500 transition-all hover:bg-blue-600"
                   style={{
                     height: `${(day.count / maxConsultations) * 100}%`,
                     minHeight: day.count > 0 ? '4px' : '0',
                   }}
                   title={`${day.date}: ${day.count} consultas`}
                 />
-                <span className="text-xs text-gray-400 rotate-45 origin-left">
+                <span className="origin-left rotate-45 text-xs text-gray-400">
                   {format(new Date(day.date), 'd', { locale: es })}
                 </span>
               </div>
@@ -369,8 +377,8 @@ export default function ReportsPage() {
         </div>
 
         {/* Appointments Status */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-6">Estado de citas</h2>
+        <div className="rounded-xl border border-gray-200 bg-white p-6">
+          <h2 className="mb-6 text-lg font-semibold text-gray-900">Estado de citas</h2>
           <div className="space-y-4">
             <StatusBar
               label="Completadas"
@@ -407,20 +415,20 @@ export default function ReportsPage() {
       </div>
 
       {/* Peak Hours Chart */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
-        <div className="flex items-center justify-between mb-6">
+      <div className="rounded-xl border border-gray-200 bg-white p-6">
+        <div className="mb-6 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-gray-900">Horas pico de consultas</h2>
           <div className="flex items-center gap-2 text-sm text-gray-500">
             <Clock className="h-4 w-4" />
             <span>Distribución por hora del día</span>
           </div>
         </div>
-        <div className="h-32 flex items-end gap-0.5">
+        <div className="flex h-32 items-end gap-0.5">
           {stats?.consultationsByHour.slice(7, 21).map((hour, i) => {
             const maxHour = Math.max(...(stats?.consultationsByHour.map((h) => h.count) || [1]));
             const isPeak = hour.count === maxHour && hour.count > 0;
             return (
-              <div key={i} className="flex-1 flex flex-col items-center gap-1">
+              <div key={i} className="flex flex-1 flex-col items-center gap-1">
                 <div
                   className={`w-full rounded-t transition-all ${
                     isPeak ? 'bg-green-500' : 'bg-gray-300 hover:bg-gray-400'
@@ -438,24 +446,24 @@ export default function ReportsPage() {
         </div>
         <div className="mt-4 flex items-center justify-center gap-4 text-sm">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-green-500 rounded" />
+            <div className="h-3 w-3 rounded bg-green-500" />
             <span className="text-gray-600">Hora pico</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-gray-300 rounded" />
+            <div className="h-3 w-3 rounded bg-gray-300" />
             <span className="text-gray-600">Otras horas</span>
           </div>
         </div>
       </div>
 
       {/* Bottom Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Gender Distribution */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-6">Distribución por género</h2>
+        <div className="rounded-xl border border-gray-200 bg-white p-6">
+          <h2 className="mb-6 text-lg font-semibold text-gray-900">Distribución por género</h2>
           <div className="flex items-center justify-center gap-8">
             <div className="text-center">
-              <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center mb-2">
+              <div className="mb-2 flex h-20 w-20 items-center justify-center rounded-full bg-blue-100">
                 <span className="text-2xl font-bold text-blue-600">
                   {stats?.patientsByGender.male || 0}
                 </span>
@@ -464,11 +472,12 @@ export default function ReportsPage() {
               <p className="text-xs text-gray-400">
                 {stats?.totalPatients
                   ? ((stats.patientsByGender.male / stats.totalPatients) * 100).toFixed(0)
-                  : 0}%
+                  : 0}
+                %
               </p>
             </div>
             <div className="text-center">
-              <div className="w-20 h-20 rounded-full bg-pink-100 flex items-center justify-center mb-2">
+              <div className="mb-2 flex h-20 w-20 items-center justify-center rounded-full bg-pink-100">
                 <span className="text-2xl font-bold text-pink-600">
                   {stats?.patientsByGender.female || 0}
                 </span>
@@ -477,11 +486,12 @@ export default function ReportsPage() {
               <p className="text-xs text-gray-400">
                 {stats?.totalPatients
                   ? ((stats.patientsByGender.female / stats.totalPatients) * 100).toFixed(0)
-                  : 0}%
+                  : 0}
+                %
               </p>
             </div>
             <div className="text-center">
-              <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center mb-2">
+              <div className="mb-2 flex h-20 w-20 items-center justify-center rounded-full bg-gray-100">
                 <span className="text-2xl font-bold text-gray-600">
                   {stats?.patientsByGender.other || 0}
                 </span>
@@ -490,15 +500,16 @@ export default function ReportsPage() {
               <p className="text-xs text-gray-400">
                 {stats?.totalPatients
                   ? ((stats.patientsByGender.other / stats.totalPatients) * 100).toFixed(0)
-                  : 0}%
+                  : 0}
+                %
               </p>
             </div>
           </div>
         </div>
 
         {/* Top Diagnoses */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <div className="flex items-center gap-2 mb-6">
+        <div className="rounded-xl border border-gray-200 bg-white p-6">
+          <div className="mb-6 flex items-center gap-2">
             <Stethoscope className="h-5 w-5 text-gray-500" />
             <h2 className="text-lg font-semibold text-gray-900">Diagnósticos frecuentes</h2>
           </div>
@@ -507,18 +518,18 @@ export default function ReportsPage() {
               {stats.topDiagnoses.map((diagnosis, i) => (
                 <div key={i} className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-600 text-xs font-medium flex items-center justify-center">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-xs font-medium text-blue-600">
                       {i + 1}
                     </span>
-                    <span className="text-gray-700 truncate max-w-[200px]">{diagnosis.name}</span>
+                    <span className="max-w-[200px] truncate text-gray-700">{diagnosis.name}</span>
                   </div>
                   <span className="text-sm font-medium text-gray-500">{diagnosis.count}</span>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="text-center py-8 text-gray-500">
-              <BarChart3 className="h-12 w-12 mx-auto text-gray-300 mb-2" />
+            <div className="py-8 text-center text-gray-500">
+              <BarChart3 className="mx-auto mb-2 h-12 w-12 text-gray-300" />
               <p>No hay diagnósticos registrados</p>
             </div>
           )}
@@ -526,27 +537,29 @@ export default function ReportsPage() {
       </div>
 
       {/* Performance Summary */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Resumen de rendimiento</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div className="rounded-xl border border-gray-200 bg-white p-6">
+        <h2 className="mb-4 text-lg font-semibold text-gray-900">Resumen de rendimiento</h2>
+        <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
           <div className="text-center">
-            <div className="flex items-center justify-center gap-1 text-green-600 mb-1">
+            <div className="mb-1 flex items-center justify-center gap-1 text-green-600">
               <TrendingUp className="h-4 w-4" />
               <span className="text-2xl font-bold">
                 {stats?.totalAppointments
                   ? ((stats.completedAppointments / stats.totalAppointments) * 100).toFixed(0)
-                  : 0}%
+                  : 0}
+                %
               </span>
             </div>
             <p className="text-sm text-gray-500">Tasa de completado</p>
           </div>
           <div className="text-center">
-            <div className="flex items-center justify-center gap-1 text-red-600 mb-1">
+            <div className="mb-1 flex items-center justify-center gap-1 text-red-600">
               <Clock className="h-4 w-4" />
               <span className="text-2xl font-bold">
                 {stats?.totalAppointments
                   ? ((stats.cancelledAppointments / stats.totalAppointments) * 100).toFixed(0)
-                  : 0}%
+                  : 0}
+                %
               </span>
             </div>
             <p className="text-sm text-gray-500">Tasa de cancelación</p>
@@ -558,9 +571,7 @@ export default function ReportsPage() {
             <p className="text-sm text-gray-500">Consultas/día promedio</p>
           </div>
           <div className="text-center">
-            <span className="text-2xl font-bold text-purple-600">
-              {stats?.newPatients || 0}
-            </span>
+            <span className="text-2xl font-bold text-purple-600">{stats?.newPatients || 0}</span>
             <p className="text-sm text-gray-500">Nuevos pacientes</p>
           </div>
         </div>
@@ -594,24 +605,34 @@ function MetricCard({
   };
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-4">
+    <div className="rounded-xl border border-gray-200 bg-white p-4">
       <div className="flex items-center gap-3">
-        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${colorStyles[color]}`}>
+        <div
+          className={`flex h-10 w-10 items-center justify-center rounded-lg ${colorStyles[color]}`}
+        >
           <Icon className="h-5 w-5" />
         </div>
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <p className={`font-bold text-gray-900 ${isPercentage ? 'text-xl' : 'text-2xl'}`}>{value}</p>
+            <p className={`font-bold text-gray-900 ${isPercentage ? 'text-xl' : 'text-2xl'}`}>
+              {value}
+            </p>
             {trend !== undefined && trend !== 0 && (
-              <span className={`flex items-center text-xs font-medium ${
-                trend > 0 ? 'text-green-600' : 'text-red-600'
-              }`}>
-                {trend > 0 ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
+              <span
+                className={`flex items-center text-xs font-medium ${
+                  trend > 0 ? 'text-green-600' : 'text-red-600'
+                }`}
+              >
+                {trend > 0 ? (
+                  <ArrowUpRight className="h-3 w-3" />
+                ) : (
+                  <ArrowDownRight className="h-3 w-3" />
+                )}
                 {Math.abs(trend).toFixed(0)}%
               </span>
             )}
           </div>
-          <p className="text-sm text-gray-500 truncate">{label}</p>
+          <p className="truncate text-sm text-gray-500">{label}</p>
         </div>
       </div>
     </div>
@@ -633,11 +654,11 @@ function StatusBar({
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-1">
+      <div className="mb-1 flex items-center justify-between">
         <span className="text-sm text-gray-600">{label}</span>
         <span className="text-sm font-medium text-gray-900">{value}</span>
       </div>
-      <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+      <div className="h-2 overflow-hidden rounded-full bg-gray-100">
         <div
           className={`h-full ${color} rounded-full transition-all`}
           style={{ width: `${percentage}%` }}

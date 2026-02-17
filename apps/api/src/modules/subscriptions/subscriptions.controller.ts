@@ -27,7 +27,7 @@ export class SubscriptionsController {
 
   constructor(
     private readonly subscriptionsService: SubscriptionsService,
-    private readonly configService: ConfigService,
+    private readonly configService: ConfigService
   ) {
     this.stripe = new Stripe(this.configService.get<string>('STRIPE_SECRET_KEY') || '');
   }
@@ -92,12 +92,12 @@ export class SubscriptionsController {
   @ApiOperation({ summary: 'Create Stripe checkout session' })
   async createCheckout(
     @TenantId() tenantId: string,
-    @Body() body: { planName: string; billingCycle: 'MONTHLY' | 'YEARLY' },
+    @Body() body: { planName: string; billingCycle: 'MONTHLY' | 'YEARLY' }
   ) {
     return this.subscriptionsService.createCheckoutSession(
       tenantId,
       body.planName,
-      body.billingCycle,
+      body.billingCycle
     );
   }
 
@@ -115,7 +115,7 @@ export class SubscriptionsController {
   @ApiOperation({ summary: 'Check if action is allowed based on limits' })
   async checkLimit(
     @TenantId() tenantId: string,
-    @Param('limitType') limitType: 'users' | 'patients' | 'appointments' | 'storage',
+    @Param('limitType') limitType: 'users' | 'patients' | 'appointments' | 'storage'
   ) {
     return this.subscriptionsService.checkLimit(tenantId, limitType);
   }
@@ -129,7 +129,7 @@ export class SubscriptionsController {
   @ApiOperation({ summary: 'Stripe webhook handler' })
   async handleWebhook(
     @Req() req: RawBodyRequest<Request>,
-    @Headers('stripe-signature') signature: string,
+    @Headers('stripe-signature') signature: string
   ) {
     const webhookSecret = this.configService.get<string>('STRIPE_WEBHOOK_SECRET');
 

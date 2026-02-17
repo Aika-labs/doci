@@ -1,276 +1,253 @@
 import Link from 'next/link';
-import { 
-  Mic, 
-  FileText, 
-  Calendar, 
-  Pill, 
-  Smartphone, 
-  Shield, 
-  Sparkles,
+import {
+  Calendar,
+  Pill,
+  Shield,
   ArrowRight,
   Check,
-  Play,
-  Zap,
+  Stethoscope,
+  HeartPulse,
+  Users,
   Clock,
+  Smartphone,
   BarChart3,
+  Lock,
 } from 'lucide-react';
+import HeroSection from './HeroSection';
+
+/* ==========================================================================
+   Doci Landing Page
+   Design: Dark medical-blue theme inspired by modern SaaS / ESG layouts.
+   Palette: navy #0A1628, light #E8F4FD, accent #3B82F6
+   ========================================================================== */
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100">
-        <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center shadow-lg shadow-teal-500/25">
-              <span className="text-white font-bold text-lg">D</span>
-            </div>
-            <span className="text-xl font-semibold text-gray-900">Doci</span>
-          </Link>
-          
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#features" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
-              Características
-            </a>
-            <a href="#pricing" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
-              Precios
-            </a>
-            <a href="#testimonials" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
-              Testimonios
-            </a>
-          </div>
+    <div className="min-h-screen bg-[#0A1628] text-[#E8F4FD] selection:bg-blue-500 selection:text-white">
+      {/* ── Hero with scroll-morph animation ────────────────────────── */}
+      <HeroSection />
 
-          <div className="flex items-center gap-3">
-            <Link
-              href="/sign-in"
-              className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors px-4 py-2"
-            >
-              Iniciar sesión
-            </Link>
-            <Link
-              href="/sign-up"
-              className="text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 px-5 py-2.5 rounded-full transition-colors"
-            >
-              Comenzar gratis
-            </Link>
+      {/* ── Partners / Trust ───────────────────────────────────────── */}
+      <section className="relative z-30 -mt-16 rounded-t-[3rem] bg-white pt-20 pb-20 text-[#0A1628] md:rounded-t-[5rem]">
+        <div className="mx-auto max-w-7xl px-6 md:px-12">
+          <div className="flex flex-col items-center justify-center gap-12 pt-8">
+            <h2 className="text-center text-3xl font-bold tracking-tight md:text-4xl">
+              Diseñado para médicos modernos
+            </h2>
+            <div className="flex flex-wrap items-center justify-center gap-8 opacity-70 grayscale transition-all duration-500 hover:opacity-100 hover:grayscale-0 md:gap-16">
+              <div className="flex h-12 items-center gap-2">
+                <Shield className="h-8 w-8 text-[#0A1628]" />
+                <span className="text-lg font-bold tracking-tight">HIPAA</span>
+              </div>
+              <div className="flex h-12 items-center gap-2">
+                <Lock className="h-8 w-8 text-[#0A1628]" />
+                <span className="text-lg font-bold tracking-tight">NOM-024</span>
+              </div>
+              <div className="flex h-12 items-center gap-2">
+                <Stethoscope className="h-8 w-8 text-[#0A1628]" />
+                <span className="text-lg font-bold tracking-tight">HL7 FHIR</span>
+              </div>
+              <div className="flex h-12 items-center gap-2">
+                <HeartPulse className="h-8 w-8 text-[#0A1628]" />
+                <span className="text-lg font-bold tracking-tight">COFEPRIS</span>
+              </div>
+            </div>
           </div>
         </div>
-      </nav>
+      </section>
 
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6 overflow-hidden">
-        <div className="mx-auto max-w-7xl">
-          {/* Badge */}
-          <div className="flex justify-center mb-8">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-teal-50 to-cyan-50 border border-teal-100">
-              <Sparkles className="w-4 h-4 text-teal-600" />
-              <span className="text-sm font-medium text-teal-700">Potenciado con IA de última generación</span>
-            </div>
+      {/* ── Features — Sticky Left + Cards Right ──────────────────── */}
+      <section id="features" className="bg-white px-6 pb-40 text-[#0A1628] md:px-12">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-16 lg:grid-cols-2 lg:gap-24">
+          {/* Sticky left */}
+          <div className="flex h-fit flex-col justify-start gap-8 lg:sticky lg:top-32 lg:self-start">
+            <h2 className="text-5xl leading-[0.95] font-medium tracking-tight md:text-6xl lg:text-7xl">
+              Inteligencia
+              <br />
+              Clínica
+            </h2>
+            <p className="max-w-lg text-xl leading-relaxed font-medium text-[#0A1628]/60 md:text-2xl">
+              Herramientas de IA que se adaptan a tu especialidad, automatizan la documentación y te
+              devuelven horas de tu día.
+            </p>
           </div>
 
-          {/* Headline */}
-          <h1 className="text-center text-5xl md:text-7xl font-bold tracking-tight text-gray-900 leading-[1.1]">
-            Tu consultorio,
-            <br />
-            <span className="bg-gradient-to-r from-teal-600 via-cyan-600 to-blue-600 bg-clip-text text-transparent">
-              reimaginado
-            </span>
-          </h1>
+          {/* Cards right */}
+          <div className="flex flex-col gap-10">
+            {/* AI Voice Notes */}
+            <FeatureCard
+              title="Notas clínicas con IA"
+              description="Dicta tus notas y la IA las estructura automáticamente en formato SOAP. Ahorra hasta 2 horas diarias."
+              stat="2hrs"
+              statLabel="Ahorro diario promedio"
+            />
 
-          <p className="mt-8 text-center text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            El sistema de gestión clínica que usa inteligencia artificial para que 
-            dediques más tiempo a tus pacientes y menos a la documentación.
+            {/* Digital Records */}
+            <FeatureCard
+              title="Expediente Digital"
+              description="Historias clínicas personalizables por especialidad con plantillas dinámicas y búsqueda inteligente."
+              cta="Explorar plantillas"
+            />
+
+            {/* Digital Prescriptions */}
+            <FeatureCard
+              title="Recetas Digitales"
+              description="Genera recetas con firma digital y código QR. Tus pacientes verifican la autenticidad en línea."
+              cta="Ver ejemplo"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ── Capabilities Section (dark) ────────────────────────────── */}
+      <section className="relative z-30 -mt-16 rounded-t-[3rem] bg-[#0A1628] pt-32 pb-32 text-[#E8F4FD] md:rounded-t-[5rem]">
+        <div className="mx-auto max-w-7xl px-6 text-center md:px-12">
+          <h2 className="mb-6 text-5xl font-medium tracking-tight md:text-8xl">Todo en un lugar</h2>
+          <p className="mx-auto mb-24 max-w-2xl text-lg font-light text-white/60 md:text-2xl">
+            Cada herramienta que necesitas para gestionar tu práctica médica, integrada en una sola
+            plataforma.
           </p>
 
-          {/* CTA Buttons */}
-          <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              href="/sign-up"
-              className="group flex items-center gap-2 px-8 py-4 bg-gray-900 text-white rounded-full font-medium hover:bg-gray-800 transition-all hover:scale-105 shadow-xl shadow-gray-900/20"
-            >
-              Prueba gratis 14 días
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <button className="flex items-center gap-2 px-8 py-4 text-gray-700 rounded-full font-medium hover:bg-gray-100 transition-colors">
-              <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-                <Play className="w-4 h-4 text-gray-700 ml-0.5" />
-              </div>
-              Ver demo
-            </button>
-          </div>
-
-          {/* Trust badges */}
-          <div className="mt-16 flex flex-wrap items-center justify-center gap-8 text-sm text-gray-500">
-            <div className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-teal-600" />
-              Sin tarjeta de crédito
-            </div>
-            <div className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-teal-600" />
-              Configuración en 5 minutos
-            </div>
-            <div className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-teal-600" />
-              Soporte en español
-            </div>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            <CapabilityCard
+              icon={<Calendar className="h-7 w-7" />}
+              title="Agenda Inteligente"
+              description="Recordatorios por WhatsApp, confirmación automática y vista de calendario integrada."
+            />
+            <CapabilityCard
+              icon={<Pill className="h-7 w-7" />}
+              title="Vademécum con IA"
+              description="Búsqueda semántica de medicamentos, interacciones y dosis personalizadas por paciente."
+            />
+            <CapabilityCard
+              icon={<Smartphone className="h-7 w-7" />}
+              title="PWA Móvil"
+              description="Accede desde cualquier dispositivo. Funciona incluso sin conexión a internet."
+            />
           </div>
         </div>
       </section>
 
-      {/* Bento Grid Features */}
-      <section id="features" className="py-24 px-6 bg-gray-50">
+      {/* ── Social Impact / Benefits (white) ───────────────────────── */}
+      <section className="relative z-20 -mt-16 rounded-t-[3rem] bg-white px-6 pt-24 pb-24 text-[#0A1628] md:rounded-t-[5rem]">
         <div className="mx-auto max-w-7xl">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
-              Todo lo que necesitas
+          <div className="mb-20 grid grid-cols-1 gap-12 lg:grid-cols-2">
+            <h2 className="text-5xl font-bold tracking-tight md:text-7xl">
+              Impacto
+              <br />
+              Real
             </h2>
-            <p className="mt-4 text-xl text-gray-600">
-              Herramientas diseñadas para médicos modernos
+            <p className="text-xl leading-relaxed text-[#0A1628]/70 md:text-2xl">
+              Doci transforma la práctica médica en LATAM: menos burocracia, mejor atención, más
+              tiempo para lo que importa.
             </p>
           </div>
 
-          {/* Bento Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {/* Large Card - AI Voice */}
-            <div className="lg:col-span-2 group relative overflow-hidden rounded-3xl bg-gradient-to-br from-teal-500 to-cyan-600 p-8 md:p-10 text-white">
-              <div className="relative z-10">
-                <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center mb-6">
-                  <Mic className="w-7 h-7" />
-                </div>
-                <h3 className="text-2xl md:text-3xl font-bold mb-3">Notas clínicas con IA</h3>
-                <p className="text-white/80 text-lg max-w-md leading-relaxed">
-                  Dicta tus notas y la IA las estructura automáticamente en formato SOAP. 
-                  Ahorra hasta 2 horas diarias en documentación.
-                </p>
-                <div className="mt-8 flex items-center gap-4">
-                  <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur text-sm">
-                    <Zap className="w-4 h-4" />
-                    Whisper + GPT-4o
-                  </div>
-                  <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur text-sm">
-                    <Clock className="w-4 h-4" />
-                    Tiempo real
-                  </div>
-                </div>
-              </div>
-              {/* Decorative elements */}
-              <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
-              <div className="absolute bottom-0 left-0 w-48 h-48 bg-cyan-400/20 rounded-full blur-2xl transform -translate-x-1/2 translate-y-1/2" />
-            </div>
-
-            {/* Expediente */}
-            <div className="group relative overflow-hidden rounded-3xl bg-white border border-gray-200 p-8 hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-300">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center mb-5 shadow-lg shadow-purple-500/25">
-                <FileText className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Expediente Digital</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Historias clínicas personalizables por especialidad con plantillas dinámicas y búsqueda inteligente.
-              </p>
-            </div>
-
-            {/* Agenda */}
-            <div className="group relative overflow-hidden rounded-3xl bg-white border border-gray-200 p-8 hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-300">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center mb-5 shadow-lg shadow-orange-500/25">
-                <Calendar className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Agenda Inteligente</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Recordatorios automáticos por WhatsApp, confirmación de citas y vista de calendario integrada.
-              </p>
-            </div>
-
-            {/* Recetas - Wide */}
-            <div className="lg:col-span-2 group relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900 to-gray-800 p-8 md:p-10 text-white">
-              <div className="relative z-10 flex flex-col md:flex-row md:items-center gap-8">
-                <div className="flex-1">
-                  <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur flex items-center justify-center mb-6">
-                    <Pill className="w-7 h-7" />
-                  </div>
-                  <h3 className="text-2xl md:text-3xl font-bold mb-3">Recetas Digitales</h3>
-                  <p className="text-white/70 text-lg leading-relaxed">
-                    Genera recetas con firma digital y código QR de verificación. 
-                    Tus pacientes pueden verificar la autenticidad en línea.
-                  </p>
-                </div>
-                <div className="flex-shrink-0 p-6 bg-white/10 backdrop-blur rounded-2xl">
-                  <div className="text-center">
-                    <Shield className="w-10 h-10 mx-auto mb-2 text-teal-400" />
-                    <p className="text-sm text-white/60">Verificación</p>
-                    <p className="text-lg font-bold">Segura</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* PWA */}
-            <div className="group relative overflow-hidden rounded-3xl bg-white border border-gray-200 p-8 hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-300">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center mb-5 shadow-lg shadow-blue-500/25">
-                <Smartphone className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">PWA Móvil</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Accede desde cualquier dispositivo. Funciona incluso sin conexión a internet.
-              </p>
-            </div>
-
-            {/* Reportes */}
-            <div className="group relative overflow-hidden rounded-3xl bg-white border border-gray-200 p-8 hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-300">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center mb-5 shadow-lg shadow-emerald-500/25">
-                <BarChart3 className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Reportes Avanzados</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Estadísticas de tu práctica, tendencias y métricas de rendimiento en tiempo real.
-              </p>
-            </div>
-
-            {/* Seguridad */}
-            <div className="group relative overflow-hidden rounded-3xl bg-white border border-gray-200 p-8 hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-300">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500 to-rose-500 flex items-center justify-center mb-5 shadow-lg shadow-red-500/25">
-                <Shield className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Seguridad Total</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Datos cifrados, autenticación segura y cumplimiento con normativas de salud.
-              </p>
-            </div>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            <BenefitCard
+              icon={<Users className="h-7 w-7" />}
+              title="Pacientes"
+              description="Mejor experiencia: recordatorios, historial accesible y comunicación directa con su médico."
+            />
+            <BenefitCard
+              icon={<Clock className="h-7 w-7" />}
+              title="Eficiencia"
+              description="Reduce 70% del tiempo en documentación. Más consultas, menos papeleo."
+            />
+            <BenefitCard
+              icon={<Shield className="h-7 w-7" />}
+              title="Seguridad"
+              description="Datos cifrados, respaldos automáticos y cumplimiento con normativas de salud mexicanas."
+            />
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-24 px-6">
+      {/* ── Impact Dashboard (dark) ────────────────────────────────── */}
+      <section id="impact" className="bg-[#0A1628] px-6 py-24 text-[#E8F4FD]">
         <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
-            <StatCard number="500+" label="Médicos activos" />
-            <StatCard number="50k+" label="Consultas procesadas" />
-            <StatCard number="2hrs" label="Ahorro diario promedio" />
-            <StatCard number="99.9%" label="Uptime garantizado" />
+          <div className="mb-16 grid grid-cols-1 gap-12 lg:grid-cols-2">
+            <h2 className="text-5xl font-bold tracking-tight text-white md:text-7xl">
+              Panel de Impacto
+            </h2>
+            <p className="text-xl text-white/60 md:text-2xl">
+              Métricas en tiempo real de cómo Doci optimiza la práctica médica de nuestros usuarios.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+            {/* Chart area */}
+            <div className="flex h-[400px] flex-col justify-between rounded-[2rem] border border-white/10 bg-white/5 p-8 md:col-span-2">
+              <div className="flex items-start justify-between">
+                <h3 className="text-2xl font-bold text-white">Consultas procesadas</h3>
+                <div className="flex items-center gap-1 rounded-full bg-blue-500/20 px-3 py-1 text-sm font-semibold text-blue-400">
+                  <BarChart3 className="h-3 w-3" />
+                  +34% este mes
+                </div>
+              </div>
+              <div className="mt-8 flex h-full w-full items-end justify-between gap-2 opacity-80">
+                {[40, 55, 45, 70, 65, 85].map((h, i) => (
+                  <div
+                    key={i}
+                    className={`group relative w-full cursor-pointer rounded-t-lg transition-all duration-500 hover:bg-blue-400/60 ${
+                      i === 5
+                        ? 'bg-gradient-to-t from-blue-500 to-blue-400/50'
+                        : 'hover:h-[ bg-white/10' + (h + 5) + '%]'
+                    }`}
+                    style={{ height: `${h}%` }}
+                  >
+                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs opacity-0 group-hover:opacity-100">
+                      {2019 + i}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4 text-sm text-white/40">Últimos 6 años de crecimiento</div>
+            </div>
+
+            {/* Stats column */}
+            <div className="flex flex-col gap-8">
+              <div className="flex flex-1 flex-col justify-center gap-2 rounded-[2rem] border border-white/10 bg-white/5 p-8 transition-colors hover:bg-white/10">
+                <span className="text-6xl font-bold tracking-tighter text-white">50k+</span>
+                <div className="flex items-center gap-2 text-white/60">
+                  <Stethoscope className="h-5 w-5" />
+                  <span className="text-lg">Consultas procesadas</span>
+                </div>
+                <div className="mt-4 h-2 w-full overflow-hidden rounded-full bg-white/10">
+                  <div className="h-full w-[85%] rounded-full bg-blue-500" />
+                </div>
+              </div>
+              <div className="flex flex-1 flex-col justify-center gap-2 rounded-[2rem] border border-white/10 bg-white/5 p-8 transition-colors hover:bg-white/10">
+                <span className="text-6xl font-bold tracking-tighter text-white">99.9%</span>
+                <div className="flex items-center gap-2 text-white/60">
+                  <HeartPulse className="h-5 w-5" />
+                  <span className="text-lg">Uptime garantizado</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section id="pricing" className="py-24 px-6 bg-gray-50">
+      {/* ── Pricing Section ────────────────────────────────────────── */}
+      <section
+        id="pricing"
+        className="relative z-20 -mt-16 rounded-t-[3rem] bg-white px-6 pt-32 pb-32 text-[#0A1628] md:rounded-t-[5rem]"
+      >
         <div className="mx-auto max-w-5xl">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
-              Precios simples
-            </h2>
-            <p className="mt-4 text-xl text-gray-600">
-              Sin sorpresas. Cancela cuando quieras.
-            </p>
+          <div className="mb-16 text-center">
+            <h2 className="text-5xl font-bold tracking-tight md:text-7xl">Precios simples</h2>
+            <p className="mt-4 text-xl text-[#0A1628]/60">Sin sorpresas. Cancela cuando quieras.</p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* Basic Plan */}
-            <div className="rounded-3xl bg-white border border-gray-200 p-8 md:p-10">
-              <h3 className="text-xl font-bold text-gray-900">Básico</h3>
-              <p className="mt-2 text-gray-600">Para consultorios individuales</p>
+          <div className="grid gap-8 md:grid-cols-2">
+            {/* Basic */}
+            <div className="rounded-[2rem] border border-gray-200 bg-white p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl md:p-10">
+              <h3 className="text-xl font-bold">Básico</h3>
+              <p className="mt-2 text-[#0A1628]/60">Para consultorios individuales</p>
               <div className="mt-6">
-                <span className="text-5xl font-bold text-gray-900">$499</span>
-                <span className="text-gray-600"> MXN/mes</span>
+                <span className="text-5xl font-bold">$499</span>
+                <span className="text-[#0A1628]/60"> MXN/mes</span>
               </div>
               <ul className="mt-8 space-y-4">
                 <PricingFeature>Hasta 100 pacientes</PricingFeature>
@@ -280,23 +257,23 @@ export default function HomePage() {
                 <PricingFeature>Soporte por email</PricingFeature>
               </ul>
               <Link
-                href="/sign-up"
-                className="mt-8 block w-full text-center py-4 rounded-full border-2 border-gray-900 text-gray-900 font-medium hover:bg-gray-900 hover:text-white transition-colors"
+                href="#cta"
+                className="mt-8 block w-full rounded-full border-2 border-[#0A1628] py-4 text-center font-medium transition-colors hover:bg-[#0A1628] hover:text-white"
               >
                 Comenzar gratis
               </Link>
             </div>
 
-            {/* Pro Plan */}
-            <div className="rounded-3xl bg-gradient-to-br from-gray-900 to-gray-800 p-8 md:p-10 text-white relative overflow-hidden">
-              <div className="absolute top-6 right-6 px-3 py-1 rounded-full bg-teal-500 text-xs font-medium">
+            {/* Pro */}
+            <div className="relative overflow-hidden rounded-[2rem] bg-[#0A1628] p-8 text-white transition-all duration-300 hover:-translate-y-2 hover:shadow-xl md:p-10">
+              <div className="absolute top-6 right-6 rounded-full bg-blue-500 px-3 py-1 text-xs font-semibold">
                 Popular
               </div>
               <h3 className="text-xl font-bold">Profesional</h3>
-              <p className="mt-2 text-white/70">Para clínicas y equipos</p>
+              <p className="mt-2 text-white/60">Para clínicas y equipos</p>
               <div className="mt-6">
                 <span className="text-5xl font-bold">$999</span>
-                <span className="text-white/70"> MXN/mes</span>
+                <span className="text-white/60"> MXN/mes</span>
               </div>
               <ul className="mt-8 space-y-4">
                 <PricingFeature light>Pacientes ilimitados</PricingFeature>
@@ -307,8 +284,8 @@ export default function HomePage() {
                 <PricingFeature light>Soporte prioritario 24/7</PricingFeature>
               </ul>
               <Link
-                href="/sign-up"
-                className="mt-8 block w-full text-center py-4 rounded-full bg-white text-gray-900 font-medium hover:bg-gray-100 transition-colors"
+                href="#cta"
+                className="mt-8 block w-full rounded-full bg-white py-4 text-center font-semibold text-[#0A1628] transition-colors hover:bg-blue-50"
               >
                 Comenzar gratis
               </Link>
@@ -317,59 +294,144 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-24 px-6">
+      {/* ── CTA Section (dark) ─────────────────────────────────────── */}
+      <section id="cta" className="bg-[#0A1628] px-6 py-32">
         <div className="mx-auto max-w-4xl text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
-            Empieza a transformar tu práctica hoy
+          <h2 className="text-5xl font-bold tracking-tight text-white md:text-7xl">
+            Empieza a transformar
+            <br />
+            tu práctica hoy
           </h2>
-          <p className="mt-6 text-xl text-gray-600">
+          <p className="mx-auto mt-6 max-w-xl text-xl text-white/60">
             Únete a cientos de médicos que ya usan Doci para optimizar su consultorio.
           </p>
           <div className="mt-10">
             <Link
               href="/sign-up"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-teal-600 to-cyan-600 text-white rounded-full font-medium hover:from-teal-700 hover:to-cyan-700 transition-all shadow-xl shadow-teal-500/25 hover:scale-105"
+              className="group inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 px-10 py-5 text-lg font-semibold text-white shadow-xl shadow-blue-500/25 transition-all duration-300 hover:scale-105 hover:from-blue-600 hover:to-cyan-600"
             >
               Prueba gratis 14 días
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-gray-200 py-12 px-6">
-        <div className="mx-auto max-w-7xl">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center">
-                <span className="text-white font-bold">D</span>
-              </div>
-              <span className="text-lg font-semibold text-gray-900">Doci</span>
+      {/* ── Footer ─────────────────────────────────────────────────── */}
+      <footer className="border-t border-white/10 bg-[#0A1628] px-6 py-12 text-center text-sm text-white/30">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 md:flex-row">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-cyan-400">
+              <span className="font-bold text-white">D</span>
             </div>
-            <div className="flex items-center gap-8 text-sm text-gray-600">
-              <a href="#" className="hover:text-gray-900 transition-colors">Privacidad</a>
-              <a href="#" className="hover:text-gray-900 transition-colors">Términos</a>
-              <a href="#" className="hover:text-gray-900 transition-colors">Contacto</a>
-            </div>
-            <p className="text-sm text-gray-500">
-              © {new Date().getFullYear()} Doci. Todos los derechos reservados.
-            </p>
+            <span className="text-lg font-semibold text-white/80">Doci</span>
           </div>
+          <div className="flex items-center gap-8 text-white/40">
+            <a href="#" className="transition-colors hover:text-white">
+              Privacidad
+            </a>
+            <a href="#" className="transition-colors hover:text-white">
+              Términos
+            </a>
+            <a href="#" className="transition-colors hover:text-white">
+              Contacto
+            </a>
+          </div>
+          <p>© {new Date().getFullYear()} Doci. Todos los derechos reservados.</p>
         </div>
       </footer>
     </div>
   );
 }
 
-function StatCard({ number, label }: { number: string; label: string }) {
+/* ── Sub-components ──────────────────────────────────────────────────── */
+
+function FeatureCard({
+  title,
+  description,
+  stat,
+  statLabel,
+  cta,
+}: {
+  title: string;
+  description: string;
+  stat?: string;
+  statLabel?: string;
+  cta?: string;
+}) {
   return (
-    <div className="text-center">
-      <p className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
-        {number}
+    <div className="group relative flex cursor-default flex-col gap-12 overflow-hidden rounded-[2.5rem] border border-transparent bg-slate-50 p-10 shadow-sm transition-all duration-500 ease-out hover:-translate-y-2 hover:border-blue-100 hover:bg-blue-50 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)]">
+      <div className="relative z-10 space-y-4">
+        <h3 className="text-4xl font-medium tracking-tight text-[#0A1628] md:text-5xl">{title}</h3>
+        <p className="max-w-md text-lg leading-relaxed font-medium text-[#0A1628]/60">
+          {description}
+        </p>
+      </div>
+      {stat && (
+        <div className="mt-auto border-t border-[#0A1628]/10 pt-8">
+          <span className="text-5xl font-medium tracking-tight text-[#0A1628] md:text-6xl">
+            {stat}
+          </span>
+          {statLabel && (
+            <span className="mt-1 block text-sm font-semibold tracking-wider text-[#0A1628]/50 uppercase">
+              {statLabel}
+            </span>
+          )}
+        </div>
+      )}
+      {cta && (
+        <div className="group/btn mt-auto flex items-center justify-between border-t border-[#0A1628]/10 pt-6">
+          <span className="text-sm font-semibold tracking-wider text-[#0A1628] uppercase">
+            {cta}
+          </span>
+          <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[#0A1628]/10 bg-white transition-all duration-300 group-hover/btn:bg-[#0A1628] group-hover/btn:text-white">
+            <ArrowRight className="h-5 w-5" />
+          </div>
+        </div>
+      )}
+      <div className="absolute -right-10 -bottom-10 h-64 w-64 rounded-full bg-white/40 opacity-0 blur-3xl transition-all duration-700 group-hover:bg-white/60 group-hover:opacity-100" />
+    </div>
+  );
+}
+
+function CapabilityCard({
+  icon,
+  title,
+  description,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="group cursor-default rounded-[2rem] bg-white/5 p-8 transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:text-white">
+      <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-white/80 transition-colors group-hover:bg-blue-500/20 group-hover:text-blue-400">
+        {icon}
+      </div>
+      <h3 className="mb-4 text-3xl font-bold tracking-tight">{title}</h3>
+      <p className="text-lg leading-relaxed text-white/50 group-hover:text-white/70">
+        {description}
       </p>
-      <p className="mt-2 text-gray-600">{label}</p>
+    </div>
+  );
+}
+
+function BenefitCard({
+  icon,
+  title,
+  description,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="group cursor-default rounded-[2rem] bg-slate-50 p-8 transition-all duration-500 hover:bg-[#0A1628] hover:text-[#E8F4FD]">
+      <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-[#0A1628] transition-colors group-hover:bg-white/10 group-hover:text-[#E8F4FD]">
+        {icon}
+      </div>
+      <h3 className="mb-4 text-3xl font-bold tracking-tight">{title}</h3>
+      <p className="text-lg leading-relaxed opacity-60">{description}</p>
     </div>
   );
 }
@@ -377,12 +439,14 @@ function StatCard({ number, label }: { number: string; label: string }) {
 function PricingFeature({ children, light }: { children: React.ReactNode; light?: boolean }) {
   return (
     <li className="flex items-center gap-3">
-      <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
-        light ? 'bg-teal-500' : 'bg-teal-100'
-      }`}>
-        <Check className={`w-3 h-3 ${light ? 'text-white' : 'text-teal-600'}`} />
+      <div
+        className={`flex h-5 w-5 items-center justify-center rounded-full ${
+          light ? 'bg-blue-500' : 'bg-blue-100'
+        }`}
+      >
+        <Check className={`h-3 w-3 ${light ? 'text-white' : 'text-blue-600'}`} />
       </div>
-      <span className={light ? 'text-white/90' : 'text-gray-700'}>{children}</span>
+      <span className={light ? 'text-white/90' : 'text-[#0A1628]/70'}>{children}</span>
     </li>
   );
 }

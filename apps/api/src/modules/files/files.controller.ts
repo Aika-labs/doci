@@ -34,7 +34,7 @@ export class FilesController {
   async getFilesByType(
     @TenantId() tenantId: string,
     @Param('patientId') patientId: string,
-    @Param('type') type: 'LAB_RESULT' | 'IMAGING' | 'DOCUMENT' | 'PRESCRIPTION' | 'OTHER',
+    @Param('type') type: 'LAB_RESULT' | 'IMAGING' | 'DOCUMENT' | 'PRESCRIPTION' | 'OTHER'
   ) {
     return this.filesService.getFilesByType(tenantId, patientId, type);
   }
@@ -62,7 +62,7 @@ export class FilesController {
     @Body('patientId') patientId: string,
     @Body('name') name: string,
     @Body('description') description: string,
-    @Body('type') type: 'LAB_RESULT' | 'IMAGING' | 'DOCUMENT' | 'PRESCRIPTION' | 'OTHER',
+    @Body('type') type: 'LAB_RESULT' | 'IMAGING' | 'DOCUMENT' | 'PRESCRIPTION' | 'OTHER'
   ) {
     if (!file) {
       throw new BadRequestException('File is required');

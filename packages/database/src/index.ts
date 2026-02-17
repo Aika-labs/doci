@@ -25,6 +25,9 @@ export type TenantContext = {
 };
 
 // Utility to create tenant-scoped Prisma operations
-export function withTenant<T extends object>(data: T, ctx: TenantContext): T & { tenantId: string } {
+export function withTenant<T extends object>(
+  data: T,
+  ctx: TenantContext
+): T & { tenantId: string } {
   return { ...data, tenantId: ctx.tenantId };
 }

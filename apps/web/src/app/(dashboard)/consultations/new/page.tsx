@@ -5,7 +5,19 @@ import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@clerk/nextjs';
 import { VoiceRecorder } from '@/components/voice';
 import { patientsApi, Patient } from '@/lib/api';
-import { ArrowLeft, Search, User, Mic, FileText, CheckCircle, Loader2, Pill, Plus, X, Download } from 'lucide-react';
+import {
+  ArrowLeft,
+  Search,
+  User,
+  Mic,
+  FileText,
+  CheckCircle,
+  Loader2,
+  Pill,
+  Plus,
+  X,
+  Download,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/components/ui';
 
@@ -46,7 +58,7 @@ function NewConsultationContent() {
   const searchParams = useSearchParams();
   const { getToken } = useAuth();
   const { success, error: showError } = useToast();
-  
+
   const [step, setStep] = useState<Step>('patient');
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [patients, setPatients] = useState<Patient[]>([]);
@@ -58,7 +70,7 @@ function NewConsultationContent() {
   const [editedNotes, setEditedNotes] = useState<SOAPNotes | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [consultationId, setConsultationId] = useState<string | null>(null);
-  
+
   // Prescription state
   const [showPrescriptionForm, setShowPrescriptionForm] = useState(false);
   const [medications, setMedications] = useState<Medication[]>([]);
@@ -67,17 +79,20 @@ function NewConsultationContent() {
   const [isCreatingPrescription, setIsCreatingPrescription] = useState(false);
   const [createdPrescription, setCreatedPrescription] = useState<CreatedPrescription | null>(null);
 
-  const loadPatient = useCallback(async (patientId: string) => {
-    try {
-      const token = await getToken();
-      if (!token) return;
-      const patient = await patientsApi.getById(token, patientId);
-      setSelectedPatient(patient);
-      setStep('recording');
-    } catch (error) {
-      console.error('Error loading patient:', error);
-    }
-  }, [getToken]);
+  const loadPatient = useCallback(
+    async (patientId: string) => {
+      try {
+        const token = await getToken();
+        if (!token) return;
+        const patient = await patientsApi.getById(token, patientId);
+        setSelectedPatient(patient);
+        setStep('recording');
+      } catch (error) {
+        console.error('Error loading patient:', error);
+      }
+    },
+    [getToken]
+  );
 
   // Load preselected patient from URL
   useEffect(() => {
@@ -87,24 +102,27 @@ function NewConsultationContent() {
     }
   }, [searchParams, loadPatient]);
 
-  const searchPatients = useCallback(async (search: string) => {
-    if (search.length < 2) {
-      setPatients([]);
-      return;
-    }
+  const searchPatients = useCallback(
+    async (search: string) => {
+      if (search.length < 2) {
+        setPatients([]);
+        return;
+      }
 
-    try {
-      setIsSearching(true);
-      const token = await getToken();
-      if (!token) return;
-      const response = await patientsApi.getAll(token, { search, limit: 10 });
-      setPatients(response.data);
-    } catch (error) {
-      console.error('Error searching patients:', error);
-    } finally {
-      setIsSearching(false);
-    }
-  }, [getToken]);
+      try {
+        setIsSearching(true);
+        const token = await getToken();
+        if (!token) return;
+        const response = await patientsApi.getAll(token, { search, limit: 10 });
+        setPatients(response.data);
+      } catch (error) {
+        console.error('Error searching patients:', error);
+      } finally {
+        setIsSearching(false);
+      }
+    },
+    [getToken]
+  );
 
   useEffect(() => {
     const debounce = setTimeout(() => {
@@ -159,11 +177,15 @@ function NewConsultationContent() {
       console.error('Error processing recording:', error);
       // For demo, create mock response
       const mockResponse: AIResponse = {
-        transcription: 'Paciente refiere dolor de cabeza desde hace 3 días, intensidad 7/10, localizado en región frontal. No mejora con paracetamol. Sin náuseas ni vómitos. Antecedentes de migraña.',
+        transcription:
+          'Paciente refiere dolor de cabeza desde hace 3 días, intensidad 7/10, localizado en región frontal. No mejora con paracetamol. Sin náuseas ni vómitos. Antecedentes de migraña.',
         soapNotes: {
-          subjective: 'Paciente de sexo masculino refiere cefalea frontal de 3 días de evolución, intensidad 7/10. No responde a paracetamol. Niega náuseas, vómitos, fotofobia. Antecedente personal de migraña.',
-          objective: 'Signos vitales estables. Paciente alerta, orientado. Sin rigidez de nuca. Pupilas isocóricas, reactivas. Fondo de ojo normal.',
-          assessment: 'Cefalea tensional vs episodio migrañoso sin aura. Diagnóstico diferencial: cefalea secundaria (descartada por clínica).',
+          subjective:
+            'Paciente de sexo masculino refiere cefalea frontal de 3 días de evolución, intensidad 7/10. No responde a paracetamol. Niega náuseas, vómitos, fotofobia. Antecedente personal de migraña.',
+          objective:
+            'Signos vitales estables. Paciente alerta, orientado. Sin rigidez de nuca. Pupilas isocóricas, reactivas. Fondo de ojo normal.',
+          assessment:
+            'Cefalea tensional vs episodio migrañoso sin aura. Diagnóstico diferencial: cefalea secundaria (descartada por clínica).',
           plan: '1. Ibuprofeno 400mg c/8h por 5 días\n2. Reposo relativo\n3. Evitar factores desencadenantes\n4. Control en 1 semana si no mejora\n5. Acudir a urgencias si presenta signos de alarma',
         },
         suggestions: {
@@ -249,10 +271,7 @@ function NewConsultationContent() {
     const parts = suggestion.split(' ');
     const name = parts[0];
     const dose = parts.slice(1).join(' ');
-    setMedications([
-      ...medications,
-      { name, dose, frequency: '', duration: '', instructions: '' },
-    ]);
+    setMedications([...medications, { name, dose, frequency: '', duration: '', instructions: '' }]);
   };
 
   const handleCreatePrescription = async () => {
@@ -275,7 +294,7 @@ function NewConsultationContent() {
             patientId: selectedPatient.id,
             consultationId: consultationId,
             diagnosis: prescriptionDiagnosis || editedNotes?.assessment,
-            medications: medications.filter(m => m.name && m.dose),
+            medications: medications.filter((m) => m.name && m.dose),
             notes: prescriptionNotes,
           }),
         }
@@ -312,12 +331,12 @@ function NewConsultationContent() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="mx-auto max-w-4xl">
       {/* Header */}
       <div className="mb-6">
         <Link
           href="/consultations"
-          className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4"
+          className="mb-4 inline-flex items-center gap-2 text-gray-600 hover:text-gray-900"
         >
           <ArrowLeft className="h-4 w-4" />
           Volver a consultas
@@ -327,7 +346,7 @@ function NewConsultationContent() {
       </div>
 
       {/* Progress Steps */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="mb-8 flex items-center justify-between">
         {[
           { key: 'patient', label: 'Paciente', icon: User },
           { key: 'recording', label: 'Grabación', icon: Mic },
@@ -336,22 +355,22 @@ function NewConsultationContent() {
         ].map((s, i) => (
           <div key={s.key} className="flex items-center">
             <div
-              className={`flex items-center justify-center w-10 h-10 rounded-full ${
+              className={`flex h-10 w-10 items-center justify-center rounded-full ${
                 step === s.key
                   ? 'bg-blue-600 text-white'
                   : ['patient', 'recording', 'review', 'complete'].indexOf(step) >
-                    ['patient', 'recording', 'review', 'complete'].indexOf(s.key)
-                  ? 'bg-green-500 text-white'
-                  : 'bg-gray-200 text-gray-500'
+                      ['patient', 'recording', 'review', 'complete'].indexOf(s.key)
+                    ? 'bg-green-500 text-white'
+                    : 'bg-gray-200 text-gray-500'
               }`}
             >
               <s.icon className="h-5 w-5" />
             </div>
-            <span className="ml-2 text-sm font-medium text-gray-700 hidden sm:block">
+            <span className="ml-2 hidden text-sm font-medium text-gray-700 sm:block">
               {s.label}
             </span>
             {i < 3 && (
-              <div className="w-12 sm:w-24 h-0.5 mx-2 bg-gray-200">
+              <div className="mx-2 h-0.5 w-12 bg-gray-200 sm:w-24">
                 <div
                   className={`h-full bg-green-500 transition-all ${
                     ['patient', 'recording', 'review', 'complete'].indexOf(step) > i
@@ -366,21 +385,19 @@ function NewConsultationContent() {
       </div>
 
       {/* Step Content */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
+      <div className="rounded-xl border border-gray-200 bg-white p-6">
         {/* Step 1: Patient Selection */}
         {step === 'patient' && (
           <div>
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">
-              Selecciona el paciente
-            </h2>
+            <h2 className="mb-4 text-lg font-semibold text-gray-900">Selecciona el paciente</h2>
             <div className="relative mb-4">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Buscar por nombre..."
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full rounded-lg border border-gray-300 py-3 pr-4 pl-10 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
@@ -394,11 +411,12 @@ function NewConsultationContent() {
                   <button
                     key={patient.id}
                     onClick={() => handlePatientSelect(patient)}
-                    className="w-full flex items-center gap-4 p-4 border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-colors text-left"
+                    className="flex w-full items-center gap-4 rounded-lg border border-gray-200 p-4 text-left transition-colors hover:border-blue-300 hover:bg-blue-50"
                   >
-                    <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-blue-600 font-semibold">
-                        {patient.firstName[0]}{patient.lastName[0]}
+                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
+                      <span className="font-semibold text-blue-600">
+                        {patient.firstName[0]}
+                        {patient.lastName[0]}
                       </span>
                     </div>
                     <div className="flex-1">
@@ -406,7 +424,8 @@ function NewConsultationContent() {
                         {patient.firstName} {patient.lastName}
                       </p>
                       <p className="text-sm text-gray-500">
-                        {calculateAge(patient.dateOfBirth)} años • {patient.gender === 'MALE' ? 'M' : 'F'}
+                        {calculateAge(patient.dateOfBirth)} años •{' '}
+                        {patient.gender === 'MALE' ? 'M' : 'F'}
                         {patient.bloodType && ` • ${patient.bloodType}`}
                       </p>
                     </div>
@@ -414,11 +433,9 @@ function NewConsultationContent() {
                 ))}
               </div>
             ) : searchTerm.length >= 2 ? (
-              <p className="text-center text-gray-500 py-8">
-                No se encontraron pacientes
-              </p>
+              <p className="py-8 text-center text-gray-500">No se encontraron pacientes</p>
             ) : (
-              <p className="text-center text-gray-500 py-8">
+              <p className="py-8 text-center text-gray-500">
                 Escribe al menos 2 caracteres para buscar
               </p>
             )}
@@ -428,10 +445,11 @@ function NewConsultationContent() {
         {/* Step 2: Recording */}
         {step === 'recording' && selectedPatient && (
           <div>
-            <div className="flex items-center gap-4 mb-6 p-4 bg-blue-50 rounded-lg">
-              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                <span className="text-blue-600 font-semibold">
-                  {selectedPatient.firstName[0]}{selectedPatient.lastName[0]}
+            <div className="mb-6 flex items-center gap-4 rounded-lg bg-blue-50 p-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
+                <span className="font-semibold text-blue-600">
+                  {selectedPatient.firstName[0]}
+                  {selectedPatient.lastName[0]}
                 </span>
               </div>
               <div>
@@ -441,7 +459,7 @@ function NewConsultationContent() {
                 <p className="text-sm text-gray-600">
                   {calculateAge(selectedPatient.dateOfBirth)} años
                   {selectedPatient.allergies?.length > 0 && (
-                    <span className="text-red-600 ml-2">
+                    <span className="ml-2 text-red-600">
                       Alergias: {selectedPatient.allergies.join(', ')}
                     </span>
                   )}
@@ -458,10 +476,8 @@ function NewConsultationContent() {
               </button>
             </div>
 
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">
-              Graba la consulta
-            </h2>
-            <p className="text-gray-600 mb-6">
+            <h2 className="mb-4 text-lg font-semibold text-gray-900">Graba la consulta</h2>
+            <p className="mb-6 text-gray-600">
               Presiona el botón para comenzar a grabar. La IA transcribirá y estructurará
               automáticamente las notas SOAP.
             </p>
@@ -473,7 +489,7 @@ function NewConsultationContent() {
                 <button
                   onClick={handleProcessRecording}
                   disabled={isProcessing}
-                  className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {isProcessing ? (
                     <>
@@ -495,26 +511,36 @@ function NewConsultationContent() {
         {/* Step 3: Review */}
         {step === 'review' && editedNotes && aiResponse && (
           <div>
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">
-              Revisa y edita las notas
-            </h2>
+            <h2 className="mb-4 text-lg font-semibold text-gray-900">Revisa y edita las notas</h2>
 
             {/* Transcription */}
-            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <h3 className="text-sm font-medium text-gray-700 mb-2">Transcripción</h3>
-              <p className="text-gray-600 text-sm">{aiResponse.transcription}</p>
+            <div className="mb-6 rounded-lg bg-gray-50 p-4">
+              <h3 className="mb-2 text-sm font-medium text-gray-700">Transcripción</h3>
+              <p className="text-sm text-gray-600">{aiResponse.transcription}</p>
             </div>
 
             {/* SOAP Notes */}
             <div className="space-y-4">
               {[
-                { key: 'subjective', label: 'Subjetivo (S)', placeholder: 'Lo que el paciente refiere...' },
-                { key: 'objective', label: 'Objetivo (O)', placeholder: 'Hallazgos del examen físico...' },
-                { key: 'assessment', label: 'Evaluación (A)', placeholder: 'Diagnóstico y análisis...' },
+                {
+                  key: 'subjective',
+                  label: 'Subjetivo (S)',
+                  placeholder: 'Lo que el paciente refiere...',
+                },
+                {
+                  key: 'objective',
+                  label: 'Objetivo (O)',
+                  placeholder: 'Hallazgos del examen físico...',
+                },
+                {
+                  key: 'assessment',
+                  label: 'Evaluación (A)',
+                  placeholder: 'Diagnóstico y análisis...',
+                },
                 { key: 'plan', label: 'Plan (P)', placeholder: 'Tratamiento y seguimiento...' },
               ].map((field) => (
                 <div key={field.key}>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
                     {field.label}
                   </label>
                   <textarea
@@ -526,7 +552,7 @@ function NewConsultationContent() {
                       })
                     }
                     rows={4}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
                     placeholder={field.placeholder}
                   />
                 </div>
@@ -534,14 +560,16 @@ function NewConsultationContent() {
             </div>
 
             {/* AI Suggestions */}
-            <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-              <h3 className="text-sm font-medium text-blue-900 mb-3">Sugerencias de IA</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div className="mt-6 rounded-lg bg-blue-50 p-4">
+              <h3 className="mb-3 text-sm font-medium text-blue-900">Sugerencias de IA</h3>
+              <div className="grid grid-cols-1 gap-4 text-sm md:grid-cols-2">
                 <div>
                   <p className="font-medium text-blue-800">Diagnósticos sugeridos:</p>
                   <ul className="mt-1 space-y-1">
                     {aiResponse.suggestions.diagnoses.map((d, i) => (
-                      <li key={i} className="text-blue-700">• {d}</li>
+                      <li key={i} className="text-blue-700">
+                        • {d}
+                      </li>
                     ))}
                   </ul>
                 </div>
@@ -549,7 +577,9 @@ function NewConsultationContent() {
                   <p className="font-medium text-blue-800">Medicamentos sugeridos:</p>
                   <ul className="mt-1 space-y-1">
                     {aiResponse.suggestions.medications.map((m, i) => (
-                      <li key={i} className="text-blue-700">• {m}</li>
+                      <li key={i} className="text-blue-700">
+                        • {m}
+                      </li>
                     ))}
                   </ul>
                 </div>
@@ -557,7 +587,9 @@ function NewConsultationContent() {
                   <p className="font-medium text-blue-800">Estudios sugeridos:</p>
                   <ul className="mt-1 space-y-1">
                     {aiResponse.suggestions.tests.map((t, i) => (
-                      <li key={i} className="text-blue-700">• {t}</li>
+                      <li key={i} className="text-blue-700">
+                        • {t}
+                      </li>
                     ))}
                   </ul>
                 </div>
@@ -572,14 +604,14 @@ function NewConsultationContent() {
             <div className="mt-6 flex justify-between">
               <button
                 onClick={() => setStep('recording')}
-                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50"
+                className="rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50"
               >
                 Volver a grabar
               </button>
               <button
                 onClick={handleSaveConsultation}
                 disabled={isSaving}
-                className="flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
+                className="flex items-center gap-2 rounded-lg bg-green-600 px-6 py-3 text-white hover:bg-green-700 disabled:opacity-50"
               >
                 {isSaving ? (
                   <>
@@ -600,11 +632,11 @@ function NewConsultationContent() {
         {/* Step 4: Complete */}
         {step === 'complete' && (
           <div className="py-8">
-            <div className="text-center mb-8">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="mb-8 text-center">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
                 <CheckCircle className="h-8 w-8 text-green-600" />
               </div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">
+              <h2 className="mb-2 text-xl font-semibold text-gray-900">
                 Consulta guardada exitosamente
               </h2>
               <p className="text-gray-600">
@@ -614,13 +646,15 @@ function NewConsultationContent() {
 
             {/* Prescription Section */}
             {!showPrescriptionForm && !createdPrescription && (
-              <div className="bg-blue-50 rounded-lg p-6 mb-6">
+              <div className="mb-6 rounded-lg bg-blue-50 p-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Pill className="h-6 w-6 text-blue-600" />
                     <div>
                       <h3 className="font-semibold text-gray-900">¿Necesitas crear una receta?</h3>
-                      <p className="text-sm text-gray-600">Genera una receta médica para este paciente</p>
+                      <p className="text-sm text-gray-600">
+                        Genera una receta médica para este paciente
+                      </p>
                     </div>
                   </div>
                   <button
@@ -630,7 +664,7 @@ function NewConsultationContent() {
                         setPrescriptionDiagnosis(aiResponse.suggestions.diagnoses[0]);
                       }
                     }}
-                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                   >
                     <Plus className="h-4 w-4" />
                     Crear Receta
@@ -641,9 +675,9 @@ function NewConsultationContent() {
 
             {/* Prescription Form */}
             {showPrescriptionForm && (
-              <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+              <div className="mb-6 rounded-lg border border-gray-200 bg-white p-6">
+                <div className="mb-4 flex items-center justify-between">
+                  <h3 className="flex items-center gap-2 text-lg font-semibold text-gray-900">
                     <Pill className="h-5 w-5 text-green-600" />
                     Nueva Receta
                   </h3>
@@ -657,39 +691,42 @@ function NewConsultationContent() {
 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="mb-1 block text-sm font-medium text-gray-700">
                       Diagnóstico
                     </label>
                     <input
                       type="text"
                       value={prescriptionDiagnosis}
                       onChange={(e) => setPrescriptionDiagnosis(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500"
                       placeholder="Diagnóstico principal"
                     />
                   </div>
 
                   {/* Suggested Medications */}
-                  {aiResponse?.suggestions.medications && aiResponse.suggestions.medications.length > 0 && (
-                    <div>
-                      <p className="text-sm font-medium text-gray-700 mb-2">Medicamentos sugeridos por IA:</p>
-                      <div className="flex flex-wrap gap-2">
-                        {aiResponse.suggestions.medications.map((med, i) => (
-                          <button
-                            key={i}
-                            onClick={() => addSuggestedMedication(med)}
-                            className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm hover:bg-blue-100"
-                          >
-                            + {med}
-                          </button>
-                        ))}
+                  {aiResponse?.suggestions.medications &&
+                    aiResponse.suggestions.medications.length > 0 && (
+                      <div>
+                        <p className="mb-2 text-sm font-medium text-gray-700">
+                          Medicamentos sugeridos por IA:
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          {aiResponse.suggestions.medications.map((med, i) => (
+                            <button
+                              key={i}
+                              onClick={() => addSuggestedMedication(med)}
+                              className="rounded-full bg-blue-50 px-3 py-1 text-sm text-blue-700 hover:bg-blue-100"
+                            >
+                              + {med}
+                            </button>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
 
                   {/* Medications List */}
                   <div>
-                    <div className="flex items-center justify-between mb-2">
+                    <div className="mb-2 flex items-center justify-between">
                       <label className="text-sm font-medium text-gray-700">Medicamentos</label>
                       <button
                         onClick={addMedication}
@@ -698,17 +735,20 @@ function NewConsultationContent() {
                         + Agregar medicamento
                       </button>
                     </div>
-                    
+
                     {medications.length === 0 ? (
-                      <p className="text-sm text-gray-500 text-center py-4 border border-dashed border-gray-300 rounded-lg">
-                        No hay medicamentos agregados. Haz clic en una sugerencia o agrega uno manualmente.
+                      <p className="rounded-lg border border-dashed border-gray-300 py-4 text-center text-sm text-gray-500">
+                        No hay medicamentos agregados. Haz clic en una sugerencia o agrega uno
+                        manualmente.
                       </p>
                     ) : (
                       <div className="space-y-3">
                         {medications.map((med, index) => (
-                          <div key={index} className="p-3 bg-gray-50 rounded-lg">
-                            <div className="flex items-start justify-between mb-2">
-                              <span className="text-sm font-medium text-gray-700">Medicamento {index + 1}</span>
+                          <div key={index} className="rounded-lg bg-gray-50 p-3">
+                            <div className="mb-2 flex items-start justify-between">
+                              <span className="text-sm font-medium text-gray-700">
+                                Medicamento {index + 1}
+                              </span>
                               <button
                                 onClick={() => removeMedication(index)}
                                 className="text-red-500 hover:text-red-700"
@@ -722,36 +762,42 @@ function NewConsultationContent() {
                                 value={med.name}
                                 onChange={(e) => updateMedication(index, 'name', e.target.value)}
                                 placeholder="Nombre"
-                                className="px-2 py-1 border border-gray-300 rounded text-sm"
+                                className="rounded border border-gray-300 px-2 py-1 text-sm"
                               />
                               <input
                                 type="text"
                                 value={med.dose}
                                 onChange={(e) => updateMedication(index, 'dose', e.target.value)}
                                 placeholder="Dosis (ej: 400mg)"
-                                className="px-2 py-1 border border-gray-300 rounded text-sm"
+                                className="rounded border border-gray-300 px-2 py-1 text-sm"
                               />
                               <input
                                 type="text"
                                 value={med.frequency}
-                                onChange={(e) => updateMedication(index, 'frequency', e.target.value)}
+                                onChange={(e) =>
+                                  updateMedication(index, 'frequency', e.target.value)
+                                }
                                 placeholder="Frecuencia (ej: c/8h)"
-                                className="px-2 py-1 border border-gray-300 rounded text-sm"
+                                className="rounded border border-gray-300 px-2 py-1 text-sm"
                               />
                               <input
                                 type="text"
                                 value={med.duration}
-                                onChange={(e) => updateMedication(index, 'duration', e.target.value)}
+                                onChange={(e) =>
+                                  updateMedication(index, 'duration', e.target.value)
+                                }
                                 placeholder="Duración (ej: 7 días)"
-                                className="px-2 py-1 border border-gray-300 rounded text-sm"
+                                className="rounded border border-gray-300 px-2 py-1 text-sm"
                               />
                             </div>
                             <input
                               type="text"
                               value={med.instructions || ''}
-                              onChange={(e) => updateMedication(index, 'instructions', e.target.value)}
+                              onChange={(e) =>
+                                updateMedication(index, 'instructions', e.target.value)
+                              }
                               placeholder="Instrucciones adicionales (opcional)"
-                              className="w-full mt-2 px-2 py-1 border border-gray-300 rounded text-sm"
+                              className="mt-2 w-full rounded border border-gray-300 px-2 py-1 text-sm"
                             />
                           </div>
                         ))}
@@ -760,14 +806,14 @@ function NewConsultationContent() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="mb-1 block text-sm font-medium text-gray-700">
                       Notas adicionales
                     </label>
                     <textarea
                       value={prescriptionNotes}
                       onChange={(e) => setPrescriptionNotes(e.target.value)}
                       rows={2}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500"
                       placeholder="Indicaciones especiales, advertencias, etc."
                     />
                   </div>
@@ -775,14 +821,14 @@ function NewConsultationContent() {
                   <div className="flex justify-end gap-3 pt-2">
                     <button
                       onClick={() => setShowPrescriptionForm(false)}
-                      className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50"
+                      className="rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50"
                     >
                       Cancelar
                     </button>
                     <button
                       onClick={handleCreatePrescription}
                       disabled={isCreatingPrescription || medications.length === 0}
-                      className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
+                      className="flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700 disabled:opacity-50"
                     >
                       {isCreatingPrescription ? (
                         <>
@@ -803,21 +849,23 @@ function NewConsultationContent() {
 
             {/* Created Prescription */}
             {createdPrescription && (
-              <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+              <div className="mb-6 rounded-lg border border-green-200 bg-green-50 p-6">
+                <div className="mb-4 flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
                     <CheckCircle className="h-5 w-5 text-green-600" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-green-900">Receta creada exitosamente</h3>
-                    <p className="text-sm text-green-700">Código de verificación: {createdPrescription.securityCode}</p>
+                    <p className="text-sm text-green-700">
+                      Código de verificación: {createdPrescription.securityCode}
+                    </p>
                   </div>
                 </div>
                 <a
                   href={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/prescriptions/${createdPrescription.id}/pdf`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                  className="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700"
                 >
                   <Download className="h-4 w-4" />
                   Descargar PDF
@@ -829,14 +877,14 @@ function NewConsultationContent() {
             <div className="flex justify-center gap-4">
               <Link
                 href={`/patients/${selectedPatient?.id}`}
-                className="px-4 py-2 text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50"
+                className="rounded-lg border border-blue-600 px-4 py-2 text-blue-600 hover:bg-blue-50"
               >
                 Ver expediente
               </Link>
               {consultationId && (
                 <Link
                   href={`/consultations/${consultationId}`}
-                  className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50"
+                  className="rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50"
                 >
                   Ver consulta
                 </Link>
@@ -853,7 +901,7 @@ function NewConsultationContent() {
                   setCreatedPrescription(null);
                   setShowPrescriptionForm(false);
                 }}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
               >
                 Nueva consulta
               </button>
@@ -867,7 +915,13 @@ function NewConsultationContent() {
 
 export default function NewConsultationPage() {
   return (
-    <Suspense fallback={<div className="flex items-center justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-blue-600" /></div>}>
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        </div>
+      }
+    >
       <NewConsultationContent />
     </Suspense>
   );
