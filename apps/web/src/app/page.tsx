@@ -25,6 +25,7 @@ import HeroSection from './HeroSection';
 
 /* ==========================================================================
    Doci Landing Page — Venezuela Edition
+   Design: Dark medical-blue theme inspired by modern SaaS / ESG layouts.
    Palette: navy #0A1628, light #E8F4FD, accent #3B82F6
    ========================================================================== */
 
@@ -33,7 +34,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-[#0A1628] text-[#E8F4FD] selection:bg-blue-500 selection:text-white">
       <HeroSection />
 
-      {/* ── Trust / Compliance ─────────────────────────────────────── */}
+      {/* ── Partners / Trust ───────────────────────────────────────── */}
       <section className="relative z-30 -mt-8 rounded-t-[3rem] bg-white pt-20 pb-20 text-[#0A1628] shadow-[0_-20px_60px_rgba(0,0,0,0.5)] md:-mt-16 md:rounded-t-[5rem]">
         <div className="mx-auto max-w-7xl px-6 md:px-12">
           <div className="flex flex-col items-center justify-center gap-12 pt-8">
@@ -97,7 +98,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Todo en un lugar — Mind-map (dark) ─────────────────────── */}
+      {/* ── Todo en un lugar — Mind-map style (dark) ────────────────── */}
       <section className="relative z-30 -mt-16 rounded-t-[3rem] bg-[#0A1628] pt-32 pb-32 text-[#E8F4FD] md:rounded-t-[5rem]">
         <div className="mx-auto max-w-7xl px-6 text-center md:px-12">
           <h2 className="mb-6 text-5xl font-medium tracking-tight md:text-8xl">Todo en un lugar</h2>
@@ -106,6 +107,7 @@ export default function HomePage() {
             complejidad, más eficiencia en cada consulta.
           </p>
 
+          {/* Mind-map: center hub + radiating features */}
           <div className="relative mx-auto max-w-5xl">
             {/* Center hub */}
             <div className="mx-auto mb-16 flex h-28 w-28 items-center justify-center rounded-full border-2 border-blue-400/30 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 shadow-[0_0_60px_rgba(59,130,246,0.15)] md:h-36 md:w-36">
@@ -117,6 +119,7 @@ export default function HomePage() {
               </div>
             </div>
 
+            {/* Feature grid radiating from center */}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <MindMapNode
                 icon={<Mic className="h-5 w-5" />}
@@ -165,6 +168,7 @@ export default function HomePage() {
               />
             </div>
 
+            {/* Bottom CTA line */}
             <div className="mt-16 flex flex-col items-center gap-4">
               <div className="h-12 w-px bg-gradient-to-b from-blue-400/40 to-transparent" />
               <p className="max-w-lg text-center text-lg font-medium text-white/80 md:text-xl">
@@ -178,7 +182,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Resultados Reales (white) ──────────────────────────────── */}
+      {/* ── Impacto Real (white) ───────────────────────────────────── */}
       <section className="relative z-20 -mt-16 rounded-t-[3rem] bg-white px-6 pt-24 pb-24 text-[#0A1628] md:rounded-t-[5rem]">
         <div className="mx-auto max-w-7xl">
           <div className="mb-20 grid grid-cols-1 gap-12 lg:grid-cols-2">
