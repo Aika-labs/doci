@@ -50,9 +50,7 @@ export function Providers({ children }: ProvidersProps) {
       }}
     >
       <ToastProvider>
-        <ThemeProvider>
-          {children}
-        </ThemeProvider>
+        <ThemeProvider>{children}</ThemeProvider>
       </ToastProvider>
       <ServiceWorkerRegistration />
       <OfflineIndicator />

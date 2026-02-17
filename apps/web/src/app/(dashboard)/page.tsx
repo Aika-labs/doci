@@ -5,7 +5,17 @@ import { useAuth, useUser } from '@clerk/nextjs';
 import Link from 'next/link';
 import { format, startOfDay, endOfDay } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { Calendar, Users, FileText, Clock, Mic, UserPlus, CalendarPlus, TrendingUp, TrendingDown } from 'lucide-react';
+import {
+  Calendar,
+  Users,
+  FileText,
+  Clock,
+  Mic,
+  UserPlus,
+  CalendarPlus,
+  TrendingUp,
+  TrendingDown,
+} from 'lucide-react';
 import { DashboardSkeleton } from '@/components/Skeleton';
 
 interface DashboardStats {
@@ -161,9 +171,7 @@ export default function DashboardPage() {
         <h1 className="text-2xl font-bold text-slate-900">
           {getGreeting()}, {user?.firstName || 'Doctor'}
         </h1>
-        <p className="text-slate-500">
-          {format(new Date(), "EEEE, d 'de' MMMM", { locale: es })}
-        </p>
+        <p className="text-slate-500">{format(new Date(), "EEEE, d 'de' MMMM", { locale: es })}</p>
       </div>
 
       {/* Stats */}
@@ -195,23 +203,20 @@ export default function DashboardPage() {
 
       {/* Today's appointments */}
       <div className="rounded-xl border bg-white p-6">
-        <div className="flex items-center justify-between mb-4">
+        <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-slate-900">Citas de hoy</h2>
-          <Link
-            href="/appointments"
-            className="text-sm text-blue-600 hover:text-blue-700"
-          >
+          <Link href="/appointments" className="text-sm text-blue-600 hover:text-blue-700">
             Ver todas
           </Link>
         </div>
-        
+
         {appointments.length === 0 ? (
-          <div className="text-center py-8 text-slate-500">
-            <Calendar className="h-12 w-12 mx-auto mb-3 text-slate-300" />
+          <div className="py-8 text-center text-slate-500">
+            <Calendar className="mx-auto mb-3 h-12 w-12 text-slate-300" />
             <p>No hay citas programadas para hoy</p>
             <Link
               href="/appointments"
-              className="mt-2 inline-block text-blue-600 hover:text-blue-700 text-sm"
+              className="mt-2 inline-block text-sm text-blue-600 hover:text-blue-700"
             >
               Agendar una cita
             </Link>
@@ -221,10 +226,10 @@ export default function DashboardPage() {
             {appointments.map((apt) => (
               <div
                 key={apt.id}
-                className="flex items-center justify-between rounded-lg border p-4 hover:bg-slate-50 transition-colors"
+                className="flex items-center justify-between rounded-lg border p-4 transition-colors hover:bg-slate-50"
               >
                 <div className="flex items-center gap-4">
-                  <span className="text-lg font-semibold text-slate-900 w-14">
+                  <span className="w-14 text-lg font-semibold text-slate-900">
                     {format(new Date(apt.startTime), 'HH:mm')}
                   </span>
                   <div>
@@ -296,19 +301,16 @@ function StatCard({
           <p className="text-sm text-slate-500">{label}</p>
           <div className="flex items-center gap-2">
             <p className="text-2xl font-bold text-slate-900">{value}</p>
-            {trend && (
-              trend === 'up' ? (
+            {trend &&
+              (trend === 'up' ? (
                 <TrendingUp className="h-4 w-4 text-green-500" />
               ) : (
                 <TrendingDown className="h-4 w-4 text-red-500" />
-              )
-            )}
+              ))}
           </div>
         </div>
       </div>
-      {subtitle && (
-        <p className="mt-2 text-xs text-slate-500 truncate">{subtitle}</p>
-      )}
+      {subtitle && <p className="mt-2 truncate text-xs text-slate-500">{subtitle}</p>}
     </div>
   );
 }

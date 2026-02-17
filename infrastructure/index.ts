@@ -6,7 +6,8 @@ const config = new pulumi.Config();
 const environment = pulumi.getStack();
 
 // Get SSH public key from config (with placeholder for preview)
-const sshPublicKey = config.get('sshPublicKey') || 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPlaceholder doci-placeholder';
+const sshPublicKey =
+  config.get('sshPublicKey') || 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPlaceholder doci-placeholder';
 
 // Server configuration based on environment
 const serverConfigs: Record<string, { serverType: string; location: string }> = {

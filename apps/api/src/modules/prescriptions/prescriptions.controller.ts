@@ -1,14 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Patch,
-  Body,
-  Param,
-  Query,
-  Res,
-  Header,
-} from '@nestjs/common';
+import { Controller, Get, Post, Patch, Body, Param, Query, Res, Header } from '@nestjs/common';
 import { Response } from 'express';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiProduces } from '@nestjs/swagger';
 import { PrescriptionsService } from './prescriptions.service';
@@ -34,7 +24,7 @@ export class PrescriptionsController {
   @ApiOperation({ summary: 'Get all prescriptions' })
   async findAll(
     @CurrentTenant() ctx: TenantContext,
-    @Query('consultationId') consultationId?: string,
+    @Query('consultationId') consultationId?: string
   ) {
     return this.prescriptionsService.findAll(ctx, { consultationId });
   }
@@ -59,16 +49,16 @@ export class PrescriptionsController {
   async generatePDF(
     @CurrentTenant() ctx: TenantContext,
     @Param('id') id: string,
-    @Res() res: Response,
+    @Res() res: Response
   ) {
     const pdfBuffer = await this.prescriptionsService.generatePDF(ctx, id);
-    
+
     res.set({
       'Content-Type': 'application/pdf',
       'Content-Disposition': `attachment; filename="receta-${id}.pdf"`,
       'Content-Length': pdfBuffer.length,
     });
-    
+
     res.end(pdfBuffer);
   }
 
@@ -83,7 +73,7 @@ export class PrescriptionsController {
       diagnosis?: string;
       instructions?: string;
       expiresAt?: string;
-    },
+    }
   ) {
     return this.prescriptionsService.create(ctx, data);
   }

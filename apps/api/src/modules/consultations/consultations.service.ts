@@ -9,7 +9,10 @@ type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string
 export class ConsultationsService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(ctx: TenantContext, options?: { page?: number; limit?: number; patientId?: string }) {
+  async findAll(
+    ctx: TenantContext,
+    options?: { page?: number; limit?: number; patientId?: string }
+  ) {
     const { page = 1, limit = 20, patientId } = options || {};
     const skip = (page - 1) * limit;
 
@@ -54,12 +57,15 @@ export class ConsultationsService {
     });
   }
 
-  async create(ctx: TenantContext, data: {
-    patientId: string;
-    templateId?: string;
-    appointmentId?: string;
-    clinicalData: JsonValue;
-  }) {
+  async create(
+    ctx: TenantContext,
+    data: {
+      patientId: string;
+      templateId?: string;
+      appointmentId?: string;
+      clinicalData: JsonValue;
+    }
+  ) {
     return this.prisma.consultation.create({
       data: {
         tenantId: ctx.tenantId,
@@ -73,15 +79,19 @@ export class ConsultationsService {
     });
   }
 
-  async update(ctx: TenantContext, id: string, data: {
-    clinicalData?: JsonValue;
-    soapNotes?: JsonValue;
-    vitalSigns?: JsonValue;
-    diagnoses?: JsonValue;
-    aiTranscription?: string;
-    aiSummary?: string;
-    status?: 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
-  }) {
+  async update(
+    ctx: TenantContext,
+    id: string,
+    data: {
+      clinicalData?: JsonValue;
+      soapNotes?: JsonValue;
+      vitalSigns?: JsonValue;
+      diagnoses?: JsonValue;
+      aiTranscription?: string;
+      aiSummary?: string;
+      status?: 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
+    }
+  ) {
     const updateData: Record<string, unknown> = {};
 
     if (data.clinicalData !== undefined) updateData.clinicalData = data.clinicalData;

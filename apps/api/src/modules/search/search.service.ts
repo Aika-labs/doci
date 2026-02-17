@@ -66,7 +66,7 @@ export class SearchService {
   private async searchPatients(
     tenantId: string,
     searchTerm: string,
-    limit: number,
+    limit: number
   ): Promise<SearchResult[]> {
     const patients = await this.prisma.patient.findMany({
       where: {
@@ -104,7 +104,7 @@ export class SearchService {
   private async searchConsultations(
     tenantId: string,
     searchTerm: string,
-    limit: number,
+    limit: number
   ): Promise<SearchResult[]> {
     const consultations = await this.prisma.consultation.findMany({
       where: {
@@ -141,7 +141,7 @@ export class SearchService {
   private async searchAppointments(
     tenantId: string,
     searchTerm: string,
-    limit: number,
+    limit: number
   ): Promise<SearchResult[]> {
     const appointments = await this.prisma.appointment.findMany({
       where: {
@@ -179,7 +179,7 @@ export class SearchService {
   private async searchTemplates(
     tenantId: string,
     searchTerm: string,
-    limit: number,
+    limit: number
   ): Promise<SearchResult[]> {
     const templates = await this.prisma.clinicalTemplate.findMany({
       where: {
@@ -214,7 +214,7 @@ export class SearchService {
   private async searchServices(
     tenantId: string,
     searchTerm: string,
-    limit: number,
+    limit: number
   ): Promise<SearchResult[]> {
     const services = await this.prisma.service.findMany({
       where: {

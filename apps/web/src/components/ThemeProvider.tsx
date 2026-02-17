@@ -1,6 +1,14 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState, useCallback, ReactNode, useMemo } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+  ReactNode,
+  useMemo,
+} from 'react';
 
 type Theme = 'light' | 'dark' | 'system';
 
@@ -45,7 +53,7 @@ function applyClassToDOM(resolved: 'light' | 'dark') {
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeRaw] = useState<Theme>(getStoredTheme);
   const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>(() =>
-    resolveTheme(getStoredTheme()),
+    resolveTheme(getStoredTheme())
   );
 
   const setTheme = useCallback((newTheme: Theme) => {
@@ -77,14 +85,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo(
     () => ({ theme, resolvedTheme, setTheme }),
-    [theme, resolvedTheme, setTheme],
+    [theme, resolvedTheme, setTheme]
   );
 
-  return (
-    <ThemeContext.Provider value={value}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
 export function useTheme() {

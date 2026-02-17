@@ -53,7 +53,7 @@ export class CalendarController {
   async googleCallback(
     @Query('code') code: string,
     @Query('state') userId: string,
-    @Res() res: Response,
+    @Res() res: Response
   ) {
     try {
       await this.calendarService.handleGoogleCallback(code, userId);
@@ -70,7 +70,7 @@ export class CalendarController {
   async microsoftCallback(
     @Query('code') code: string,
     @Query('state') userId: string,
-    @Res() res: Response,
+    @Res() res: Response
   ) {
     try {
       await this.calendarService.handleMicrosoftCallback(code, userId);
@@ -97,7 +97,7 @@ export class CalendarController {
     @CurrentUser('id') userId: string,
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string,
-    @Query('maxResults') maxResults?: number,
+    @Query('maxResults') maxResults?: number
   ) {
     return this.calendarService.listEvents(userId, {
       startDate: startDate ? new Date(startDate) : undefined,
@@ -118,7 +118,7 @@ export class CalendarController {
   async updateEvent(
     @CurrentUser('id') userId: string,
     @Param('id') eventId: string,
-    @Body() event: Partial<CalendarEvent>,
+    @Body() event: Partial<CalendarEvent>
   ) {
     await this.calendarService.updateEvent(userId, eventId, event);
     return { success: true };

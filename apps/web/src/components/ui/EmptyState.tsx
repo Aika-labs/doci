@@ -16,27 +16,26 @@ interface EmptyStateProps {
 
 export function EmptyState({ icon: Icon, title, description, action }: EmptyStateProps) {
   return (
-    <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
-      <Icon className="h-12 w-12 mx-auto text-gray-300 mb-3" />
-      <p className="text-gray-700 font-medium mb-1">{title}</p>
-      {description && <p className="text-sm text-gray-500 mb-4">{description}</p>}
-      {action && (
-        action.href ? (
+    <div className="rounded-lg border border-gray-200 bg-white py-12 text-center">
+      <Icon className="mx-auto mb-3 h-12 w-12 text-gray-300" />
+      <p className="mb-1 font-medium text-gray-700">{title}</p>
+      {description && <p className="mb-4 text-sm text-gray-500">{description}</p>}
+      {action &&
+        (action.href ? (
           <Link
             href={action.href}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
           >
             {action.label}
           </Link>
         ) : (
           <button
             onClick={action.onClick}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
           >
             {action.label}
           </button>
-        )
-      )}
+        ))}
     </div>
   );
 }

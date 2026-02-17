@@ -22,7 +22,7 @@ export class AuditController {
     @Query('userId') userId?: string,
     @Query('action') action?: AuditAction,
     @Query('startDate') startDate?: string,
-    @Query('endDate') endDate?: string,
+    @Query('endDate') endDate?: string
   ) {
     return this.auditService.findAll(tenantId, {
       page: page || 1,
@@ -47,7 +47,7 @@ export class AuditController {
   async getEntityHistory(
     @TenantId() tenantId: string,
     @Param('entity') entity: string,
-    @Param('entityId') entityId: string,
+    @Param('entityId') entityId: string
   ) {
     return this.auditService.getEntityHistory(tenantId, entity, entityId);
   }
@@ -57,7 +57,7 @@ export class AuditController {
   async getUserActivity(
     @TenantId() tenantId: string,
     @Param('userId') userId: string,
-    @Query('limit') limit?: number,
+    @Query('limit') limit?: number
   ) {
     return this.auditService.getUserActivity(tenantId, userId, limit || 20);
   }
