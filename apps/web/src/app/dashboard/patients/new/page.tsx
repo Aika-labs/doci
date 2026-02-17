@@ -89,7 +89,7 @@ export default function NewPatientPage() {
     <div>
       <div className="mb-6">
         <Link
-          href="/patients"
+          href="/dashboard/patients"
           className="mb-4 inline-flex items-center gap-2 text-white/50 hover:text-white"
         >
           <ArrowLeft className="h-4 w-4" />

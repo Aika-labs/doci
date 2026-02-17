@@ -147,7 +147,7 @@ export default function ConsultationsPage() {
           <p className="text-white/50">Historial de consultas médicas</p>
         </div>
         <Link
-          href="/consultations/new"
+          href="/dashboard/consultations/new"
           className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white transition-colors hover:from-blue-600 hover:to-cyan-600"
         >
           <Mic className="h-4 w-4" />
@@ -284,7 +284,7 @@ export default function ConsultationsPage() {
           </p>
           {!searchTerm && statusFilter === 'ALL' && dateFilter === 'ALL' && (
             <Link
-              href="/consultations/new"
+              href="/dashboard/consultations/new"
               className="mt-4 inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white transition-colors hover:from-blue-600 hover:to-cyan-600"
             >
               <Plus className="h-4 w-4" />

@@ -181,7 +181,10 @@ export default function NewInvoicePage() {
     <div className="mx-auto max-w-4xl">
       {/* Header */}
       <div className="mb-6 flex items-center gap-4">
-        <Link href="/billing" className="rounded-2xl p-2 transition-colors hover:bg-white/[0.06]">
+        <Link
+          href="/dashboard/billing"
+          className="rounded-2xl p-2 transition-colors hover:bg-white/[0.06]"
+        >
           <ArrowLeft className="h-5 w-5" />
         </Link>
         <div>
@@ -428,7 +431,7 @@ export default function NewInvoicePage() {
         {/* Actions */}
         <div className="flex gap-4">
           <Link
-            href="/billing"
+            href="/dashboard/billing"
             className="flex-1 rounded-2xl border border-white/[0.08] px-4 py-3 text-center text-white/70 hover:bg-white/[0.02]"
           >
             Cancelar

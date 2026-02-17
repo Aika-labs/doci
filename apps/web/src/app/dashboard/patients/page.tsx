@@ -101,7 +101,7 @@ export default function PatientsPage() {
           <p className="text-white/50">Gestiona la información de tus pacientes</p>
         </div>
         <Link
-          href="/patients/new"
+          href="/dashboard/patients/new"
           className="flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-500/25 transition-all hover:scale-105"
         >
           <Plus className="h-4 w-4" />
@@ -239,7 +239,7 @@ export default function PatientsPage() {
           </p>
           {!search && genderFilter === 'ALL' && (
             <Link
-              href="/patients/new"
+              href="/dashboard/patients/new"
               className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-500/25"
             >
               <Plus className="h-4 w-4" />

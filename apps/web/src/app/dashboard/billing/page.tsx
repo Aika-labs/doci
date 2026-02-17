@@ -196,7 +196,7 @@ export default function BillingPage() {
         <div className="flex items-center gap-2">
           {activeTab === 'invoices' ? (
             <Link
-              href="/billing/new"
+              href="/dashboard/billing/new"
               className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white transition-colors hover:from-blue-600 hover:to-cyan-600"
             >
               <Plus className="h-4 w-4" />
@@ -370,7 +370,7 @@ export default function BillingPage() {
             </p>
             {!searchTerm && statusFilter === 'ALL' && (
               <Link
-                href="/billing/new"
+                href="/dashboard/billing/new"
                 className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600"
               >
                 <Plus className="h-4 w-4" />

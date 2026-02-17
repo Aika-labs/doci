@@ -48,22 +48,22 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   const pathname = usePathname();
 
   const navigation = [
-    { name: 'Inicio', href: '/', icon: Home },
-    { name: 'Pacientes', href: '/patients', icon: Users },
-    { name: 'Agenda', href: '/appointments', icon: Calendar },
-    { name: 'Consultas', href: '/consultations', icon: FileText },
-    { name: 'Plantillas', href: '/templates', icon: FileStack },
+    { name: 'Inicio', href: '/dashboard', icon: Home },
+    { name: 'Pacientes', href: '/dashboard/patients', icon: Users },
+    { name: 'Agenda', href: '/dashboard/appointments', icon: Calendar },
+    { name: 'Consultas', href: '/dashboard/consultations', icon: FileText },
+    { name: 'Plantillas', href: '/dashboard/templates', icon: FileStack },
   ];
 
   const secondaryNavigation = [
-    { name: 'Facturación', href: '/billing', icon: Receipt },
-    { name: 'Reportes', href: '/reports', icon: BarChart3 },
-    { name: 'Almacenamiento', href: '/storage', icon: HardDrive },
-    { name: 'Configuración', href: '/settings', icon: Settings },
+    { name: 'Facturación', href: '/dashboard/billing', icon: Receipt },
+    { name: 'Reportes', href: '/dashboard/reports', icon: BarChart3 },
+    { name: 'Almacenamiento', href: '/dashboard/storage', icon: HardDrive },
+    { name: 'Configuración', href: '/dashboard/settings', icon: Settings },
   ];
 
   const isActive = (href: string) => {
-    if (href === '/') return pathname === '/';
+    if (href === '/dashboard') return pathname === '/dashboard';
     return pathname.startsWith(href);
   };
 
@@ -116,11 +116,11 @@ export default function DashboardShell({ children }: { children: React.ReactNode
           <div className="my-4 border-t border-white/[0.06]" />
 
           <NavItem
-            href="/consultations/new"
+            href="/dashboard/consultations/new"
             icon={Mic}
             highlight
             collapsed={collapsed}
-            active={pathname === '/consultations/new'}
+            active={pathname === '/dashboard/consultations/new'}
           >
             Nueva Consulta
           </NavItem>
@@ -204,31 +204,36 @@ export default function DashboardShell({ children }: { children: React.ReactNode
       {/* ── Mobile bottom nav ───────────────────────────────────── */}
       <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-white/[0.06] bg-[#0A1628]/90 backdrop-blur-xl md:hidden">
         <div className="flex items-center justify-around py-2">
-          <MobileNavItem href="/" icon={Home} label="Inicio" active={pathname === '/'} />
           <MobileNavItem
-            href="/patients"
-            icon={Users}
-            label="Pacientes"
-            active={pathname.startsWith('/patients')}
+            href="/dashboard"
+            icon={Home}
+            label="Inicio"
+            active={pathname === '/dashboard'}
           />
           <MobileNavItem
-            href="/consultations/new"
+            href="/dashboard/patients"
+            icon={Users}
+            label="Pacientes"
+            active={pathname.startsWith('/dashboard/patients')}
+          />
+          <MobileNavItem
+            href="/dashboard/consultations/new"
             icon={Mic}
             label="Grabar"
             highlight
-            active={pathname === '/consultations/new'}
+            active={pathname === '/dashboard/consultations/new'}
           />
           <MobileNavItem
-            href="/appointments"
+            href="/dashboard/appointments"
             icon={Calendar}
             label="Agenda"
-            active={pathname.startsWith('/appointments')}
+            active={pathname.startsWith('/dashboard/appointments')}
           />
           <MobileNavItem
-            href="/settings"
+            href="/dashboard/settings"
             icon={Settings}
             label="Config"
-            active={pathname.startsWith('/settings')}
+            active={pathname.startsWith('/dashboard/settings')}
           />
         </div>
       </nav>

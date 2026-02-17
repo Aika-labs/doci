@@ -181,7 +181,7 @@ export default function StoragePage() {
           <p className="text-white/50">Gestiona los archivos de tus pacientes</p>
         </div>
         <Link
-          href="/patients"
+          href="/dashboard/patients"
           className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600"
         >
           <Upload className="h-4 w-4" />

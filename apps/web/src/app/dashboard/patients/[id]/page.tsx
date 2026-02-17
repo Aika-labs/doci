@@ -291,7 +291,7 @@ export default function PatientDetailPage() {
     return (
       <div className="py-12 text-center">
         <h2 className="text-xl font-semibold text-white">Paciente no encontrado</h2>
-        <Link href="/patients" className="mt-4 text-blue-400 hover:text-blue-300">
+        <Link href="/dashboard/patients" className="mt-4 text-blue-400 hover:text-blue-300">
           Volver a pacientes
         </Link>
       </div>
@@ -316,7 +316,7 @@ export default function PatientDetailPage() {
       {/* Header */}
       <div className="mb-6">
         <Link
-          href="/patients"
+          href="/dashboard/patients"
           className="mb-4 inline-flex items-center gap-2 text-white/50 hover:text-white"
         >
           <ArrowLeft className="h-4 w-4" />
