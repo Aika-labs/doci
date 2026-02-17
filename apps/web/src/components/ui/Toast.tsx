@@ -123,15 +123,15 @@ function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: () => void }) 
 
   return (
     <div
-      className={`animate-in slide-in-from-right-5 flex items-start gap-3 rounded-lg border p-4 shadow-lg ${styles[toast.type]}`}
+      className={`animate-in slide-in-from-right-5 flex items-start gap-3 rounded-2xl border p-4 shadow-lg ${styles[toast.type]}`}
       role="alert"
     >
       {icons[toast.type]}
       <div className="min-w-0 flex-1">
-        <p className="font-medium text-gray-900">{toast.title}</p>
-        {toast.message && <p className="mt-0.5 text-sm text-gray-600">{toast.message}</p>}
+        <p className="font-medium text-white">{toast.title}</p>
+        {toast.message && <p className="mt-0.5 text-sm text-white/50">{toast.message}</p>}
       </div>
-      <button onClick={onRemove} className="rounded p-1 text-gray-400 hover:text-gray-600">
+      <button onClick={onRemove} className="rounded p-1 text-white/30 hover:text-white/50">
         <X className="h-4 w-4" />
       </button>
     </div>

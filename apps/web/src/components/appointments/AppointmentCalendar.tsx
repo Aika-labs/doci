@@ -73,7 +73,7 @@ export function AppointmentCalendar({
 
   return (
     <div
-      className={`rounded-lg border border-gray-200 bg-white p-4 ${isLoading ? 'opacity-50' : ''}`}
+      className={`rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4 ${isLoading ? 'opacity-50' : ''}`}
     >
       <FullCalendar
         ref={calendarRef}

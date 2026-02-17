@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '@clerk/nextjs';
+import { useAuthCompat as useAuth } from '@/hooks/useAuthCompat';
 import {
   FileStack,
   Plus,
@@ -367,11 +367,11 @@ Este certificado se expide a solicitud del interesado para los fines que estime 
       {/* Header */}
       <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Plantillas</h1>
-          <p className="text-gray-600">Gestiona tus plantillas médicas reutilizables</p>
+          <h1 className="text-2xl font-bold text-white">Plantillas</h1>
+          <p className="text-white/50">Gestiona tus plantillas médicas reutilizables</p>
         </div>
         <div className="flex items-center gap-2">
-          <label className="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50">
+          <label className="flex cursor-pointer items-center gap-2 rounded-2xl border border-white/[0.08] px-4 py-2 text-white/70 hover:bg-white/[0.02]">
             <Upload className="h-4 w-4" />
             <span className="hidden sm:inline">Importar</span>
             <input type="file" accept=".json" onChange={handleImport} className="hidden" />
@@ -379,7 +379,7 @@ Este certificado se expide a solicitud del interesado para los fines que estime 
           <button
             onClick={handleExport}
             disabled={filteredTemplates.length === 0}
-            className="flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex items-center gap-2 rounded-2xl border border-white/[0.08] px-4 py-2 text-white/70 hover:bg-white/[0.02] disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Download className="h-4 w-4" />
             <span className="hidden sm:inline">Exportar</span>
@@ -389,7 +389,7 @@ Este certificado se expide a solicitud del interesado para los fines que estime 
               resetForm();
               setShowForm(true);
             }}
-            className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+            className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600"
           >
             <Plus className="h-4 w-4" />
             Nueva Plantilla
@@ -400,19 +400,19 @@ Este certificado se expide a solicitud del interesado para los fines que estime 
       {/* Filters */}
       <div className="mb-6 flex flex-col gap-4 md:flex-row">
         <div className="relative flex-1">
-          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-white/30" />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Buscar plantillas..."
-            className="w-full rounded-lg border border-gray-300 py-2 pr-4 pl-10 focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-2xl border border-white/[0.08] py-2 pr-4 pl-10 focus:ring-2 focus:ring-blue-500/20"
           />
         </div>
         <select
           value={filterType}
           onChange={(e) => setFilterType(e.target.value as TemplateType | 'ALL')}
-          className="rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500"
+          className="rounded-2xl border border-white/[0.08] px-4 py-2 focus:ring-2 focus:ring-blue-500/20"
         >
           <option value="ALL">Todos los tipos</option>
           {Object.entries(templateTypeLabels).map(([value, label]) => (
@@ -428,16 +428,16 @@ Este certificado se expide a solicitud del interesado para los fines que estime 
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="m-4 max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white shadow-xl">
             <div className="flex items-center justify-between border-b p-4">
-              <h2 className="text-lg font-semibold text-gray-900">
+              <h2 className="text-lg font-semibold text-white">
                 {editingTemplate ? 'Editar Plantilla' : 'Nueva Plantilla'}
               </h2>
-              <button onClick={resetForm} className="p-1 text-gray-400 hover:text-gray-600">
+              <button onClick={resetForm} className="p-1 text-white/30 hover:text-white/50">
                 <X className="h-5 w-5" />
               </button>
             </div>
             <form onSubmit={handleSubmit} className="space-y-4 p-4">
               <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
+                <label className="mb-1 block text-sm font-medium text-white/70">
                   Nombre de la plantilla
                 </label>
                 <input
@@ -445,13 +445,13 @@ Este certificado se expide a solicitud del interesado para los fines que estime 
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:ring-2 focus:ring-blue-500/20"
                   placeholder="Ej: Consulta general"
                 />
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
+                <label className="mb-1 block text-sm font-medium text-white/70">
                   Tipo de plantilla
                 </label>
                 <select
@@ -464,7 +464,7 @@ Este certificado se expide a solicitud del interesado para los fines que estime 
                       content: formData.content || getDefaultContent(newType),
                     });
                   }}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:ring-2 focus:ring-blue-500/20"
                 >
                   {Object.entries(templateTypeLabels).map(([value, label]) => (
                     <option key={value} value={value}>
@@ -476,14 +476,14 @@ Este certificado se expide a solicitud del interesado para los fines que estime 
 
               <div>
                 <div className="mb-1 flex items-center justify-between">
-                  <label className="text-sm font-medium text-gray-700">Contenido</label>
+                  <label className="text-sm font-medium text-white/70">Contenido</label>
                   {!formData.content && (
                     <button
                       type="button"
                       onClick={() =>
                         setFormData({ ...formData, content: getDefaultContent(formData.type) })
                       }
-                      className="text-xs text-blue-600 hover:text-blue-700"
+                      className="text-xs text-blue-400 hover:text-blue-300"
                     >
                       Usar plantilla predeterminada
                     </button>
@@ -494,10 +494,10 @@ Este certificado se expide a solicitud del interesado para los fines que estime 
                   onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                   required
                   rows={12}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 font-mono text-sm focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 font-mono text-sm focus:ring-2 focus:ring-blue-500/20"
                   placeholder="Escribe el contenido de la plantilla..."
                 />
-                <p className="mt-1 text-xs text-gray-500">
+                <p className="mt-1 text-xs text-white/40">
                   Usa [VARIABLE] para campos que se llenarán automáticamente
                 </p>
               </div>
@@ -508,9 +508,9 @@ Este certificado se expide a solicitud del interesado para los fines que estime 
                   id="isDefault"
                   checked={formData.isDefault}
                   onChange={(e) => setFormData({ ...formData, isDefault: e.target.checked })}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-white/[0.08] text-blue-400 focus:ring-blue-500/20"
                 />
-                <label htmlFor="isDefault" className="text-sm text-gray-700">
+                <label htmlFor="isDefault" className="text-sm text-white/70">
                   Usar como plantilla predeterminada para este tipo
                 </label>
               </div>
@@ -519,14 +519,14 @@ Este certificado se expide a solicitud del interesado para los fines que estime 
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50"
+                  className="rounded-2xl border border-white/[0.08] px-4 py-2 text-white/70 hover:bg-white/[0.02]"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
+                  className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600 disabled:opacity-50"
                 >
                   {isSaving ? (
                     <>
@@ -546,12 +546,12 @@ Este certificado se expide a solicitud del interesado para los fines que estime 
       {/* Templates List */}
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+          <Loader2 className="h-8 w-8 animate-spin text-blue-400" />
         </div>
       ) : filteredTemplates.length === 0 ? (
-        <div className="rounded-lg border border-gray-200 bg-white py-12 text-center">
-          <FileStack className="mx-auto mb-3 h-12 w-12 text-gray-300" />
-          <p className="mb-4 text-gray-500">
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] py-12 text-center">
+          <FileStack className="mx-auto mb-3 h-12 w-12 text-white/20" />
+          <p className="mb-4 text-white/40">
             {searchTerm || filterType !== 'ALL'
               ? 'No se encontraron plantillas con esos filtros'
               : 'No hay plantillas creadas'}
@@ -561,7 +561,7 @@ Este certificado se expide a solicitud del interesado para los fines que estime 
               resetForm();
               setShowForm(true);
             }}
-            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+            className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600"
           >
             <Plus className="h-4 w-4" />
             Crear primera plantilla
@@ -572,21 +572,21 @@ Este certificado se expide a solicitud del interesado para los fines que estime 
           {filteredTemplates.map((template) => (
             <div
               key={template.id}
-              className="rounded-lg border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md"
+              className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4 transition-shadow hover:shadow-md"
             >
               <div className="mb-3 flex items-start justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-500/15 text-blue-400">
                     {templateTypeIcons[template.type]}
                   </div>
                   <div>
-                    <h3 className="font-medium text-gray-900">{template.name}</h3>
+                    <h3 className="font-medium text-white">{template.name}</h3>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-white/40">
                         {templateTypeLabels[template.type]}
                       </span>
                       {template.isDefault && (
-                        <span className="rounded bg-green-100 px-2 py-0.5 text-xs text-green-700">
+                        <span className="rounded bg-emerald-500/15 px-2 py-0.5 text-xs text-emerald-300">
                           Predeterminada
                         </span>
                       )}
@@ -596,35 +596,35 @@ Este certificado se expide a solicitud del interesado para los fines que estime 
                 <div className="flex items-center gap-1">
                   <button
                     onClick={() => setPreviewTemplate(template)}
-                    className="rounded p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+                    className="rounded p-2 text-white/30 hover:bg-white/[0.06] hover:text-white/50"
                     title="Vista previa"
                   >
                     <Eye className="h-4 w-4" />
                   </button>
                   <button
                     onClick={() => handleDuplicate(template)}
-                    className="rounded p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+                    className="rounded p-2 text-white/30 hover:bg-white/[0.06] hover:text-white/50"
                     title="Duplicar"
                   >
                     <Copy className="h-4 w-4" />
                   </button>
                   <button
                     onClick={() => handleEdit(template)}
-                    className="rounded p-2 text-gray-400 hover:bg-blue-50 hover:text-blue-600"
+                    className="rounded p-2 text-white/30 hover:bg-blue-50 hover:text-blue-400"
                     title="Editar"
                   >
                     <Edit2 className="h-4 w-4" />
                   </button>
                   <button
                     onClick={() => setDeleteConfirm({ open: true, template, isDeleting: false })}
-                    className="rounded p-2 text-gray-400 hover:bg-red-50 hover:text-red-600"
+                    className="rounded p-2 text-white/30 hover:bg-red-50 hover:text-red-400"
                     title="Eliminar"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
               </div>
-              <p className="line-clamp-3 text-sm whitespace-pre-wrap text-gray-600">
+              <p className="line-clamp-3 text-sm whitespace-pre-wrap text-white/50">
                 {template.content.substring(0, 150)}
                 {template.content.length > 150 && '...'}
               </p>
@@ -639,42 +639,42 @@ Este certificado se expide a solicitud del interesado para los fines que estime 
           <div className="m-4 max-h-[90vh] w-full max-w-2xl overflow-hidden rounded-xl bg-white shadow-xl">
             <div className="flex items-center justify-between border-b p-4">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-500/15 text-blue-400">
                   {templateTypeIcons[previewTemplate.type]}
                 </div>
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-900">{previewTemplate.name}</h2>
-                  <span className="text-sm text-gray-500">
+                  <h2 className="text-lg font-semibold text-white">{previewTemplate.name}</h2>
+                  <span className="text-sm text-white/40">
                     {templateTypeLabels[previewTemplate.type]}
                   </span>
                 </div>
               </div>
               <button
                 onClick={() => setPreviewTemplate(null)}
-                className="p-1 text-gray-400 hover:text-gray-600"
+                className="p-1 text-white/30 hover:text-white/50"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
             <div className="max-h-[calc(90vh-120px)] overflow-y-auto p-6">
-              <pre className="font-sans text-sm leading-relaxed whitespace-pre-wrap text-gray-700">
+              <pre className="font-sans text-sm leading-relaxed whitespace-pre-wrap text-white/70">
                 {previewTemplate.content}
               </pre>
             </div>
-            <div className="flex justify-end gap-3 border-t bg-gray-50 p-4">
+            <div className="flex justify-end gap-3 border-t bg-white/[0.02] p-4">
               <button
                 onClick={() => {
                   handleEdit(previewTemplate);
                   setPreviewTemplate(null);
                 }}
-                className="flex items-center gap-2 rounded-lg border border-blue-600 px-4 py-2 text-blue-600 hover:bg-blue-50"
+                className="flex items-center gap-2 rounded-2xl border border-blue-600 px-4 py-2 text-blue-400 hover:bg-blue-50"
               >
                 <Edit2 className="h-4 w-4" />
                 Editar
               </button>
               <button
                 onClick={() => setPreviewTemplate(null)}
-                className="rounded-lg bg-gray-200 px-4 py-2 text-gray-700 hover:bg-gray-300"
+                className="rounded-2xl bg-white/10 px-4 py-2 text-white/70 hover:bg-gray-300"
               >
                 Cerrar
               </button>

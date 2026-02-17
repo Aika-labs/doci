@@ -5,12 +5,12 @@ interface SkeletonProps {
 }
 
 export function Skeleton({ className = '' }: SkeletonProps) {
-  return <div className={`animate-pulse rounded bg-gray-200 ${className}`} />;
+  return <div className={`animate-pulse rounded bg-white/10 ${className}`} />;
 }
 
 export function SkeletonCard() {
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-4">
+    <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
       <div className="flex items-center gap-4">
         <Skeleton className="h-12 w-12 rounded-full" />
         <div className="flex-1 space-y-2">
@@ -24,9 +24,9 @@ export function SkeletonCard() {
 
 export function SkeletonTable({ rows = 5 }: { rows?: number }) {
   return (
-    <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
+    <div className="overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.03]">
       {/* Header */}
-      <div className="border-b border-gray-200 p-4">
+      <div className="border-b border-white/[0.06] p-4">
         <div className="flex gap-4">
           <Skeleton className="h-4 w-1/4" />
           <Skeleton className="h-4 w-1/4" />
@@ -53,7 +53,7 @@ export function SkeletonStats() {
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
       {Array.from({ length: 4 }).map((_, i) => (
-        <div key={i} className="rounded-lg border border-gray-200 bg-white p-4">
+        <div key={i} className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
           <Skeleton className="mb-2 h-3 w-1/2" />
           <Skeleton className="mb-1 h-8 w-3/4" />
           <Skeleton className="h-3 w-1/3" />
@@ -76,7 +76,7 @@ export function SkeletonPatientDetail() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-4 border-b border-gray-200 pb-2">
+      <div className="flex gap-4 border-b border-white/[0.06] pb-2">
         {Array.from({ length: 5 }).map((_, i) => (
           <Skeleton key={i} className="h-8 w-24" />
         ))}
@@ -85,7 +85,7 @@ export function SkeletonPatientDetail() {
       {/* Content */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="rounded-lg border border-gray-200 bg-white p-4">
+          <div key={i} className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
             <Skeleton className="mb-2 h-4 w-1/3" />
             <Skeleton className="h-5 w-2/3" />
           </div>
@@ -93,7 +93,7 @@ export function SkeletonPatientDetail() {
       </div>
 
       {/* Medical Info */}
-      <div className="rounded-lg border border-gray-200 bg-white p-6">
+      <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-6">
         <Skeleton className="mb-4 h-5 w-1/4" />
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {Array.from({ length: 4 }).map((_, i) => (
