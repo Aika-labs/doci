@@ -10,13 +10,13 @@ interface SkeletonProps {
 
 /** Base skeleton block with shimmer animation */
 export function Skeleton({ className = '' }: SkeletonProps) {
-  return <div className={`animate-pulse rounded-2xl bg-white/10 ${className}`} />;
+  return <div className={`animate-pulse rounded-lg bg-gray-200 ${className}`} />;
 }
 
 /** Skeleton for stat/metric cards (used in Dashboard, Billing) */
 export function StatCardSkeleton() {
   return (
-    <div className="rounded-[2rem] border bg-white/[0.03] p-6">
+    <div className="rounded-xl border bg-white p-6">
       <div className="flex items-center gap-3">
         <Skeleton className="h-10 w-10 rounded-lg" />
         <div className="flex-1 space-y-2">
@@ -44,9 +44,9 @@ export function TableRowSkeleton({ columns = 5 }: { columns?: number }) {
 /** Skeleton for a full table (used in Patients, Billing invoices) */
 export function TableSkeleton({ rows = 5, columns = 5 }: { rows?: number; columns?: number }) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.03]">
+    <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
       <table className="w-full">
-        <thead className="bg-white/[0.02]">
+        <thead className="bg-gray-50">
           <tr>
             {Array.from({ length: columns }).map((_, i) => (
               <th key={i} className="px-4 py-3">
@@ -55,7 +55,7 @@ export function TableSkeleton({ rows = 5, columns = 5 }: { rows?: number; column
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-white/[0.04]">
+        <tbody className="divide-y divide-gray-200">
           {Array.from({ length: rows }).map((_, i) => (
             <TableRowSkeleton key={i} columns={columns} />
           ))}
@@ -68,7 +68,7 @@ export function TableSkeleton({ rows = 5, columns = 5 }: { rows?: number; column
 /** Skeleton for a card in a grid (used in Billing services) */
 export function CardSkeleton() {
   return (
-    <div className="space-y-3 rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
+    <div className="space-y-3 rounded-lg border border-gray-200 bg-white p-4">
       <div className="flex items-start justify-between">
         <div className="space-y-2">
           <Skeleton className="h-4 w-32" />
@@ -104,13 +104,13 @@ export function DashboardSkeleton() {
       </div>
 
       {/* Appointments list */}
-      <div className="space-y-4 rounded-[2rem] border bg-white/[0.03] p-6">
+      <div className="space-y-4 rounded-xl border bg-white p-6">
         <div className="flex items-center justify-between">
           <Skeleton className="h-5 w-32" />
           <Skeleton className="h-4 w-16" />
         </div>
         {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="flex items-center justify-between rounded-2xl border p-4">
+          <div key={i} className="flex items-center justify-between rounded-lg border p-4">
             <div className="flex items-center gap-4">
               <Skeleton className="h-6 w-14" />
               <div className="space-y-1">
@@ -126,10 +126,7 @@ export function DashboardSkeleton() {
       {/* Quick actions */}
       <div className="grid gap-4 md:grid-cols-3">
         {Array.from({ length: 3 }).map((_, i) => (
-          <div
-            key={i}
-            className="flex items-center gap-4 rounded-[2rem] border bg-white/[0.03] p-6"
-          >
+          <div key={i} className="flex items-center gap-4 rounded-xl border bg-white p-6">
             <Skeleton className="h-12 w-12 rounded-lg" />
             <div className="space-y-2">
               <Skeleton className="h-4 w-28" />

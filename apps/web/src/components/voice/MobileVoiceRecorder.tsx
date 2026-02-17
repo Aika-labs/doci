@@ -252,13 +252,13 @@ export function MobileVoiceRecorder({
           <div className="mb-6 text-center">
             <span
               className={`font-mono text-4xl font-bold ${
-                state === 'recording' ? 'text-red-400' : 'text-white/30'
+                state === 'recording' ? 'text-red-600' : 'text-gray-400'
               }`}
             >
               {formatDuration(duration)}
             </span>
             {state === 'recording' && (
-              <p className="mt-1 text-sm text-white/40">Máximo: {formatDuration(maxDuration)}</p>
+              <p className="mt-1 text-sm text-gray-500">Máximo: {formatDuration(maxDuration)}</p>
             )}
           </div>
 
@@ -269,10 +269,10 @@ export function MobileVoiceRecorder({
               disabled={state === 'processing'}
               className={`relative flex h-24 w-24 items-center justify-center rounded-full transition-all active:scale-95 ${
                 state === 'idle' || state === 'error'
-                  ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg hover:from-blue-600 hover:to-cyan-600'
+                  ? 'bg-blue-600 text-white shadow-lg hover:bg-blue-700'
                   : state === 'recording'
                     ? 'bg-red-500 text-white shadow-lg shadow-red-200 hover:bg-red-600'
-                    : 'bg-gray-300 text-white/40'
+                    : 'bg-gray-300 text-gray-500'
               }`}
             >
               {state === 'recording' && (
@@ -288,25 +288,25 @@ export function MobileVoiceRecorder({
 
           {/* Status Text */}
           <div className="text-center">
-            {state === 'idle' && <p className="text-white/50">Toca para comenzar a grabar</p>}
+            {state === 'idle' && <p className="text-gray-600">Toca para comenzar a grabar</p>}
             {state === 'recording' && (
               <div className="flex items-center justify-center gap-2">
                 <div className="h-2 w-2 animate-pulse rounded-full bg-red-500" />
-                <p className="font-medium text-red-400">Grabando...</p>
+                <p className="font-medium text-red-600">Grabando...</p>
               </div>
             )}
-            {state === 'processing' && <p className="text-white/50">Procesando audio...</p>}
-            {state === 'error' && error && <p className="text-sm text-red-400">{error}</p>}
+            {state === 'processing' && <p className="text-gray-600">Procesando audio...</p>}
+            {state === 'error' && error && <p className="text-sm text-red-600">{error}</p>}
           </div>
 
           {/* Tips */}
           {state === 'recording' && (
-            <div className="mt-6 rounded-2xl bg-blue-50 p-4">
+            <div className="mt-6 rounded-lg bg-blue-50 p-4">
               <div className="flex items-start gap-3">
-                <Volume2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-blue-400" />
+                <Volume2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-blue-600" />
                 <div className="text-sm text-blue-800">
                   <p className="mb-1 font-medium">Consejos para mejor calidad:</p>
-                  <ul className="space-y-1 text-blue-300">
+                  <ul className="space-y-1 text-blue-700">
                     <li>• Habla claro y a ritmo normal</li>
                     <li>• Mantén el dispositivo cerca</li>
                     <li>• Evita ruido de fondo</li>
@@ -319,22 +319,22 @@ export function MobileVoiceRecorder({
       ) : (
         /* Preview Interface */
         <div className="w-full max-w-sm">
-          <div className="mb-6 rounded-xl bg-white/[0.02] p-6">
+          <div className="mb-6 rounded-xl bg-gray-50 p-6">
             <div className="mb-4 flex items-center justify-between">
-              <span className="text-sm font-medium text-white/70">Vista previa</span>
-              <span className="text-sm text-white/40">{formatDuration(duration)}</span>
+              <span className="text-sm font-medium text-gray-700">Vista previa</span>
+              <span className="text-sm text-gray-500">{formatDuration(duration)}</span>
             </div>
 
             <div className="mb-4 flex justify-center">
               <button
                 onClick={togglePlayback}
-                className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white transition-colors hover:from-blue-600 hover:to-cyan-600"
+                className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 text-white transition-colors hover:bg-blue-700"
               >
                 {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="ml-1 h-6 w-6" />}
               </button>
             </div>
 
-            <p className="text-center text-sm text-white/40">
+            <p className="text-center text-sm text-gray-500">
               {isPlaying ? 'Reproduciendo...' : 'Toca para escuchar'}
             </p>
           </div>
@@ -342,13 +342,13 @@ export function MobileVoiceRecorder({
           <div className="flex gap-3">
             <button
               onClick={discardRecording}
-              className="flex-1 rounded-2xl border border-white/[0.08] px-4 py-3 font-medium text-white/70 hover:bg-white/[0.02]"
+              className="flex-1 rounded-lg border border-gray-300 px-4 py-3 font-medium text-gray-700 hover:bg-gray-50"
             >
               Descartar
             </button>
             <button
               onClick={confirmRecording}
-              className="flex-1 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-3 font-medium text-white hover:from-blue-600 hover:to-cyan-600"
+              className="flex-1 rounded-lg bg-blue-600 px-4 py-3 font-medium text-white hover:bg-blue-700"
             >
               Usar grabación
             </button>

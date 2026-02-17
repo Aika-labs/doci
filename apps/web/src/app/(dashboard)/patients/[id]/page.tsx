@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { useAuthCompat as useAuth } from '@/hooks/useAuthCompat';
+import { useAuth } from '@clerk/nextjs';
 import { PatientForm } from '@/components/patients';
 import { patientsApi, Patient } from '@/lib/api';
 import { PatientFormData } from '@/lib/validations/patient';
@@ -282,7 +282,7 @@ export default function PatientDetailPage() {
   if (isLoading) {
     return (
       <div className="flex min-h-[400px] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-400" />
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
       </div>
     );
   }
@@ -290,8 +290,8 @@ export default function PatientDetailPage() {
   if (!patient) {
     return (
       <div className="py-12 text-center">
-        <h2 className="text-xl font-semibold text-white">Paciente no encontrado</h2>
-        <Link href="/patients" className="mt-4 text-blue-400 hover:text-blue-300">
+        <h2 className="text-xl font-semibold text-gray-900">Paciente no encontrado</h2>
+        <Link href="/patients" className="mt-4 text-blue-600 hover:text-blue-700">
           Volver a pacientes
         </Link>
       </div>
@@ -317,7 +317,7 @@ export default function PatientDetailPage() {
       <div className="mb-6">
         <Link
           href="/patients"
-          className="mb-4 inline-flex items-center gap-2 text-white/50 hover:text-white"
+          className="mb-4 inline-flex items-center gap-2 text-gray-600 hover:text-gray-900"
         >
           <ArrowLeft className="h-4 w-4" />
           Volver a pacientes
@@ -326,17 +326,17 @@ export default function PatientDetailPage() {
         {!isEditing && (
           <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
             <div className="flex items-center gap-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-500/15">
-                <span className="text-2xl font-bold text-blue-400">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100">
+                <span className="text-2xl font-bold text-blue-600">
                   {patient.firstName[0]}
                   {patient.lastName[0]}
                 </span>
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-white">
+                <h1 className="text-2xl font-bold text-gray-900">
                   {patient.firstName} {patient.lastName}
                 </h1>
-                <p className="text-white/50">
+                <p className="text-gray-600">
                   {calculateAge(patient.dateOfBirth)} años •{' '}
                   {patient.gender === 'MALE'
                     ? 'Masculino'
@@ -350,21 +350,21 @@ export default function PatientDetailPage() {
             <div className="flex flex-wrap items-center gap-2">
               <Link
                 href={`/consultations/new?patientId=${patient.id}`}
-                className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white transition-colors hover:from-blue-600 hover:to-cyan-600"
+                className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
               >
                 <FileText className="h-4 w-4" />
                 Nueva Consulta
               </Link>
               <button
                 onClick={() => setIsEditing(true)}
-                className="rounded-2xl border border-white/[0.08] px-4 py-2 transition-colors hover:bg-white/[0.02]"
+                className="rounded-lg border border-gray-300 px-4 py-2 transition-colors hover:bg-gray-50"
               >
                 Editar
               </button>
               <button
                 onClick={() => setShowDeleteConfirm(true)}
                 disabled={isDeleting}
-                className="rounded-2xl border border-red-300 p-2 text-red-400 transition-colors hover:bg-red-50 disabled:opacity-50"
+                className="rounded-lg border border-red-300 p-2 text-red-600 transition-colors hover:bg-red-50 disabled:opacity-50"
               >
                 <Trash2 className="h-4 w-4" />
               </button>
@@ -374,7 +374,7 @@ export default function PatientDetailPage() {
       </div>
 
       {error && (
-        <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-red-300">
+        <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
           {error}
         </div>
       )}
@@ -389,7 +389,7 @@ export default function PatientDetailPage() {
       ) : (
         <>
           {/* Tabs */}
-          <div className="mb-6 border-b border-white/[0.06]">
+          <div className="mb-6 border-b border-gray-200">
             <nav className="flex gap-4 overflow-x-auto">
               {tabs.map((tab) => (
                 <button
@@ -397,14 +397,14 @@ export default function PatientDetailPage() {
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors ${
                     activeTab === tab.id
-                      ? 'border-blue-600 text-blue-400'
-                      : 'border-transparent text-white/40 hover:border-white/[0.08] hover:text-white/70'
+                      ? 'border-blue-600 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
                   }`}
                 >
                   <tab.icon className="h-4 w-4" />
                   {tab.label}
                   {tab.count !== undefined && tab.count > 0 && (
-                    <span className="ml-1 rounded-full bg-white/[0.06] px-2 py-0.5 text-xs text-white/50">
+                    <span className="ml-1 rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
                       {tab.count}
                     </span>
                   )}
@@ -416,7 +416,7 @@ export default function PatientDetailPage() {
           {/* Tab Content */}
           {tabLoading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-6 w-6 animate-spin text-blue-400" />
+              <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
             </div>
           ) : (
             <>
@@ -470,29 +470,29 @@ function OverviewTab({
       {/* Quick Info */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {patient.phone && (
-          <div className="flex items-center gap-3 rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
-            <Phone className="h-5 w-5 text-white/30" />
+          <div className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4">
+            <Phone className="h-5 w-5 text-gray-400" />
             <div>
-              <p className="text-sm text-white/40">Teléfono</p>
-              <p className="font-medium text-white">{patient.phone}</p>
+              <p className="text-sm text-gray-500">Teléfono</p>
+              <p className="font-medium text-gray-900">{patient.phone}</p>
             </div>
           </div>
         )}
         {patient.email && (
-          <div className="flex items-center gap-3 rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
-            <Mail className="h-5 w-5 text-white/30" />
+          <div className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4">
+            <Mail className="h-5 w-5 text-gray-400" />
             <div>
-              <p className="text-sm text-white/40">Email</p>
-              <p className="font-medium text-white">{patient.email}</p>
+              <p className="text-sm text-gray-500">Email</p>
+              <p className="font-medium text-gray-900">{patient.email}</p>
             </div>
           </div>
         )}
         {patient.address && (
-          <div className="flex items-center gap-3 rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
-            <MapPin className="h-5 w-5 text-white/30" />
+          <div className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4">
+            <MapPin className="h-5 w-5 text-gray-400" />
             <div>
-              <p className="text-sm text-white/40">Dirección</p>
-              <p className="font-medium text-white">
+              <p className="text-sm text-gray-500">Dirección</p>
+              <p className="font-medium text-gray-900">
                 {patient.address}
                 {patient.city && `, ${patient.city}`}
               </p>
@@ -503,14 +503,14 @@ function OverviewTab({
 
       {/* Alerts */}
       {patient.allergies && patient.allergies.length > 0 && (
-        <div className="rounded-2xl border border-red-200 bg-red-50 p-4">
+        <div className="rounded-lg border border-red-200 bg-red-50 p-4">
           <div className="mb-2 flex items-center gap-2">
-            <AlertTriangle className="h-5 w-5 text-red-400" />
+            <AlertTriangle className="h-5 w-5 text-red-600" />
             <h3 className="font-semibold text-red-900">Alergias</h3>
           </div>
           <div className="flex flex-wrap gap-2">
             {patient.allergies.map((allergy, i) => (
-              <span key={i} className="rounded-full bg-red-500/15 px-3 py-1 text-sm text-red-300">
+              <span key={i} className="rounded-full bg-red-100 px-3 py-1 text-sm text-red-700">
                 {allergy}
               </span>
             ))}
@@ -519,69 +519,69 @@ function OverviewTab({
       )}
 
       {/* Medical Info */}
-      <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-6">
-        <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
+      <div className="rounded-lg border border-gray-200 bg-white p-6">
+        <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900">
           <Heart className="h-5 w-5 text-red-500" />
           Información Médica
         </h3>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div>
-            <p className="mb-2 text-sm text-white/40">Fecha de Nacimiento</p>
-            <p className="text-white">
+            <p className="mb-2 text-sm text-gray-500">Fecha de Nacimiento</p>
+            <p className="text-gray-900">
               {format(new Date(patient.dateOfBirth), "d 'de' MMMM, yyyy", { locale: es })}
-              <span className="ml-2 text-white/40">({calculateAge(patient.dateOfBirth)} años)</span>
+              <span className="ml-2 text-gray-500">({calculateAge(patient.dateOfBirth)} años)</span>
             </p>
           </div>
           <div>
-            <p className="mb-2 text-sm text-white/40">Tipo de Sangre</p>
-            <p className="text-white">{patient.bloodType || 'No registrado'}</p>
+            <p className="mb-2 text-sm text-gray-500">Tipo de Sangre</p>
+            <p className="text-gray-900">{patient.bloodType || 'No registrado'}</p>
           </div>
           <div className="md:col-span-2">
-            <p className="mb-2 text-sm text-white/40">Medicamentos Actuales</p>
+            <p className="mb-2 text-sm text-gray-500">Medicamentos Actuales</p>
             {patient.currentMedications && patient.currentMedications.length > 0 ? (
               <div className="flex flex-wrap gap-2">
                 {patient.currentMedications.map((med, i) => (
                   <span
                     key={i}
-                    className="rounded-full bg-blue-500/15 px-3 py-1 text-sm text-blue-300"
+                    className="rounded-full bg-blue-100 px-3 py-1 text-sm text-blue-700"
                   >
                     {med}
                   </span>
                 ))}
               </div>
             ) : (
-              <p className="text-white/50">Sin medicamentos registrados</p>
+              <p className="text-gray-600">Sin medicamentos registrados</p>
             )}
           </div>
         </div>
         {patient.notes && (
           <div className="mt-4 border-t pt-4">
-            <p className="mb-2 text-sm text-white/40">Notas</p>
-            <p className="text-white/70">{patient.notes}</p>
+            <p className="mb-2 text-sm text-gray-500">Notas</p>
+            <p className="text-gray-700">{patient.notes}</p>
           </div>
         )}
       </div>
 
       {/* Emergency Contact */}
       {patient.emergencyContact && (
-        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-6">
-          <h3 className="mb-4 text-lg font-semibold text-white">Contacto de Emergencia</h3>
+        <div className="rounded-lg border border-gray-200 bg-white p-6">
+          <h3 className="mb-4 text-lg font-semibold text-gray-900">Contacto de Emergencia</h3>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <div>
-              <p className="text-sm text-white/40">Nombre</p>
-              <p className="font-medium text-white">
+              <p className="text-sm text-gray-500">Nombre</p>
+              <p className="font-medium text-gray-900">
                 {(patient.emergencyContact as Record<string, string>).name}
               </p>
             </div>
             <div>
-              <p className="text-sm text-white/40">Teléfono</p>
-              <p className="font-medium text-white">
+              <p className="text-sm text-gray-500">Teléfono</p>
+              <p className="font-medium text-gray-900">
                 {(patient.emergencyContact as Record<string, string>).phone}
               </p>
             </div>
             <div>
-              <p className="text-sm text-white/40">Relación</p>
-              <p className="font-medium text-white">
+              <p className="text-sm text-gray-500">Relación</p>
+              <p className="font-medium text-gray-900">
                 {(patient.emergencyContact as Record<string, string>).relation}
               </p>
             </div>
@@ -591,18 +591,18 @@ function OverviewTab({
 
       {/* Insurance */}
       {patient.insuranceInfo && (
-        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-6">
-          <h3 className="mb-4 text-lg font-semibold text-white">Seguro Médico</h3>
+        <div className="rounded-lg border border-gray-200 bg-white p-6">
+          <h3 className="mb-4 text-lg font-semibold text-gray-900">Seguro Médico</h3>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
-              <p className="text-sm text-white/40">Aseguradora</p>
-              <p className="font-medium text-white">
+              <p className="text-sm text-gray-500">Aseguradora</p>
+              <p className="font-medium text-gray-900">
                 {(patient.insuranceInfo as Record<string, string>).provider}
               </p>
             </div>
             <div>
-              <p className="text-sm text-white/40">Número de Póliza</p>
-              <p className="font-medium text-white">
+              <p className="text-sm text-gray-500">Número de Póliza</p>
+              <p className="font-medium text-gray-900">
                 {(patient.insuranceInfo as Record<string, string>).policyNumber}
               </p>
             </div>
@@ -622,12 +622,12 @@ function ConsultationsTab({
 }) {
   if (consultations.length === 0) {
     return (
-      <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] py-12 text-center">
-        <FileText className="mx-auto mb-3 h-12 w-12 text-white/20" />
-        <p className="mb-4 text-white/40">No hay consultas registradas</p>
+      <div className="rounded-lg border border-gray-200 bg-white py-12 text-center">
+        <FileText className="mx-auto mb-3 h-12 w-12 text-gray-300" />
+        <p className="mb-4 text-gray-500">No hay consultas registradas</p>
         <Link
           href={`/consultations/new?patientId=${patientId}`}
-          className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600"
+          className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
         >
           <FileText className="h-4 w-4" />
           Nueva Consulta
@@ -642,18 +642,18 @@ function ConsultationsTab({
         <Link
           key={consultation.id}
           href={`/consultations/${consultation.id}`}
-          className="block rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4 transition-shadow hover:shadow-md"
+          className="block rounded-lg border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md"
         >
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-medium text-white">
+              <p className="font-medium text-gray-900">
                 {format(new Date(consultation.createdAt), "d 'de' MMMM, yyyy", { locale: es })}
               </p>
-              <p className="text-sm text-white/40">
+              <p className="text-sm text-gray-500">
                 {consultation.clinicalData?.soapNotes?.assessment || 'Sin diagnóstico registrado'}
               </p>
               {consultation.user && (
-                <p className="mt-1 text-xs text-white/30">
+                <p className="mt-1 text-xs text-gray-400">
                   Dr. {consultation.user.firstName} {consultation.user.lastName}
                 </p>
               )}
@@ -662,13 +662,13 @@ function ConsultationsTab({
               <span
                 className={`rounded-full px-2 py-1 text-xs font-medium ${
                   consultation.status === 'COMPLETED'
-                    ? 'bg-emerald-500/15 text-emerald-300'
-                    : 'bg-amber-500/15 text-amber-300'
+                    ? 'bg-green-100 text-green-700'
+                    : 'bg-yellow-100 text-yellow-700'
                 }`}
               >
                 {consultation.status === 'COMPLETED' ? 'Completada' : 'En progreso'}
               </span>
-              <ChevronRight className="h-5 w-5 text-white/30" />
+              <ChevronRight className="h-5 w-5 text-gray-400" />
             </div>
           </div>
         </Link>
@@ -680,9 +680,9 @@ function ConsultationsTab({
 function PrescriptionsTab({ prescriptions }: { prescriptions: Prescription[] }) {
   if (prescriptions.length === 0) {
     return (
-      <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] py-12 text-center">
-        <Pill className="mx-auto mb-3 h-12 w-12 text-white/20" />
-        <p className="text-white/40">No hay recetas registradas</p>
+      <div className="rounded-lg border border-gray-200 bg-white py-12 text-center">
+        <Pill className="mx-auto mb-3 h-12 w-12 text-gray-300" />
+        <p className="text-gray-500">No hay recetas registradas</p>
       </div>
     );
   }
@@ -690,25 +690,20 @@ function PrescriptionsTab({ prescriptions }: { prescriptions: Prescription[] }) 
   return (
     <div className="space-y-3">
       {prescriptions.map((prescription) => (
-        <div
-          key={prescription.id}
-          className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4"
-        >
+        <div key={prescription.id} className="rounded-lg border border-gray-200 bg-white p-4">
           <div className="mb-3 flex items-center justify-between">
             <div>
-              <p className="font-medium text-white">
+              <p className="font-medium text-gray-900">
                 {format(new Date(prescription.createdAt), "d 'de' MMMM, yyyy", { locale: es })}
               </p>
               {prescription.diagnosis && (
-                <p className="text-sm text-white/40">{prescription.diagnosis}</p>
+                <p className="text-sm text-gray-500">{prescription.diagnosis}</p>
               )}
             </div>
             <div className="flex items-center gap-2">
               <span
                 className={`rounded-full px-2 py-1 text-xs font-medium ${
-                  prescription.isValid
-                    ? 'bg-emerald-500/15 text-emerald-300'
-                    : 'bg-red-500/15 text-red-300'
+                  prescription.isValid ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
                 }`}
               >
                 {prescription.isValid ? 'Válida' : 'Invalidada'}
@@ -717,7 +712,7 @@ function PrescriptionsTab({ prescriptions }: { prescriptions: Prescription[] }) 
                 href={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/prescriptions/${prescription.id}/pdf`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-2xl p-2 text-blue-400 hover:bg-blue-50"
+                className="rounded-lg p-2 text-blue-600 hover:bg-blue-50"
               >
                 <Download className="h-4 w-4" />
               </a>
@@ -725,12 +720,12 @@ function PrescriptionsTab({ prescriptions }: { prescriptions: Prescription[] }) 
           </div>
           <div className="flex flex-wrap gap-2">
             {prescription.medications.slice(0, 3).map((med, i) => (
-              <span key={i} className="rounded bg-white/[0.06] px-2 py-1 text-sm text-white/70">
+              <span key={i} className="rounded bg-gray-100 px-2 py-1 text-sm text-gray-700">
                 {med.name} - {med.dose}
               </span>
             ))}
             {prescription.medications.length > 3 && (
-              <span className="rounded bg-white/[0.06] px-2 py-1 text-sm text-white/40">
+              <span className="rounded bg-gray-100 px-2 py-1 text-sm text-gray-500">
                 +{prescription.medications.length - 3} más
               </span>
             )}
@@ -774,7 +769,7 @@ function FilesTab({
       ) : (
         <button
           onClick={() => setShowUpload(true)}
-          className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-white/[0.08] p-4 text-white/50 transition-colors hover:border-blue-500 hover:text-blue-400"
+          className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-dashed border-gray-300 p-4 text-gray-600 transition-colors hover:border-blue-500 hover:text-blue-600"
         >
           <Plus className="h-5 w-5" />
           Subir archivos
@@ -783,21 +778,21 @@ function FilesTab({
 
       {/* Files List */}
       {files.length === 0 ? (
-        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] py-12 text-center">
-          <FolderOpen className="mx-auto mb-3 h-12 w-12 text-white/20" />
-          <p className="text-white/40">No hay archivos subidos</p>
+        <div className="rounded-lg border border-gray-200 bg-white py-12 text-center">
+          <FolderOpen className="mx-auto mb-3 h-12 w-12 text-gray-300" />
+          <p className="text-gray-500">No hay archivos subidos</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {files.map((file) => (
             <div
               key={file.id}
-              className="flex items-center gap-4 rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4"
+              className="flex items-center gap-4 rounded-lg border border-gray-200 bg-white p-4"
             >
               <span className="text-2xl">{getFileIcon(file.type)}</span>
               <div className="min-w-0 flex-1">
-                <p className="truncate font-medium text-white">{file.name}</p>
-                <p className="text-sm text-white/40">
+                <p className="truncate font-medium text-gray-900">{file.name}</p>
+                <p className="text-sm text-gray-500">
                   {format(new Date(file.createdAt), 'd MMM yyyy', { locale: es })} •{' '}
                   {file.sizeMb.toFixed(2)} MB
                 </p>
@@ -807,7 +802,7 @@ function FilesTab({
                   href={file.storageUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-2xl p-2 text-blue-400 hover:bg-blue-50"
+                  className="rounded-lg p-2 text-blue-600 hover:bg-blue-50"
                 >
                   <Download className="h-4 w-4" />
                 </a>
@@ -829,12 +824,12 @@ function AppointmentsTab({
 }) {
   if (appointments.length === 0) {
     return (
-      <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] py-12 text-center">
-        <Calendar className="mx-auto mb-3 h-12 w-12 text-white/20" />
-        <p className="mb-4 text-white/40">No hay citas registradas</p>
+      <div className="rounded-lg border border-gray-200 bg-white py-12 text-center">
+        <Calendar className="mx-auto mb-3 h-12 w-12 text-gray-300" />
+        <p className="mb-4 text-gray-500">No hay citas registradas</p>
         <Link
           href={`/appointments?patientId=${patientId}`}
-          className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600"
+          className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
         >
           <Calendar className="h-4 w-4" />
           Agendar Cita
@@ -845,13 +840,13 @@ function AppointmentsTab({
 
   const getStatusStyle = (status: string) => {
     const styles: Record<string, string> = {
-      COMPLETED: 'bg-emerald-500/15 text-emerald-300',
-      CONFIRMED: 'bg-blue-500/15 text-blue-300',
-      SCHEDULED: 'bg-white/[0.06] text-white/70',
-      CANCELLED: 'bg-red-500/15 text-red-300',
-      NO_SHOW: 'bg-amber-500/15 text-amber-300',
+      COMPLETED: 'bg-green-100 text-green-700',
+      CONFIRMED: 'bg-blue-100 text-blue-700',
+      SCHEDULED: 'bg-gray-100 text-gray-700',
+      CANCELLED: 'bg-red-100 text-red-700',
+      NO_SHOW: 'bg-yellow-100 text-yellow-700',
     };
-    return styles[status] || 'bg-white/[0.06] text-white/70';
+    return styles[status] || 'bg-gray-100 text-gray-700';
   };
 
   const getStatusLabel = (status: string) => {
@@ -868,31 +863,28 @@ function AppointmentsTab({
   return (
     <div className="space-y-3">
       {appointments.map((appointment) => (
-        <div
-          key={appointment.id}
-          className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4"
-        >
+        <div key={appointment.id} className="rounded-lg border border-gray-200 bg-white p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="text-center">
-                <p className="text-2xl font-bold text-white">
+                <p className="text-2xl font-bold text-gray-900">
                   {format(new Date(appointment.startTime), 'd')}
                 </p>
-                <p className="text-sm text-white/40">
+                <p className="text-sm text-gray-500">
                   {format(new Date(appointment.startTime), 'MMM', { locale: es })}
                 </p>
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-white/30" />
-                  <p className="font-medium text-white">
+                  <Clock className="h-4 w-4 text-gray-400" />
+                  <p className="font-medium text-gray-900">
                     {format(new Date(appointment.startTime), 'HH:mm')} -{' '}
                     {format(new Date(appointment.endTime), 'HH:mm')}
                   </p>
                 </div>
-                <p className="text-sm text-white/40">{appointment.type || 'Consulta'}</p>
+                <p className="text-sm text-gray-500">{appointment.type || 'Consulta'}</p>
                 {appointment.notes && (
-                  <p className="mt-1 text-xs text-white/30">{appointment.notes}</p>
+                  <p className="mt-1 text-xs text-gray-400">{appointment.notes}</p>
                 )}
               </div>
             </div>

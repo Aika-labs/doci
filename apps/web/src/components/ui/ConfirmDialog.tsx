@@ -29,16 +29,16 @@ export function ConfirmDialog({
 
   const variantStyles = {
     danger: {
-      icon: 'bg-red-500/15 text-red-400',
+      icon: 'bg-red-100 text-red-600',
       button: 'bg-red-600 hover:bg-red-700',
     },
     warning: {
-      icon: 'bg-amber-500/15 text-amber-400',
+      icon: 'bg-yellow-100 text-yellow-600',
       button: 'bg-yellow-600 hover:bg-yellow-700',
     },
     info: {
-      icon: 'bg-blue-500/15 text-blue-400',
-      button: 'bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600',
+      icon: 'bg-blue-100 text-blue-600',
+      button: 'bg-blue-600 hover:bg-blue-700',
     },
   };
 
@@ -59,20 +59,20 @@ export function ConfirmDialog({
               <AlertTriangle className="h-5 w-5" />
             </div>
             <div className="flex-1">
-              <h3 className="text-lg font-semibold text-white">{title}</h3>
-              <p className="mt-2 text-white/50">{message}</p>
+              <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+              <p className="mt-2 text-gray-600">{message}</p>
             </div>
-            <button onClick={onCancel} className="p-1 text-white/30 hover:text-white/50">
+            <button onClick={onCancel} className="p-1 text-gray-400 hover:text-gray-600">
               <X className="h-5 w-5" />
             </button>
           </div>
         </div>
 
-        <div className="flex justify-end gap-3 bg-white/[0.02] px-6 py-4">
+        <div className="flex justify-end gap-3 bg-gray-50 px-6 py-4">
           <button
             onClick={onCancel}
             disabled={isLoading}
-            className="rounded-2xl border border-white/[0.08] px-4 py-2 text-white/70 hover:bg-white/[0.06] disabled:opacity-50"
+            className="rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-100 disabled:opacity-50"
           >
             {cancelLabel}
           </button>

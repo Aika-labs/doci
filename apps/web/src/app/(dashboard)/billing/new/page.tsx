@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useAuthCompat as useAuth } from '@/hooks/useAuthCompat';
+import { useAuth } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { format, addDays } from 'date-fns';
 import { ArrowLeft, Plus, Trash2, Search, Loader2, User } from 'lucide-react';
@@ -172,7 +172,7 @@ export default function NewInvoicePage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-400" />
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
       </div>
     );
   }
@@ -181,23 +181,23 @@ export default function NewInvoicePage() {
     <div className="mx-auto max-w-4xl">
       {/* Header */}
       <div className="mb-6 flex items-center gap-4">
-        <Link href="/billing" className="rounded-2xl p-2 transition-colors hover:bg-white/[0.06]">
+        <Link href="/billing" className="rounded-lg p-2 transition-colors hover:bg-gray-100">
           <ArrowLeft className="h-5 w-5" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-white">Nueva Factura</h1>
-          <p className="text-white/50">Crea una nueva factura para un paciente</p>
+          <h1 className="text-2xl font-bold text-gray-900">Nueva Factura</h1>
+          <p className="text-gray-600">Crea una nueva factura para un paciente</p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Patient Selection */}
-        <div className="rounded-[2rem] border border-white/[0.06] bg-white/[0.03] p-6">
-          <h2 className="mb-4 text-lg font-semibold text-white">Paciente</h2>
+        <div className="rounded-xl border border-gray-200 bg-white p-6">
+          <h2 className="mb-4 text-lg font-semibold text-gray-900">Paciente</h2>
 
           <div className="relative">
             <div className="relative">
-              <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-white/30" />
+              <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
                 value={patientSearch}
@@ -208,30 +208,30 @@ export default function NewInvoicePage() {
                 }}
                 onFocus={() => setShowPatientDropdown(true)}
                 placeholder="Buscar paciente..."
-                className="w-full rounded-2xl border border-white/[0.08] py-2 pr-4 pl-10 focus:ring-2 focus:ring-blue-500/20"
+                className="w-full rounded-lg border border-gray-300 py-2 pr-4 pl-10 focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             {showPatientDropdown && filteredPatients.length > 0 && (
-              <div className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-2xl border border-white/[0.06] bg-white shadow-lg">
+              <div className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-lg border border-gray-200 bg-white shadow-lg">
                 {filteredPatients.slice(0, 10).map((patient) => (
                   <button
                     key={patient.id}
                     type="button"
                     onClick={() => handleSelectPatient(patient)}
-                    className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-white/[0.02]"
+                    className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-gray-50"
                   >
-                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-500/15">
-                      <span className="text-sm font-semibold text-blue-400">
+                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
+                      <span className="text-sm font-semibold text-blue-600">
                         {patient.firstName[0]}
                         {patient.lastName[0]}
                       </span>
                     </div>
                     <div>
-                      <p className="font-medium text-white">
+                      <p className="font-medium text-gray-900">
                         {patient.firstName} {patient.lastName}
                       </p>
-                      <p className="text-sm text-white/40">{patient.email || patient.phone}</p>
+                      <p className="text-sm text-gray-500">{patient.email || patient.phone}</p>
                     </div>
                   </button>
                 ))}
@@ -240,15 +240,15 @@ export default function NewInvoicePage() {
           </div>
 
           {selectedPatient && (
-            <div className="mt-4 flex items-center gap-4 rounded-2xl bg-blue-50 p-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-500/15">
-                <User className="h-6 w-6 text-blue-400" />
+            <div className="mt-4 flex items-center gap-4 rounded-lg bg-blue-50 p-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
+                <User className="h-6 w-6 text-blue-600" />
               </div>
               <div>
-                <p className="font-medium text-white">
+                <p className="font-medium text-gray-900">
                   {selectedPatient.firstName} {selectedPatient.lastName}
                 </p>
-                <p className="text-sm text-white/50">
+                <p className="text-sm text-gray-600">
                   {selectedPatient.email} • {selectedPatient.phone}
                 </p>
               </div>
@@ -257,42 +257,42 @@ export default function NewInvoicePage() {
         </div>
 
         {/* Invoice Details */}
-        <div className="rounded-[2rem] border border-white/[0.06] bg-white/[0.03] p-6">
-          <h2 className="mb-4 text-lg font-semibold text-white">Detalles</h2>
+        <div className="rounded-xl border border-gray-200 bg-white p-6">
+          <h2 className="mb-4 text-lg font-semibold text-gray-900">Detalles</h2>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="mb-1 block text-sm font-medium text-white/70">
+              <label className="mb-1 block text-sm font-medium text-gray-700">
                 Fecha de vencimiento
               </label>
               <input
                 type="date"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
-                className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:ring-2 focus:ring-blue-500/20"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-white/70">Notas</label>
+              <label className="mb-1 block text-sm font-medium text-gray-700">Notas</label>
               <input
                 type="text"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="Notas adicionales..."
-                className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:ring-2 focus:ring-blue-500/20"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500"
               />
             </div>
           </div>
         </div>
 
         {/* Items */}
-        <div className="rounded-[2rem] border border-white/[0.06] bg-white/[0.03] p-6">
+        <div className="rounded-xl border border-gray-200 bg-white p-6">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-white">Conceptos</h2>
+            <h2 className="text-lg font-semibold text-gray-900">Conceptos</h2>
             <button
               type="button"
               onClick={handleAddItem}
-              className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm text-blue-400 hover:bg-blue-50"
+              className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm text-blue-600 hover:bg-blue-50"
             >
               <Plus className="h-4 w-4" />
               Agregar
@@ -301,18 +301,18 @@ export default function NewInvoicePage() {
 
           <div className="space-y-4">
             {items.map((item) => (
-              <div key={item.id} className="rounded-2xl border border-white/[0.06] p-4">
+              <div key={item.id} className="rounded-lg border border-gray-200 p-4">
                 <div className="flex items-start gap-4">
                   <div className="flex-1 space-y-3">
                     {/* Service selector */}
                     <div>
-                      <label className="mb-1 block text-xs font-medium text-white/40">
+                      <label className="mb-1 block text-xs font-medium text-gray-500">
                         Servicio (opcional)
                       </label>
                       <select
                         value={item.serviceId || ''}
                         onChange={(e) => handleSelectService(item.id, e.target.value)}
-                        className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500/20"
+                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
                       >
                         <option value="">Seleccionar servicio...</option>
                         {services.map((service) => (
@@ -325,7 +325,7 @@ export default function NewInvoicePage() {
 
                     {/* Description */}
                     <div>
-                      <label className="mb-1 block text-xs font-medium text-white/40">
+                      <label className="mb-1 block text-xs font-medium text-gray-500">
                         Descripción *
                       </label>
                       <input
@@ -333,7 +333,7 @@ export default function NewInvoicePage() {
                         value={item.description}
                         onChange={(e) => handleItemChange(item.id, 'description', e.target.value)}
                         placeholder="Descripción del concepto"
-                        className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500/20"
+                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
                         required
                       />
                     </div>
@@ -341,7 +341,7 @@ export default function NewInvoicePage() {
                     {/* Quantity, Price, Discount */}
                     <div className="grid grid-cols-3 gap-3">
                       <div>
-                        <label className="mb-1 block text-xs font-medium text-white/40">
+                        <label className="mb-1 block text-xs font-medium text-gray-500">
                           Cantidad
                         </label>
                         <input
@@ -351,11 +351,11 @@ export default function NewInvoicePage() {
                           onChange={(e) =>
                             handleItemChange(item.id, 'quantity', parseInt(e.target.value) || 1)
                           }
-                          className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500/20"
+                          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
                         />
                       </div>
                       <div>
-                        <label className="mb-1 block text-xs font-medium text-white/40">
+                        <label className="mb-1 block text-xs font-medium text-gray-500">
                           Precio unitario
                         </label>
                         <input
@@ -366,11 +366,11 @@ export default function NewInvoicePage() {
                           onChange={(e) =>
                             handleItemChange(item.id, 'unitPrice', parseFloat(e.target.value) || 0)
                           }
-                          className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500/20"
+                          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
                         />
                       </div>
                       <div>
-                        <label className="mb-1 block text-xs font-medium text-white/40">
+                        <label className="mb-1 block text-xs font-medium text-gray-500">
                           Descuento %
                         </label>
                         <input
@@ -381,21 +381,21 @@ export default function NewInvoicePage() {
                           onChange={(e) =>
                             handleItemChange(item.id, 'discount', parseFloat(e.target.value) || 0)
                           }
-                          className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500/20"
+                          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
                         />
                       </div>
                     </div>
                   </div>
 
                   <div className="flex flex-col items-end gap-2">
-                    <p className="text-lg font-bold text-white">
+                    <p className="text-lg font-bold text-gray-900">
                       {formatCurrency(calculateItemTotal(item))}
                     </p>
                     {items.length > 1 && (
                       <button
                         type="button"
                         onClick={() => handleRemoveItem(item.id)}
-                        className="rounded-2xl p-2 text-red-400 hover:bg-red-50"
+                        className="rounded-lg p-2 text-red-600 hover:bg-red-50"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
@@ -409,18 +409,18 @@ export default function NewInvoicePage() {
           {/* Totals */}
           <div className="mt-6 space-y-2 border-t pt-6">
             <div className="flex justify-between text-sm">
-              <span className="text-white/40">Subtotal</span>
-              <span className="text-white">{formatCurrency(subtotal)}</span>
+              <span className="text-gray-500">Subtotal</span>
+              <span className="text-gray-900">{formatCurrency(subtotal)}</span>
             </div>
             {totalDiscount > 0 && (
               <div className="flex justify-between text-sm">
-                <span className="text-white/40">Descuento</span>
-                <span className="text-red-400">-{formatCurrency(totalDiscount)}</span>
+                <span className="text-gray-500">Descuento</span>
+                <span className="text-red-600">-{formatCurrency(totalDiscount)}</span>
               </div>
             )}
             <div className="flex justify-between border-t pt-2 text-lg font-bold">
-              <span className="text-white">Total</span>
-              <span className="text-white">{formatCurrency(total)}</span>
+              <span className="text-gray-900">Total</span>
+              <span className="text-gray-900">{formatCurrency(total)}</span>
             </div>
           </div>
         </div>
@@ -429,14 +429,14 @@ export default function NewInvoicePage() {
         <div className="flex gap-4">
           <Link
             href="/billing"
-            className="flex-1 rounded-2xl border border-white/[0.08] px-4 py-3 text-center text-white/70 hover:bg-white/[0.02]"
+            className="flex-1 rounded-lg border border-gray-300 px-4 py-3 text-center text-gray-700 hover:bg-gray-50"
           >
             Cancelar
           </Link>
           <button
             type="submit"
             disabled={isSubmitting || !selectedPatient}
-            className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-3 text-white hover:from-blue-600 hover:to-cyan-600 disabled:opacity-50"
+            className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-3 text-white hover:bg-blue-700 disabled:opacity-50"
           >
             {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Crear Factura'}
           </button>

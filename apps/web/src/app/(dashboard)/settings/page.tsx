@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useAuthCompat as useAuth, useUserCompat as useUser } from '@/hooks/useAuthCompat';
+import { useAuth, useUser } from '@clerk/nextjs';
 import { Building2, User, Bell, Shield, Palette, Save, Loader2 } from 'lucide-react';
 import { useToast } from '@/components/ui';
 import { useTheme } from '@/components/ThemeProvider';
@@ -97,7 +97,7 @@ export default function SettingsPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-400" />
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
       </div>
     );
   }
@@ -105,8 +105,8 @@ export default function SettingsPage() {
   return (
     <div className="mx-auto max-w-4xl">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-white">Configuración</h1>
-        <p className="text-white/50">Administra tu perfil y preferencias</p>
+        <h1 className="text-2xl font-bold text-gray-900">Configuración</h1>
+        <p className="text-gray-600">Administra tu perfil y preferencias</p>
       </div>
 
       <div className="flex flex-col gap-6 md:flex-row">
@@ -119,8 +119,8 @@ export default function SettingsPage() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                   activeTab === tab.id
-                    ? 'bg-blue-50 text-blue-300'
-                    : 'text-white/50 hover:bg-white/[0.06]'
+                    ? 'bg-blue-50 text-blue-700'
+                    : 'text-gray-600 hover:bg-gray-100'
                 }`}
               >
                 <tab.icon className="h-4 w-4" />
@@ -131,7 +131,7 @@ export default function SettingsPage() {
         </div>
 
         {/* Content */}
-        <div className="flex-1 rounded-[2rem] border border-white/[0.06] bg-white/[0.03] p-6">
+        <div className="flex-1 rounded-xl border border-gray-200 bg-white p-6">
           {activeTab === 'profile' && (
             <ProfileSettings
               user={user}
@@ -180,37 +180,37 @@ function ProfileSettings({ user, profile, onSave, isSaving }: ProfileSettingsPro
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2 className="mb-4 text-lg font-semibold text-white">Información del perfil</h2>
+      <h2 className="mb-4 text-lg font-semibold text-gray-900">Información del perfil</h2>
 
       <div className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-white/70">Nombre</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Nombre</label>
             <input
               type="text"
               value={formData.firstName}
               onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-white/70">Apellido</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Apellido</label>
             <input
               type="text"
               value={formData.lastName}
               onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-white/70">Especialidad</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Especialidad</label>
             <select
               value={formData.specialty}
               onChange={(e) => setFormData({ ...formData, specialty: e.target.value })}
-              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Seleccionar...</option>
               <option value="general">Medicina General</option>
@@ -226,7 +226,7 @@ function ProfileSettings({ user, profile, onSave, isSaving }: ProfileSettingsPro
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-white/70">
+            <label className="mb-1 block text-sm font-medium text-gray-700">
               Cédula Profesional
             </label>
             <input
@@ -234,30 +234,30 @@ function ProfileSettings({ user, profile, onSave, isSaving }: ProfileSettingsPro
               value={formData.licenseNumber}
               onChange={(e) => setFormData({ ...formData, licenseNumber: e.target.value })}
               placeholder="Ej: 12345678"
-              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-white/70">Teléfono</label>
+          <label className="mb-1 block text-sm font-medium text-gray-700">Teléfono</label>
           <input
             type="tel"
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
             placeholder="+52 55 1234 5678"
-            className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-white/70">Biografía</label>
+          <label className="mb-1 block text-sm font-medium text-gray-700">Biografía</label>
           <textarea
             value={formData.bio}
             onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
             rows={3}
             placeholder="Breve descripción profesional..."
-            className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -265,7 +265,7 @@ function ProfileSettings({ user, profile, onSave, isSaving }: ProfileSettingsPro
           <button
             type="submit"
             disabled={isSaving}
-            className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600 disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
           >
             {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             Guardar cambios
@@ -322,11 +322,11 @@ function ClinicSettings({ tenant, onSave, isSaving }: ClinicSettingsProps) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2 className="mb-4 text-lg font-semibold text-white">Información de la clínica</h2>
+      <h2 className="mb-4 text-lg font-semibold text-gray-900">Información de la clínica</h2>
 
       <div className="space-y-4">
         <div>
-          <label className="mb-1 block text-sm font-medium text-white/70">
+          <label className="mb-1 block text-sm font-medium text-gray-700">
             Nombre de la clínica
           </label>
           <input
@@ -334,74 +334,74 @@ function ClinicSettings({ tenant, onSave, isSaving }: ClinicSettingsProps) {
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             placeholder="Ej: Clínica San Rafael"
-            className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-white/70">Dirección</label>
+          <label className="mb-1 block text-sm font-medium text-gray-700">Dirección</label>
           <input
             type="text"
             value={formData.address}
             onChange={(e) => setFormData({ ...formData, address: e.target.value })}
             placeholder="Calle y número"
-            className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         <div className="grid grid-cols-3 gap-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-white/70">Ciudad</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Ciudad</label>
             <input
               type="text"
               value={formData.city}
               onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-white/70">Estado</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Estado</label>
             <input
               type="text"
               value={formData.state}
               onChange={(e) => setFormData({ ...formData, state: e.target.value })}
-              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-white/70">C.P.</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">C.P.</label>
             <input
               type="text"
               value={formData.postalCode}
               onChange={(e) => setFormData({ ...formData, postalCode: e.target.value })}
-              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-white/70">Teléfono</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Teléfono</label>
             <input
               type="tel"
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-white/70">Email</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Email</label>
             <input
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>
 
         <div className="border-t pt-4">
-          <h3 className="mb-3 text-sm font-medium text-white">Horario de atención</h3>
+          <h3 className="mb-3 text-sm font-medium text-gray-900">Horario de atención</h3>
           <div className="space-y-2">
             {days.map((day) => (
               <div key={day.key} className="flex items-center gap-4">
@@ -418,9 +418,9 @@ function ClinicSettings({ tenant, onSave, isSaving }: ClinicSettingsProps) {
                         },
                       })
                     }
-                    className="rounded border-white/[0.08] text-blue-400 focus:ring-blue-500/20"
+                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                   />
-                  <span className="text-sm text-white/70">{day.label}</span>
+                  <span className="text-sm text-gray-700">{day.label}</span>
                 </label>
                 {formData.schedule[day.key].enabled && (
                   <>
@@ -436,9 +436,9 @@ function ClinicSettings({ tenant, onSave, isSaving }: ClinicSettingsProps) {
                           },
                         })
                       }
-                      className="rounded border border-white/[0.08] px-2 py-1 text-sm"
+                      className="rounded border border-gray-300 px-2 py-1 text-sm"
                     />
-                    <span className="text-white/40">a</span>
+                    <span className="text-gray-500">a</span>
                     <input
                       type="time"
                       value={formData.schedule[day.key].close}
@@ -451,7 +451,7 @@ function ClinicSettings({ tenant, onSave, isSaving }: ClinicSettingsProps) {
                           },
                         })
                       }
-                      className="rounded border border-white/[0.08] px-2 py-1 text-sm"
+                      className="rounded border border-gray-300 px-2 py-1 text-sm"
                     />
                   </>
                 )}
@@ -464,7 +464,7 @@ function ClinicSettings({ tenant, onSave, isSaving }: ClinicSettingsProps) {
           <button
             type="submit"
             disabled={isSaving}
-            className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600 disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
           >
             {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             Guardar cambios
@@ -499,11 +499,11 @@ function NotificationSettings({ onSave, isSaving }: LocalSettingsProps) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2 className="mb-4 text-lg font-semibold text-white">Preferencias de notificaciones</h2>
+      <h2 className="mb-4 text-lg font-semibold text-gray-900">Preferencias de notificaciones</h2>
 
       <div className="space-y-6">
         <div>
-          <h3 className="mb-3 text-sm font-medium text-white">Notificaciones por email</h3>
+          <h3 className="mb-3 text-sm font-medium text-gray-900">Notificaciones por email</h3>
           <div className="space-y-3">
             <label className="flex items-center gap-3">
               <input
@@ -512,33 +512,33 @@ function NotificationSettings({ onSave, isSaving }: LocalSettingsProps) {
                 onChange={(e) =>
                   setSettings({ ...settings, emailAppointmentReminder: e.target.checked })
                 }
-                className="rounded border-white/[0.08] text-blue-400 focus:ring-blue-500/20"
+                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
-              <span className="text-sm text-white/70">Recordatorios de citas</span>
+              <span className="text-sm text-gray-700">Recordatorios de citas</span>
             </label>
             <label className="flex items-center gap-3">
               <input
                 type="checkbox"
                 checked={settings.emailNewPatient}
                 onChange={(e) => setSettings({ ...settings, emailNewPatient: e.target.checked })}
-                className="rounded border-white/[0.08] text-blue-400 focus:ring-blue-500/20"
+                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
-              <span className="text-sm text-white/70">Nuevos pacientes registrados</span>
+              <span className="text-sm text-gray-700">Nuevos pacientes registrados</span>
             </label>
             <label className="flex items-center gap-3">
               <input
                 type="checkbox"
                 checked={settings.emailWeeklySummary}
                 onChange={(e) => setSettings({ ...settings, emailWeeklySummary: e.target.checked })}
-                className="rounded border-white/[0.08] text-blue-400 focus:ring-blue-500/20"
+                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
-              <span className="text-sm text-white/70">Resumen semanal de actividad</span>
+              <span className="text-sm text-gray-700">Resumen semanal de actividad</span>
             </label>
           </div>
         </div>
 
         <div className="border-t pt-4">
-          <h3 className="mb-3 text-sm font-medium text-white">Notificaciones push</h3>
+          <h3 className="mb-3 text-sm font-medium text-gray-900">Notificaciones push</h3>
           <div className="space-y-3">
             <label className="flex items-center gap-3">
               <input
@@ -547,28 +547,28 @@ function NotificationSettings({ onSave, isSaving }: LocalSettingsProps) {
                 onChange={(e) =>
                   setSettings({ ...settings, pushAppointmentReminder: e.target.checked })
                 }
-                className="rounded border-white/[0.08] text-blue-400 focus:ring-blue-500/20"
+                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
-              <span className="text-sm text-white/70">Recordatorios de citas próximas</span>
+              <span className="text-sm text-gray-700">Recordatorios de citas próximas</span>
             </label>
             <label className="flex items-center gap-3">
               <input
                 type="checkbox"
                 checked={settings.pushNewMessage}
                 onChange={(e) => setSettings({ ...settings, pushNewMessage: e.target.checked })}
-                className="rounded border-white/[0.08] text-blue-400 focus:ring-blue-500/20"
+                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
-              <span className="text-sm text-white/70">Nuevos mensajes</span>
+              <span className="text-sm text-gray-700">Nuevos mensajes</span>
             </label>
           </div>
         </div>
 
         <div className="border-t pt-4">
-          <h3 className="mb-3 text-sm font-medium text-white">Tiempo de recordatorio</h3>
+          <h3 className="mb-3 text-sm font-medium text-gray-900">Tiempo de recordatorio</h3>
           <select
             value={settings.reminderTime}
             onChange={(e) => setSettings({ ...settings, reminderTime: e.target.value })}
-            className="rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+            className="rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
           >
             <option value="1">1 hora antes</option>
             <option value="2">2 horas antes</option>
@@ -581,7 +581,7 @@ function NotificationSettings({ onSave, isSaving }: LocalSettingsProps) {
           <button
             type="submit"
             disabled={isSaving}
-            className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600 disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
           >
             {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             Guardar cambios
@@ -595,49 +595,49 @@ function NotificationSettings({ onSave, isSaving }: LocalSettingsProps) {
 function SecuritySettings() {
   return (
     <div>
-      <h2 className="mb-4 text-lg font-semibold text-white">Seguridad</h2>
+      <h2 className="mb-4 text-lg font-semibold text-gray-900">Seguridad</h2>
 
       <div className="space-y-6">
-        <div className="rounded-2xl bg-white/[0.02] p-4">
-          <h3 className="mb-2 text-sm font-medium text-white">Cambiar contraseña</h3>
-          <p className="mb-3 text-sm text-white/50">
+        <div className="rounded-lg bg-gray-50 p-4">
+          <h3 className="mb-2 text-sm font-medium text-gray-900">Cambiar contraseña</h3>
+          <p className="mb-3 text-sm text-gray-600">
             La gestión de contraseña se realiza a través de tu cuenta de Clerk.
           </p>
           <a
             href="https://accounts.clerk.dev/user"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-2xl border border-white/[0.08] bg-white px-4 py-2 text-sm font-medium text-white/70 hover:bg-white/[0.02]"
+            className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
           >
             Gestionar cuenta
           </a>
         </div>
 
-        <div className="rounded-2xl bg-white/[0.02] p-4">
-          <h3 className="mb-2 text-sm font-medium text-white">Autenticación de dos factores</h3>
-          <p className="mb-3 text-sm text-white/50">
+        <div className="rounded-lg bg-gray-50 p-4">
+          <h3 className="mb-2 text-sm font-medium text-gray-900">Autenticación de dos factores</h3>
+          <p className="mb-3 text-sm text-gray-600">
             Añade una capa extra de seguridad a tu cuenta.
           </p>
           <a
             href="https://accounts.clerk.dev/user/security"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-2xl border border-white/[0.08] bg-white px-4 py-2 text-sm font-medium text-white/70 hover:bg-white/[0.02]"
+            className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
           >
             Configurar 2FA
           </a>
         </div>
 
-        <div className="rounded-2xl bg-white/[0.02] p-4">
-          <h3 className="mb-2 text-sm font-medium text-white">Sesiones activas</h3>
-          <p className="mb-3 text-sm text-white/50">
+        <div className="rounded-lg bg-gray-50 p-4">
+          <h3 className="mb-2 text-sm font-medium text-gray-900">Sesiones activas</h3>
+          <p className="mb-3 text-sm text-gray-600">
             Revisa y gestiona los dispositivos donde has iniciado sesión.
           </p>
           <a
             href="https://accounts.clerk.dev/user/security"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-2xl border border-white/[0.08] bg-white px-4 py-2 text-sm font-medium text-white/70 hover:bg-white/[0.02]"
+            className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
           >
             Ver sesiones
           </a>
@@ -661,11 +661,11 @@ function AppearanceSettings({ onSave, isSaving }: LocalSettingsProps) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2 className="mb-4 text-lg font-semibold text-white">Apariencia</h2>
+      <h2 className="mb-4 text-lg font-semibold text-gray-900">Apariencia</h2>
 
       <div className="space-y-6">
         <div>
-          <h3 className="mb-3 text-sm font-medium text-white">Tema</h3>
+          <h3 className="mb-3 text-sm font-medium text-gray-900">Tema</h3>
           <div className="flex gap-3">
             {[
               { value: 'light' as const, label: 'Claro' },
@@ -676,10 +676,10 @@ function AppearanceSettings({ onSave, isSaving }: LocalSettingsProps) {
                 key={option.value}
                 type="button"
                 onClick={() => setTheme(option.value)}
-                className={`rounded-2xl border px-4 py-2 text-sm font-medium transition-colors ${
+                className={`rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
                   theme === option.value
-                    ? 'border-blue-600 bg-blue-50 text-blue-300'
-                    : 'border-white/[0.08] text-white/70 hover:bg-white/[0.02]'
+                    ? 'border-blue-600 bg-blue-50 text-blue-700'
+                    : 'border-gray-300 text-gray-700 hover:bg-gray-50'
                 }`}
               >
                 {option.label}
@@ -689,11 +689,11 @@ function AppearanceSettings({ onSave, isSaving }: LocalSettingsProps) {
         </div>
 
         <div className="border-t pt-4">
-          <h3 className="mb-3 text-sm font-medium text-white">Idioma</h3>
+          <h3 className="mb-3 text-sm font-medium text-gray-900">Idioma</h3>
           <select
             value={settings.language}
             onChange={(e) => setSettings({ ...settings, language: e.target.value })}
-            className="rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+            className="rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
           >
             <option value="es">Español</option>
             <option value="en">English</option>
@@ -707,11 +707,11 @@ function AppearanceSettings({ onSave, isSaving }: LocalSettingsProps) {
               type="checkbox"
               checked={settings.compactMode}
               onChange={(e) => setSettings({ ...settings, compactMode: e.target.checked })}
-              className="rounded border-white/[0.08] text-blue-400 focus:ring-blue-500/20"
+              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
             <div>
-              <span className="text-sm font-medium text-white">Modo compacto</span>
-              <p className="text-xs text-white/40">
+              <span className="text-sm font-medium text-gray-900">Modo compacto</span>
+              <p className="text-xs text-gray-500">
                 Reduce el espaciado para mostrar más información
               </p>
             </div>
@@ -722,7 +722,7 @@ function AppearanceSettings({ onSave, isSaving }: LocalSettingsProps) {
           <button
             type="submit"
             disabled={isSaving}
-            className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600 disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
           >
             {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             Guardar cambios

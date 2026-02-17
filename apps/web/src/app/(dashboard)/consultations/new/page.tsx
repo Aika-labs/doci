@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { useAuthCompat as useAuth } from '@/hooks/useAuthCompat';
+import { useAuth } from '@clerk/nextjs';
 import { VoiceRecorder } from '@/components/voice';
 import { patientsApi, Patient } from '@/lib/api';
 import {
@@ -336,13 +336,13 @@ function NewConsultationContent() {
       <div className="mb-6">
         <Link
           href="/consultations"
-          className="mb-4 inline-flex items-center gap-2 text-white/50 hover:text-white"
+          className="mb-4 inline-flex items-center gap-2 text-gray-600 hover:text-gray-900"
         >
           <ArrowLeft className="h-4 w-4" />
           Volver a consultas
         </Link>
-        <h1 className="text-2xl font-bold text-white">Nueva Consulta</h1>
-        <p className="text-white/50">Graba la consulta y deja que la IA estructure las notas</p>
+        <h1 className="text-2xl font-bold text-gray-900">Nueva Consulta</h1>
+        <p className="text-gray-600">Graba la consulta y deja que la IA estructure las notas</p>
       </div>
 
       {/* Progress Steps */}
@@ -357,20 +357,20 @@ function NewConsultationContent() {
             <div
               className={`flex h-10 w-10 items-center justify-center rounded-full ${
                 step === s.key
-                  ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white'
+                  ? 'bg-blue-600 text-white'
                   : ['patient', 'recording', 'review', 'complete'].indexOf(step) >
                       ['patient', 'recording', 'review', 'complete'].indexOf(s.key)
                     ? 'bg-green-500 text-white'
-                    : 'bg-white/10 text-white/40'
+                    : 'bg-gray-200 text-gray-500'
               }`}
             >
               <s.icon className="h-5 w-5" />
             </div>
-            <span className="ml-2 hidden text-sm font-medium text-white/70 sm:block">
+            <span className="ml-2 hidden text-sm font-medium text-gray-700 sm:block">
               {s.label}
             </span>
             {i < 3 && (
-              <div className="mx-2 h-0.5 w-12 bg-white/10 sm:w-24">
+              <div className="mx-2 h-0.5 w-12 bg-gray-200 sm:w-24">
                 <div
                   className={`h-full bg-green-500 transition-all ${
                     ['patient', 'recording', 'review', 'complete'].indexOf(step) > i
@@ -385,25 +385,25 @@ function NewConsultationContent() {
       </div>
 
       {/* Step Content */}
-      <div className="rounded-[2rem] border border-white/[0.06] bg-white/[0.03] p-6">
+      <div className="rounded-xl border border-gray-200 bg-white p-6">
         {/* Step 1: Patient Selection */}
         {step === 'patient' && (
           <div>
-            <h2 className="mb-4 text-lg font-semibold text-white">Selecciona el paciente</h2>
+            <h2 className="mb-4 text-lg font-semibold text-gray-900">Selecciona el paciente</h2>
             <div className="relative mb-4">
-              <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-white/30" />
+              <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Buscar por nombre..."
-                className="w-full rounded-2xl border border-white/[0.08] py-3 pr-4 pl-10 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+                className="w-full rounded-lg border border-gray-300 py-3 pr-4 pl-10 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             {isSearching ? (
               <div className="flex items-center justify-center py-8">
-                <Loader2 className="h-6 w-6 animate-spin text-blue-400" />
+                <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
               </div>
             ) : patients.length > 0 ? (
               <div className="space-y-2">
@@ -411,19 +411,19 @@ function NewConsultationContent() {
                   <button
                     key={patient.id}
                     onClick={() => handlePatientSelect(patient)}
-                    className="flex w-full items-center gap-4 rounded-2xl border border-white/[0.06] p-4 text-left transition-colors hover:border-blue-300 hover:bg-blue-50"
+                    className="flex w-full items-center gap-4 rounded-lg border border-gray-200 p-4 text-left transition-colors hover:border-blue-300 hover:bg-blue-50"
                   >
-                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-500/15">
-                      <span className="font-semibold text-blue-400">
+                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
+                      <span className="font-semibold text-blue-600">
                         {patient.firstName[0]}
                         {patient.lastName[0]}
                       </span>
                     </div>
                     <div className="flex-1">
-                      <p className="font-medium text-white">
+                      <p className="font-medium text-gray-900">
                         {patient.firstName} {patient.lastName}
                       </p>
-                      <p className="text-sm text-white/40">
+                      <p className="text-sm text-gray-500">
                         {calculateAge(patient.dateOfBirth)} años •{' '}
                         {patient.gender === 'MALE' ? 'M' : 'F'}
                         {patient.bloodType && ` • ${patient.bloodType}`}
@@ -433,9 +433,9 @@ function NewConsultationContent() {
                 ))}
               </div>
             ) : searchTerm.length >= 2 ? (
-              <p className="py-8 text-center text-white/40">No se encontraron pacientes</p>
+              <p className="py-8 text-center text-gray-500">No se encontraron pacientes</p>
             ) : (
-              <p className="py-8 text-center text-white/40">
+              <p className="py-8 text-center text-gray-500">
                 Escribe al menos 2 caracteres para buscar
               </p>
             )}
@@ -445,21 +445,21 @@ function NewConsultationContent() {
         {/* Step 2: Recording */}
         {step === 'recording' && selectedPatient && (
           <div>
-            <div className="mb-6 flex items-center gap-4 rounded-2xl bg-blue-50 p-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-500/15">
-                <span className="font-semibold text-blue-400">
+            <div className="mb-6 flex items-center gap-4 rounded-lg bg-blue-50 p-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
+                <span className="font-semibold text-blue-600">
                   {selectedPatient.firstName[0]}
                   {selectedPatient.lastName[0]}
                 </span>
               </div>
               <div>
-                <p className="font-medium text-white">
+                <p className="font-medium text-gray-900">
                   {selectedPatient.firstName} {selectedPatient.lastName}
                 </p>
-                <p className="text-sm text-white/50">
+                <p className="text-sm text-gray-600">
                   {calculateAge(selectedPatient.dateOfBirth)} años
                   {selectedPatient.allergies?.length > 0 && (
-                    <span className="ml-2 text-red-400">
+                    <span className="ml-2 text-red-600">
                       Alergias: {selectedPatient.allergies.join(', ')}
                     </span>
                   )}
@@ -470,14 +470,14 @@ function NewConsultationContent() {
                   setSelectedPatient(null);
                   setStep('patient');
                 }}
-                className="ml-auto text-sm text-blue-400 hover:text-blue-300"
+                className="ml-auto text-sm text-blue-600 hover:text-blue-700"
               >
                 Cambiar
               </button>
             </div>
 
-            <h2 className="mb-4 text-lg font-semibold text-white">Graba la consulta</h2>
-            <p className="mb-6 text-white/50">
+            <h2 className="mb-4 text-lg font-semibold text-gray-900">Graba la consulta</h2>
+            <p className="mb-6 text-gray-600">
               Presiona el botón para comenzar a grabar. La IA transcribirá y estructurará
               automáticamente las notas SOAP.
             </p>
@@ -489,7 +489,7 @@ function NewConsultationContent() {
                 <button
                   onClick={handleProcessRecording}
                   disabled={isProcessing}
-                  className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-6 py-3 text-white hover:from-blue-600 hover:to-cyan-600 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {isProcessing ? (
                     <>
@@ -511,12 +511,12 @@ function NewConsultationContent() {
         {/* Step 3: Review */}
         {step === 'review' && editedNotes && aiResponse && (
           <div>
-            <h2 className="mb-4 text-lg font-semibold text-white">Revisa y edita las notas</h2>
+            <h2 className="mb-4 text-lg font-semibold text-gray-900">Revisa y edita las notas</h2>
 
             {/* Transcription */}
-            <div className="mb-6 rounded-2xl bg-white/[0.02] p-4">
-              <h3 className="mb-2 text-sm font-medium text-white/70">Transcripción</h3>
-              <p className="text-sm text-white/50">{aiResponse.transcription}</p>
+            <div className="mb-6 rounded-lg bg-gray-50 p-4">
+              <h3 className="mb-2 text-sm font-medium text-gray-700">Transcripción</h3>
+              <p className="text-sm text-gray-600">{aiResponse.transcription}</p>
             </div>
 
             {/* SOAP Notes */}
@@ -540,7 +540,7 @@ function NewConsultationContent() {
                 { key: 'plan', label: 'Plan (P)', placeholder: 'Tratamiento y seguimiento...' },
               ].map((field) => (
                 <div key={field.key}>
-                  <label className="mb-1 block text-sm font-medium text-white/70">
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
                     {field.label}
                   </label>
                   <textarea
@@ -552,7 +552,7 @@ function NewConsultationContent() {
                       })
                     }
                     rows={4}
-                    className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
                     placeholder={field.placeholder}
                   />
                 </div>
@@ -560,14 +560,14 @@ function NewConsultationContent() {
             </div>
 
             {/* AI Suggestions */}
-            <div className="mt-6 rounded-2xl bg-blue-50 p-4">
+            <div className="mt-6 rounded-lg bg-blue-50 p-4">
               <h3 className="mb-3 text-sm font-medium text-blue-900">Sugerencias de IA</h3>
               <div className="grid grid-cols-1 gap-4 text-sm md:grid-cols-2">
                 <div>
                   <p className="font-medium text-blue-800">Diagnósticos sugeridos:</p>
                   <ul className="mt-1 space-y-1">
                     {aiResponse.suggestions.diagnoses.map((d, i) => (
-                      <li key={i} className="text-blue-300">
+                      <li key={i} className="text-blue-700">
                         • {d}
                       </li>
                     ))}
@@ -577,7 +577,7 @@ function NewConsultationContent() {
                   <p className="font-medium text-blue-800">Medicamentos sugeridos:</p>
                   <ul className="mt-1 space-y-1">
                     {aiResponse.suggestions.medications.map((m, i) => (
-                      <li key={i} className="text-blue-300">
+                      <li key={i} className="text-blue-700">
                         • {m}
                       </li>
                     ))}
@@ -587,7 +587,7 @@ function NewConsultationContent() {
                   <p className="font-medium text-blue-800">Estudios sugeridos:</p>
                   <ul className="mt-1 space-y-1">
                     {aiResponse.suggestions.tests.map((t, i) => (
-                      <li key={i} className="text-blue-300">
+                      <li key={i} className="text-blue-700">
                         • {t}
                       </li>
                     ))}
@@ -595,7 +595,7 @@ function NewConsultationContent() {
                 </div>
                 <div>
                   <p className="font-medium text-blue-800">Seguimiento:</p>
-                  <p className="mt-1 text-blue-300">{aiResponse.suggestions.followUp}</p>
+                  <p className="mt-1 text-blue-700">{aiResponse.suggestions.followUp}</p>
                 </div>
               </div>
             </div>
@@ -604,14 +604,14 @@ function NewConsultationContent() {
             <div className="mt-6 flex justify-between">
               <button
                 onClick={() => setStep('recording')}
-                className="rounded-2xl border border-white/[0.08] px-4 py-2 text-white/70 hover:bg-white/[0.02]"
+                className="rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50"
               >
                 Volver a grabar
               </button>
               <button
                 onClick={handleSaveConsultation}
                 disabled={isSaving}
-                className="flex items-center gap-2 rounded-2xl bg-green-600 px-6 py-3 text-white hover:bg-green-700 disabled:opacity-50"
+                className="flex items-center gap-2 rounded-lg bg-green-600 px-6 py-3 text-white hover:bg-green-700 disabled:opacity-50"
               >
                 {isSaving ? (
                   <>
@@ -633,26 +633,26 @@ function NewConsultationContent() {
         {step === 'complete' && (
           <div className="py-8">
             <div className="mb-8 text-center">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/15">
-                <CheckCircle className="h-8 w-8 text-emerald-400" />
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+                <CheckCircle className="h-8 w-8 text-green-600" />
               </div>
-              <h2 className="mb-2 text-xl font-semibold text-white">
+              <h2 className="mb-2 text-xl font-semibold text-gray-900">
                 Consulta guardada exitosamente
               </h2>
-              <p className="text-white/50">
+              <p className="text-gray-600">
                 Las notas han sido guardadas en el expediente del paciente.
               </p>
             </div>
 
             {/* Prescription Section */}
             {!showPrescriptionForm && !createdPrescription && (
-              <div className="mb-6 rounded-2xl bg-blue-50 p-6">
+              <div className="mb-6 rounded-lg bg-blue-50 p-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <Pill className="h-6 w-6 text-blue-400" />
+                    <Pill className="h-6 w-6 text-blue-600" />
                     <div>
-                      <h3 className="font-semibold text-white">¿Necesitas crear una receta?</h3>
-                      <p className="text-sm text-white/50">
+                      <h3 className="font-semibold text-gray-900">¿Necesitas crear una receta?</h3>
+                      <p className="text-sm text-gray-600">
                         Genera una receta médica para este paciente
                       </p>
                     </div>
@@ -664,7 +664,7 @@ function NewConsultationContent() {
                         setPrescriptionDiagnosis(aiResponse.suggestions.diagnoses[0]);
                       }
                     }}
-                    className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600"
+                    className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                   >
                     <Plus className="h-4 w-4" />
                     Crear Receta
@@ -675,15 +675,15 @@ function NewConsultationContent() {
 
             {/* Prescription Form */}
             {showPrescriptionForm && (
-              <div className="mb-6 rounded-2xl border border-white/[0.06] bg-white/[0.03] p-6">
+              <div className="mb-6 rounded-lg border border-gray-200 bg-white p-6">
                 <div className="mb-4 flex items-center justify-between">
-                  <h3 className="flex items-center gap-2 text-lg font-semibold text-white">
-                    <Pill className="h-5 w-5 text-emerald-400" />
+                  <h3 className="flex items-center gap-2 text-lg font-semibold text-gray-900">
+                    <Pill className="h-5 w-5 text-green-600" />
                     Nueva Receta
                   </h3>
                   <button
                     onClick={() => setShowPrescriptionForm(false)}
-                    className="p-1 text-white/30 hover:text-white/50"
+                    className="p-1 text-gray-400 hover:text-gray-600"
                   >
                     <X className="h-5 w-5" />
                   </button>
@@ -691,14 +691,14 @@ function NewConsultationContent() {
 
                 <div className="space-y-4">
                   <div>
-                    <label className="mb-1 block text-sm font-medium text-white/70">
+                    <label className="mb-1 block text-sm font-medium text-gray-700">
                       Diagnóstico
                     </label>
                     <input
                       type="text"
                       value={prescriptionDiagnosis}
                       onChange={(e) => setPrescriptionDiagnosis(e.target.value)}
-                      className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:ring-2 focus:ring-blue-500/20"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500"
                       placeholder="Diagnóstico principal"
                     />
                   </div>
@@ -707,7 +707,7 @@ function NewConsultationContent() {
                   {aiResponse?.suggestions.medications &&
                     aiResponse.suggestions.medications.length > 0 && (
                       <div>
-                        <p className="mb-2 text-sm font-medium text-white/70">
+                        <p className="mb-2 text-sm font-medium text-gray-700">
                           Medicamentos sugeridos por IA:
                         </p>
                         <div className="flex flex-wrap gap-2">
@@ -715,7 +715,7 @@ function NewConsultationContent() {
                             <button
                               key={i}
                               onClick={() => addSuggestedMedication(med)}
-                              className="rounded-full bg-blue-50 px-3 py-1 text-sm text-blue-300 hover:bg-blue-500/15"
+                              className="rounded-full bg-blue-50 px-3 py-1 text-sm text-blue-700 hover:bg-blue-100"
                             >
                               + {med}
                             </button>
@@ -727,31 +727,31 @@ function NewConsultationContent() {
                   {/* Medications List */}
                   <div>
                     <div className="mb-2 flex items-center justify-between">
-                      <label className="text-sm font-medium text-white/70">Medicamentos</label>
+                      <label className="text-sm font-medium text-gray-700">Medicamentos</label>
                       <button
                         onClick={addMedication}
-                        className="text-sm text-blue-400 hover:text-blue-300"
+                        className="text-sm text-blue-600 hover:text-blue-700"
                       >
                         + Agregar medicamento
                       </button>
                     </div>
 
                     {medications.length === 0 ? (
-                      <p className="rounded-2xl border border-dashed border-white/[0.08] py-4 text-center text-sm text-white/40">
+                      <p className="rounded-lg border border-dashed border-gray-300 py-4 text-center text-sm text-gray-500">
                         No hay medicamentos agregados. Haz clic en una sugerencia o agrega uno
                         manualmente.
                       </p>
                     ) : (
                       <div className="space-y-3">
                         {medications.map((med, index) => (
-                          <div key={index} className="rounded-2xl bg-white/[0.02] p-3">
+                          <div key={index} className="rounded-lg bg-gray-50 p-3">
                             <div className="mb-2 flex items-start justify-between">
-                              <span className="text-sm font-medium text-white/70">
+                              <span className="text-sm font-medium text-gray-700">
                                 Medicamento {index + 1}
                               </span>
                               <button
                                 onClick={() => removeMedication(index)}
-                                className="text-red-500 hover:text-red-300"
+                                className="text-red-500 hover:text-red-700"
                               >
                                 <X className="h-4 w-4" />
                               </button>
@@ -762,14 +762,14 @@ function NewConsultationContent() {
                                 value={med.name}
                                 onChange={(e) => updateMedication(index, 'name', e.target.value)}
                                 placeholder="Nombre"
-                                className="rounded border border-white/[0.08] px-2 py-1 text-sm"
+                                className="rounded border border-gray-300 px-2 py-1 text-sm"
                               />
                               <input
                                 type="text"
                                 value={med.dose}
                                 onChange={(e) => updateMedication(index, 'dose', e.target.value)}
                                 placeholder="Dosis (ej: 400mg)"
-                                className="rounded border border-white/[0.08] px-2 py-1 text-sm"
+                                className="rounded border border-gray-300 px-2 py-1 text-sm"
                               />
                               <input
                                 type="text"
@@ -778,7 +778,7 @@ function NewConsultationContent() {
                                   updateMedication(index, 'frequency', e.target.value)
                                 }
                                 placeholder="Frecuencia (ej: c/8h)"
-                                className="rounded border border-white/[0.08] px-2 py-1 text-sm"
+                                className="rounded border border-gray-300 px-2 py-1 text-sm"
                               />
                               <input
                                 type="text"
@@ -787,7 +787,7 @@ function NewConsultationContent() {
                                   updateMedication(index, 'duration', e.target.value)
                                 }
                                 placeholder="Duración (ej: 7 días)"
-                                className="rounded border border-white/[0.08] px-2 py-1 text-sm"
+                                className="rounded border border-gray-300 px-2 py-1 text-sm"
                               />
                             </div>
                             <input
@@ -797,7 +797,7 @@ function NewConsultationContent() {
                                 updateMedication(index, 'instructions', e.target.value)
                               }
                               placeholder="Instrucciones adicionales (opcional)"
-                              className="mt-2 w-full rounded border border-white/[0.08] px-2 py-1 text-sm"
+                              className="mt-2 w-full rounded border border-gray-300 px-2 py-1 text-sm"
                             />
                           </div>
                         ))}
@@ -806,14 +806,14 @@ function NewConsultationContent() {
                   </div>
 
                   <div>
-                    <label className="mb-1 block text-sm font-medium text-white/70">
+                    <label className="mb-1 block text-sm font-medium text-gray-700">
                       Notas adicionales
                     </label>
                     <textarea
                       value={prescriptionNotes}
                       onChange={(e) => setPrescriptionNotes(e.target.value)}
                       rows={2}
-                      className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:ring-2 focus:ring-blue-500/20"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500"
                       placeholder="Indicaciones especiales, advertencias, etc."
                     />
                   </div>
@@ -821,14 +821,14 @@ function NewConsultationContent() {
                   <div className="flex justify-end gap-3 pt-2">
                     <button
                       onClick={() => setShowPrescriptionForm(false)}
-                      className="rounded-2xl border border-white/[0.08] px-4 py-2 text-white/70 hover:bg-white/[0.02]"
+                      className="rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50"
                     >
                       Cancelar
                     </button>
                     <button
                       onClick={handleCreatePrescription}
                       disabled={isCreatingPrescription || medications.length === 0}
-                      className="flex items-center gap-2 rounded-2xl bg-green-600 px-4 py-2 text-white hover:bg-green-700 disabled:opacity-50"
+                      className="flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700 disabled:opacity-50"
                     >
                       {isCreatingPrescription ? (
                         <>
@@ -849,14 +849,14 @@ function NewConsultationContent() {
 
             {/* Created Prescription */}
             {createdPrescription && (
-              <div className="mb-6 rounded-2xl border border-green-200 bg-green-50 p-6">
+              <div className="mb-6 rounded-lg border border-green-200 bg-green-50 p-6">
                 <div className="mb-4 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/15">
-                    <CheckCircle className="h-5 w-5 text-emerald-400" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
+                    <CheckCircle className="h-5 w-5 text-green-600" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-green-900">Receta creada exitosamente</h3>
-                    <p className="text-sm text-emerald-300">
+                    <p className="text-sm text-green-700">
                       Código de verificación: {createdPrescription.securityCode}
                     </p>
                   </div>
@@ -865,7 +865,7 @@ function NewConsultationContent() {
                   href={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/prescriptions/${createdPrescription.id}/pdf`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-2xl bg-green-600 px-4 py-2 text-white hover:bg-green-700"
+                  className="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700"
                 >
                   <Download className="h-4 w-4" />
                   Descargar PDF
@@ -877,14 +877,14 @@ function NewConsultationContent() {
             <div className="flex justify-center gap-4">
               <Link
                 href={`/patients/${selectedPatient?.id}`}
-                className="rounded-2xl border border-blue-600 px-4 py-2 text-blue-400 hover:bg-blue-50"
+                className="rounded-lg border border-blue-600 px-4 py-2 text-blue-600 hover:bg-blue-50"
               >
                 Ver expediente
               </Link>
               {consultationId && (
                 <Link
                   href={`/consultations/${consultationId}`}
-                  className="rounded-2xl border border-white/[0.08] px-4 py-2 text-white/70 hover:bg-white/[0.02]"
+                  className="rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50"
                 >
                   Ver consulta
                 </Link>
@@ -901,7 +901,7 @@ function NewConsultationContent() {
                   setCreatedPrescription(null);
                   setShowPrescriptionForm(false);
                 }}
-                className="rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600"
+                className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
               >
                 Nueva consulta
               </button>
@@ -918,7 +918,7 @@ export default function NewConsultationPage() {
     <Suspense
       fallback={
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-blue-400" />
+          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
         </div>
       }
     >

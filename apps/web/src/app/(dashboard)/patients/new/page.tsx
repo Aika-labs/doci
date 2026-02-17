@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuthCompat as useAuth } from '@/hooks/useAuthCompat';
+import { useAuth } from '@clerk/nextjs';
 import { PatientForm } from '@/components/patients';
 import { patientsApi } from '@/lib/api';
 import { PatientFormData } from '@/lib/validations/patient';
@@ -90,17 +90,17 @@ export default function NewPatientPage() {
       <div className="mb-6">
         <Link
           href="/patients"
-          className="mb-4 inline-flex items-center gap-2 text-white/50 hover:text-white"
+          className="mb-4 inline-flex items-center gap-2 text-gray-600 hover:text-gray-900"
         >
           <ArrowLeft className="h-4 w-4" />
           Volver a pacientes
         </Link>
-        <h1 className="text-2xl font-bold text-white">Nuevo Paciente</h1>
-        <p className="text-white/50">Registra un nuevo paciente en el sistema</p>
+        <h1 className="text-2xl font-bold text-gray-900">Nuevo Paciente</h1>
+        <p className="text-gray-600">Registra un nuevo paciente en el sistema</p>
       </div>
 
       {error && (
-        <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-red-300">
+        <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
           {error}
         </div>
       )}

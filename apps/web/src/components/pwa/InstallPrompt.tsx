@@ -84,34 +84,34 @@ export function InstallPrompt() {
   }
 
   return (
-    <div className="fixed right-4 bottom-4 left-4 z-50 rounded-[2rem] border border-white/[0.06] bg-white/[0.03] p-4 shadow-xl md:right-4 md:left-auto md:max-w-sm">
+    <div className="fixed right-4 bottom-4 left-4 z-50 rounded-xl border border-gray-200 bg-white p-4 shadow-xl md:right-4 md:left-auto md:max-w-sm">
       <button
         onClick={handleDismiss}
-        className="absolute top-2 right-2 p-1 text-white/30 hover:text-white/50"
+        className="absolute top-2 right-2 p-1 text-gray-400 hover:text-gray-600"
       >
         <X className="h-4 w-4" />
       </button>
 
       <div className="flex items-start gap-4">
-        <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-blue-500/15">
-          <Smartphone className="h-6 w-6 text-blue-400" />
+        <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-blue-100">
+          <Smartphone className="h-6 w-6 text-blue-600" />
         </div>
         <div className="flex-1">
-          <h3 className="mb-1 font-semibold text-white">Instalar Doci</h3>
-          <p className="mb-3 text-sm text-white/50">
+          <h3 className="mb-1 font-semibold text-gray-900">Instalar Doci</h3>
+          <p className="mb-3 text-sm text-gray-600">
             Instala la app para acceso rápido y funciones offline
           </p>
           <div className="flex gap-2">
             <button
               onClick={handleInstall}
-              className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:from-blue-600 hover:to-cyan-600"
+              className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
             >
               <Download className="h-4 w-4" />
               Instalar
             </button>
             <button
               onClick={handleDismiss}
-              className="rounded-lg px-4 py-2 text-sm font-medium text-white/50 transition-colors hover:bg-white/[0.06]"
+              className="rounded-lg px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100"
             >
               Ahora no
             </button>

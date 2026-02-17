@@ -246,11 +246,10 @@ export function VoiceRecorder({
         disabled={disabled || state === 'processing'}
         className={cn(
           'relative flex h-16 w-16 items-center justify-center rounded-full transition-all',
-          state === 'idle' &&
-            'bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600',
+          state === 'idle' && 'bg-blue-600 text-white hover:bg-blue-700',
           state === 'recording' && 'bg-red-500 text-white hover:bg-red-600',
-          state === 'processing' && 'cursor-wait bg-slate-300 text-white/40',
-          state === 'error' && 'bg-red-500/15 text-red-400 hover:bg-red-200',
+          state === 'processing' && 'cursor-wait bg-slate-300 text-slate-500',
+          state === 'error' && 'bg-red-100 text-red-600 hover:bg-red-200',
           disabled && 'cursor-not-allowed opacity-50'
         )}
         aria-label={state === 'recording' ? 'Detener grabación' : 'Iniciar grabación'}
@@ -275,22 +274,22 @@ export function VoiceRecorder({
 
       {/* Status text */}
       <div className="text-center">
-        {state === 'idle' && <p className="text-sm text-white/40">Toca para grabar</p>}
+        {state === 'idle' && <p className="text-sm text-slate-500">Toca para grabar</p>}
         {state === 'recording' && (
           <div className="flex flex-col items-center gap-1">
-            <p className="text-sm font-medium text-red-400">Grabando...</p>
-            <p className="text-xs text-white/40">{formatDuration(duration)}</p>
+            <p className="text-sm font-medium text-red-600">Grabando...</p>
+            <p className="text-xs text-slate-500">{formatDuration(duration)}</p>
           </div>
         )}
-        {state === 'processing' && <p className="text-sm text-white/40">Procesando audio...</p>}
-        {state === 'error' && error && <p className="text-sm text-red-400">{error}</p>}
+        {state === 'processing' && <p className="text-sm text-slate-500">Procesando audio...</p>}
+        {state === 'error' && error && <p className="text-sm text-red-600">{error}</p>}
       </div>
 
       {/* Recording indicator */}
       {state === 'recording' && (
         <div className="flex items-center gap-2">
           <div className="h-2 w-2 animate-pulse rounded-full bg-red-500" />
-          <span className="text-xs text-white/40">Habla claramente cerca del micrófono</span>
+          <span className="text-xs text-slate-500">Habla claramente cerca del micrófono</span>
         </div>
       )}
     </div>

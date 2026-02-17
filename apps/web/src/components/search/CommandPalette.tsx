@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuthCompat as useAuth } from '@/hooks/useAuthCompat';
+import { useAuth } from '@clerk/nextjs';
 import {
   Search,
   X,
@@ -268,11 +268,11 @@ export function CommandPalette() {
     return (
       <button
         onClick={openPalette}
-        className="hidden items-center gap-2 rounded-2xl bg-white/[0.06] px-3 py-1.5 text-sm text-white/40 transition-colors hover:bg-white/10 md:flex"
+        className="hidden items-center gap-2 rounded-lg bg-gray-100 px-3 py-1.5 text-sm text-gray-500 transition-colors hover:bg-gray-200 md:flex"
       >
         <Search className="h-4 w-4" />
         <span>Buscar...</span>
-        <kbd className="hidden items-center gap-0.5 rounded border border-white/[0.08] bg-white px-1.5 py-0.5 text-xs lg:inline-flex">
+        <kbd className="hidden items-center gap-0.5 rounded border border-gray-300 bg-white px-1.5 py-0.5 text-xs lg:inline-flex">
           <Command className="h-3 w-3" />K
         </kbd>
       </button>
@@ -292,19 +292,19 @@ export function CommandPalette() {
         <div className="mx-4 w-full max-w-xl overflow-hidden rounded-xl bg-white shadow-2xl">
           {/* Search Input */}
           <div className="flex items-center gap-3 border-b px-4 py-3">
-            <Search className="h-5 w-5 text-white/30" />
+            <Search className="h-5 w-5 text-gray-400" />
             <input
               ref={inputRef}
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Buscar pacientes, páginas, acciones..."
-              className="flex-1 text-lg outline-none placeholder:text-white/30"
+              className="flex-1 text-lg outline-none placeholder:text-gray-400"
             />
-            {isSearching && <Loader2 className="h-5 w-5 animate-spin text-white/30" />}
+            {isSearching && <Loader2 className="h-5 w-5 animate-spin text-gray-400" />}
             <button
               onClick={() => setIsOpen(false)}
-              className="rounded p-1 text-white/30 hover:text-white/50"
+              className="rounded p-1 text-gray-400 hover:text-gray-600"
             >
               <X className="h-5 w-5" />
             </button>
@@ -313,7 +313,7 @@ export function CommandPalette() {
           {/* Results */}
           <div ref={listRef} className="max-h-[60vh] overflow-y-auto">
             {results.length === 0 ? (
-              <div className="px-4 py-8 text-center text-white/40">
+              <div className="px-4 py-8 text-center text-gray-500">
                 No se encontraron resultados para &quot;{query}&quot;
               </div>
             ) : (
@@ -321,7 +321,7 @@ export function CommandPalette() {
                 {/* Group by type */}
                 {results.some((r) => r.type === 'action') && (
                   <div className="px-3 py-1">
-                    <p className="text-xs font-medium tracking-wider text-white/30 uppercase">
+                    <p className="text-xs font-medium tracking-wider text-gray-400 uppercase">
                       Acciones rápidas
                     </p>
                   </div>
@@ -343,7 +343,7 @@ export function CommandPalette() {
 
                 {results.some((r) => r.type === 'patient') && (
                   <div className="mt-2 px-3 py-1">
-                    <p className="text-xs font-medium tracking-wider text-white/30 uppercase">
+                    <p className="text-xs font-medium tracking-wider text-gray-400 uppercase">
                       Pacientes
                     </p>
                   </div>
@@ -365,7 +365,7 @@ export function CommandPalette() {
 
                 {results.some((r) => r.type === 'page') && (
                   <div className="mt-2 px-3 py-1">
-                    <p className="text-xs font-medium tracking-wider text-white/30 uppercase">
+                    <p className="text-xs font-medium tracking-wider text-gray-400 uppercase">
                       Páginas
                     </p>
                   </div>
@@ -389,7 +389,7 @@ export function CommandPalette() {
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-between border-t bg-white/[0.02] px-4 py-2 text-xs text-white/40">
+          <div className="flex items-center justify-between border-t bg-gray-50 px-4 py-2 text-xs text-gray-500">
             <div className="flex items-center gap-4">
               <span className="flex items-center gap-1">
                 <kbd className="rounded border bg-white px-1.5 py-0.5">↑↓</kbd>
@@ -427,18 +427,18 @@ function ResultItem({
       onClick={onSelect}
       onMouseEnter={onHover}
       className={`flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors ${
-        isSelected ? 'bg-blue-50 text-blue-900' : 'hover:bg-white/[0.02]'
+        isSelected ? 'bg-blue-50 text-blue-900' : 'hover:bg-gray-50'
       }`}
     >
       <div
-        className={`rounded-2xl p-2 ${isSelected ? 'bg-blue-500/15 text-blue-400' : 'bg-white/[0.06] text-white/40'}`}
+        className={`rounded-lg p-2 ${isSelected ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-500'}`}
       >
         {result.icon}
       </div>
       <div className="min-w-0 flex-1">
         <p className="truncate font-medium">{result.title}</p>
         {result.subtitle && (
-          <p className={`truncate text-sm ${isSelected ? 'text-blue-300' : 'text-white/40'}`}>
+          <p className={`truncate text-sm ${isSelected ? 'text-blue-700' : 'text-gray-500'}`}>
             {result.subtitle}
           </p>
         )}
