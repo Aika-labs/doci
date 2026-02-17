@@ -20,10 +20,7 @@ export class AuthController {
   @Put('me')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Update current user profile' })
-  async updateCurrentUser(
-    @CurrentUser() user: CurrentUserData,
-    @Body() dto: UpdateProfileDto,
-  ) {
+  async updateCurrentUser(@CurrentUser() user: CurrentUserData, @Body() dto: UpdateProfileDto) {
     return this.authService.updateProfile(user.id, dto);
   }
 
@@ -37,20 +34,14 @@ export class AuthController {
   @Put('tenant')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Update current tenant settings' })
-  async updateCurrentTenant(
-    @CurrentUser() user: CurrentUserData,
-    @Body() dto: UpdateTenantDto,
-  ) {
+  async updateCurrentTenant(@CurrentUser() user: CurrentUserData, @Body() dto: UpdateTenantDto) {
     return this.authService.updateTenant(user.tenantId, dto);
   }
 
   @Post('sync')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Sync Clerk user with database (manual trigger)' })
-  async syncUser(
-    @CurrentUser() user: CurrentUserData,
-    @Body() body: { tenantId?: string },
-  ) {
+  async syncUser(@CurrentUser() user: CurrentUserData, @Body() body: { tenantId?: string }) {
     return this.authService.syncUser(user.clerkId, body.tenantId || user.tenantId);
   }
 

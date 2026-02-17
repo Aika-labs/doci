@@ -10,11 +10,7 @@ interface SkeletonProps {
 
 /** Base skeleton block with shimmer animation */
 export function Skeleton({ className = '' }: SkeletonProps) {
-  return (
-    <div
-      className={`animate-pulse rounded-lg bg-gray-200 ${className}`}
-    />
-  );
+  return <div className={`animate-pulse rounded-lg bg-gray-200 ${className}`} />;
 }
 
 /** Skeleton for stat/metric cards (used in Dashboard, Billing) */
@@ -48,7 +44,7 @@ export function TableRowSkeleton({ columns = 5 }: { columns?: number }) {
 /** Skeleton for a full table (used in Patients, Billing invoices) */
 export function TableSkeleton({ rows = 5, columns = 5 }: { rows?: number; columns?: number }) {
   return (
-    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+    <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
       <table className="w-full">
         <thead className="bg-gray-50">
           <tr>
@@ -72,7 +68,7 @@ export function TableSkeleton({ rows = 5, columns = 5 }: { rows?: number; column
 /** Skeleton for a card in a grid (used in Billing services) */
 export function CardSkeleton() {
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-3">
+    <div className="space-y-3 rounded-lg border border-gray-200 bg-white p-4">
       <div className="flex items-start justify-between">
         <div className="space-y-2">
           <Skeleton className="h-4 w-32" />
@@ -81,7 +77,7 @@ export function CardSkeleton() {
         <Skeleton className="h-6 w-14 rounded-full" />
       </div>
       <Skeleton className="h-3 w-full" />
-      <div className="pt-3 border-t flex items-center justify-between">
+      <div className="flex items-center justify-between border-t pt-3">
         <Skeleton className="h-6 w-20" />
         <Skeleton className="h-3 w-12" />
       </div>
@@ -108,7 +104,7 @@ export function DashboardSkeleton() {
       </div>
 
       {/* Appointments list */}
-      <div className="rounded-xl border bg-white p-6 space-y-4">
+      <div className="space-y-4 rounded-xl border bg-white p-6">
         <div className="flex items-center justify-between">
           <Skeleton className="h-5 w-32" />
           <Skeleton className="h-4 w-16" />
@@ -174,7 +170,7 @@ export function BillingSkeleton() {
         </div>
         <Skeleton className="h-10 w-36 rounded-lg" />
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
         <StatCardSkeleton />
         <StatCardSkeleton />
         <StatCardSkeleton />

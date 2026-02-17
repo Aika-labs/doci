@@ -1,11 +1,11 @@
 import Link from 'next/link';
-import { 
-  Mic, 
-  FileText, 
-  Calendar, 
-  Pill, 
-  Smartphone, 
-  Shield, 
+import {
+  Mic,
+  FileText,
+  Calendar,
+  Pill,
+  Smartphone,
+  Shield,
   Sparkles,
   ArrowRight,
   Check,
@@ -19,23 +19,32 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100">
-        <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
+      <nav className="fixed top-0 right-0 left-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur-xl">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center shadow-lg shadow-teal-500/25">
-              <span className="text-white font-bold text-lg">D</span>
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500 to-cyan-600 shadow-lg shadow-teal-500/25">
+              <span className="text-lg font-bold text-white">D</span>
             </div>
             <span className="text-xl font-semibold text-gray-900">Doci</span>
           </Link>
-          
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#features" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+
+          <div className="hidden items-center gap-8 md:flex">
+            <a
+              href="#features"
+              className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"
+            >
               Características
             </a>
-            <a href="#pricing" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+            <a
+              href="#pricing"
+              className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"
+            >
               Precios
             </a>
-            <a href="#testimonials" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+            <a
+              href="#testimonials"
+              className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"
+            >
               Testimonios
             </a>
           </div>
@@ -43,13 +52,13 @@ export default function HomePage() {
           <div className="flex items-center gap-3">
             <Link
               href="/sign-in"
-              className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors px-4 py-2"
+              className="px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"
             >
               Iniciar sesión
             </Link>
             <Link
               href="/sign-up"
-              className="text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 px-5 py-2.5 rounded-full transition-colors"
+              className="rounded-full bg-gray-900 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-gray-800"
             >
               Comenzar gratis
             </Link>
@@ -58,18 +67,20 @@ export default function HomePage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6 overflow-hidden">
+      <section className="overflow-hidden px-6 pt-32 pb-20">
         <div className="mx-auto max-w-7xl">
           {/* Badge */}
-          <div className="flex justify-center mb-8">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-teal-50 to-cyan-50 border border-teal-100">
-              <Sparkles className="w-4 h-4 text-teal-600" />
-              <span className="text-sm font-medium text-teal-700">Potenciado con IA de última generación</span>
+          <div className="mb-8 flex justify-center">
+            <div className="inline-flex items-center gap-2 rounded-full border border-teal-100 bg-gradient-to-r from-teal-50 to-cyan-50 px-4 py-2">
+              <Sparkles className="h-4 w-4 text-teal-600" />
+              <span className="text-sm font-medium text-teal-700">
+                Potenciado con IA de última generación
+              </span>
             </div>
           </div>
 
           {/* Headline */}
-          <h1 className="text-center text-5xl md:text-7xl font-bold tracking-tight text-gray-900 leading-[1.1]">
+          <h1 className="text-center text-5xl leading-[1.1] font-bold tracking-tight text-gray-900 md:text-7xl">
             Tu consultorio,
             <br />
             <span className="bg-gradient-to-r from-teal-600 via-cyan-600 to-blue-600 bg-clip-text text-transparent">
@@ -77,23 +88,23 @@ export default function HomePage() {
             </span>
           </h1>
 
-          <p className="mt-8 text-center text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            El sistema de gestión clínica que usa inteligencia artificial para que 
-            dediques más tiempo a tus pacientes y menos a la documentación.
+          <p className="mx-auto mt-8 max-w-2xl text-center text-xl leading-relaxed text-gray-600">
+            El sistema de gestión clínica que usa inteligencia artificial para que dediques más
+            tiempo a tus pacientes y menos a la documentación.
           </p>
 
           {/* CTA Buttons */}
-          <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href="/sign-up"
-              className="group flex items-center gap-2 px-8 py-4 bg-gray-900 text-white rounded-full font-medium hover:bg-gray-800 transition-all hover:scale-105 shadow-xl shadow-gray-900/20"
+              className="group flex items-center gap-2 rounded-full bg-gray-900 px-8 py-4 font-medium text-white shadow-xl shadow-gray-900/20 transition-all hover:scale-105 hover:bg-gray-800"
             >
               Prueba gratis 14 días
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
-            <button className="flex items-center gap-2 px-8 py-4 text-gray-700 rounded-full font-medium hover:bg-gray-100 transition-colors">
-              <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-                <Play className="w-4 h-4 text-gray-700 ml-0.5" />
+            <button className="flex items-center gap-2 rounded-full px-8 py-4 font-medium text-gray-700 transition-colors hover:bg-gray-100">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100">
+                <Play className="ml-0.5 h-4 w-4 text-gray-700" />
               </div>
               Ver demo
             </button>
@@ -102,15 +113,15 @@ export default function HomePage() {
           {/* Trust badges */}
           <div className="mt-16 flex flex-wrap items-center justify-center gap-8 text-sm text-gray-500">
             <div className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-teal-600" />
+              <Check className="h-4 w-4 text-teal-600" />
               Sin tarjeta de crédito
             </div>
             <div className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-teal-600" />
+              <Check className="h-4 w-4 text-teal-600" />
               Configuración en 5 minutos
             </div>
             <div className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-teal-600" />
+              <Check className="h-4 w-4 text-teal-600" />
               Soporte en español
             </div>
           </div>
@@ -118,84 +129,84 @@ export default function HomePage() {
       </section>
 
       {/* Bento Grid Features */}
-      <section id="features" className="py-24 px-6 bg-gray-50">
+      <section id="features" className="bg-gray-50 px-6 py-24">
         <div className="mx-auto max-w-7xl">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
-              Todo lo que necesitas
-            </h2>
+          <div className="mb-16 text-center">
+            <h2 className="text-4xl font-bold text-gray-900 md:text-5xl">Todo lo que necesitas</h2>
             <p className="mt-4 text-xl text-gray-600">
               Herramientas diseñadas para médicos modernos
             </p>
           </div>
 
           {/* Bento Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {/* Large Card - AI Voice */}
-            <div className="lg:col-span-2 group relative overflow-hidden rounded-3xl bg-gradient-to-br from-teal-500 to-cyan-600 p-8 md:p-10 text-white">
+            <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-teal-500 to-cyan-600 p-8 text-white md:p-10 lg:col-span-2">
               <div className="relative z-10">
-                <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center mb-6">
-                  <Mic className="w-7 h-7" />
+                <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur">
+                  <Mic className="h-7 w-7" />
                 </div>
-                <h3 className="text-2xl md:text-3xl font-bold mb-3">Notas clínicas con IA</h3>
-                <p className="text-white/80 text-lg max-w-md leading-relaxed">
-                  Dicta tus notas y la IA las estructura automáticamente en formato SOAP. 
-                  Ahorra hasta 2 horas diarias en documentación.
+                <h3 className="mb-3 text-2xl font-bold md:text-3xl">Notas clínicas con IA</h3>
+                <p className="max-w-md text-lg leading-relaxed text-white/80">
+                  Dicta tus notas y la IA las estructura automáticamente en formato SOAP. Ahorra
+                  hasta 2 horas diarias en documentación.
                 </p>
                 <div className="mt-8 flex items-center gap-4">
-                  <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur text-sm">
-                    <Zap className="w-4 h-4" />
+                  <div className="flex items-center gap-2 rounded-full bg-white/20 px-4 py-2 text-sm backdrop-blur">
+                    <Zap className="h-4 w-4" />
                     Whisper + GPT-4o
                   </div>
-                  <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur text-sm">
-                    <Clock className="w-4 h-4" />
+                  <div className="flex items-center gap-2 rounded-full bg-white/20 px-4 py-2 text-sm backdrop-blur">
+                    <Clock className="h-4 w-4" />
                     Tiempo real
                   </div>
                 </div>
               </div>
               {/* Decorative elements */}
-              <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
-              <div className="absolute bottom-0 left-0 w-48 h-48 bg-cyan-400/20 rounded-full blur-2xl transform -translate-x-1/2 translate-y-1/2" />
+              <div className="absolute top-0 right-0 h-64 w-64 translate-x-1/2 -translate-y-1/2 transform rounded-full bg-white/10 blur-3xl" />
+              <div className="absolute bottom-0 left-0 h-48 w-48 -translate-x-1/2 translate-y-1/2 transform rounded-full bg-cyan-400/20 blur-2xl" />
             </div>
 
             {/* Expediente */}
-            <div className="group relative overflow-hidden rounded-3xl bg-white border border-gray-200 p-8 hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-300">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center mb-5 shadow-lg shadow-purple-500/25">
-                <FileText className="w-6 h-6 text-white" />
+            <div className="group relative overflow-hidden rounded-3xl border border-gray-200 bg-white p-8 transition-all duration-300 hover:shadow-xl hover:shadow-gray-200/50">
+              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 shadow-lg shadow-purple-500/25">
+                <FileText className="h-6 w-6 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Expediente Digital</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Historias clínicas personalizables por especialidad con plantillas dinámicas y búsqueda inteligente.
+              <h3 className="mb-2 text-xl font-bold text-gray-900">Expediente Digital</h3>
+              <p className="leading-relaxed text-gray-600">
+                Historias clínicas personalizables por especialidad con plantillas dinámicas y
+                búsqueda inteligente.
               </p>
             </div>
 
             {/* Agenda */}
-            <div className="group relative overflow-hidden rounded-3xl bg-white border border-gray-200 p-8 hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-300">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center mb-5 shadow-lg shadow-orange-500/25">
-                <Calendar className="w-6 h-6 text-white" />
+            <div className="group relative overflow-hidden rounded-3xl border border-gray-200 bg-white p-8 transition-all duration-300 hover:shadow-xl hover:shadow-gray-200/50">
+              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 shadow-lg shadow-orange-500/25">
+                <Calendar className="h-6 w-6 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Agenda Inteligente</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Recordatorios automáticos por WhatsApp, confirmación de citas y vista de calendario integrada.
+              <h3 className="mb-2 text-xl font-bold text-gray-900">Agenda Inteligente</h3>
+              <p className="leading-relaxed text-gray-600">
+                Recordatorios automáticos por WhatsApp, confirmación de citas y vista de calendario
+                integrada.
               </p>
             </div>
 
             {/* Recetas - Wide */}
-            <div className="lg:col-span-2 group relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900 to-gray-800 p-8 md:p-10 text-white">
-              <div className="relative z-10 flex flex-col md:flex-row md:items-center gap-8">
+            <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900 to-gray-800 p-8 text-white md:p-10 lg:col-span-2">
+              <div className="relative z-10 flex flex-col gap-8 md:flex-row md:items-center">
                 <div className="flex-1">
-                  <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur flex items-center justify-center mb-6">
-                    <Pill className="w-7 h-7" />
+                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 backdrop-blur">
+                    <Pill className="h-7 w-7" />
                   </div>
-                  <h3 className="text-2xl md:text-3xl font-bold mb-3">Recetas Digitales</h3>
-                  <p className="text-white/70 text-lg leading-relaxed">
-                    Genera recetas con firma digital y código QR de verificación. 
-                    Tus pacientes pueden verificar la autenticidad en línea.
+                  <h3 className="mb-3 text-2xl font-bold md:text-3xl">Recetas Digitales</h3>
+                  <p className="text-lg leading-relaxed text-white/70">
+                    Genera recetas con firma digital y código QR de verificación. Tus pacientes
+                    pueden verificar la autenticidad en línea.
                   </p>
                 </div>
-                <div className="flex-shrink-0 p-6 bg-white/10 backdrop-blur rounded-2xl">
+                <div className="flex-shrink-0 rounded-2xl bg-white/10 p-6 backdrop-blur">
                   <div className="text-center">
-                    <Shield className="w-10 h-10 mx-auto mb-2 text-teal-400" />
+                    <Shield className="mx-auto mb-2 h-10 w-10 text-teal-400" />
                     <p className="text-sm text-white/60">Verificación</p>
                     <p className="text-lg font-bold">Segura</p>
                   </div>
@@ -204,34 +215,34 @@ export default function HomePage() {
             </div>
 
             {/* PWA */}
-            <div className="group relative overflow-hidden rounded-3xl bg-white border border-gray-200 p-8 hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-300">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center mb-5 shadow-lg shadow-blue-500/25">
-                <Smartphone className="w-6 h-6 text-white" />
+            <div className="group relative overflow-hidden rounded-3xl border border-gray-200 bg-white p-8 transition-all duration-300 hover:shadow-xl hover:shadow-gray-200/50">
+              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 shadow-lg shadow-blue-500/25">
+                <Smartphone className="h-6 w-6 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">PWA Móvil</h3>
-              <p className="text-gray-600 leading-relaxed">
+              <h3 className="mb-2 text-xl font-bold text-gray-900">PWA Móvil</h3>
+              <p className="leading-relaxed text-gray-600">
                 Accede desde cualquier dispositivo. Funciona incluso sin conexión a internet.
               </p>
             </div>
 
             {/* Reportes */}
-            <div className="group relative overflow-hidden rounded-3xl bg-white border border-gray-200 p-8 hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-300">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center mb-5 shadow-lg shadow-emerald-500/25">
-                <BarChart3 className="w-6 h-6 text-white" />
+            <div className="group relative overflow-hidden rounded-3xl border border-gray-200 bg-white p-8 transition-all duration-300 hover:shadow-xl hover:shadow-gray-200/50">
+              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-green-500 shadow-lg shadow-emerald-500/25">
+                <BarChart3 className="h-6 w-6 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Reportes Avanzados</h3>
-              <p className="text-gray-600 leading-relaxed">
+              <h3 className="mb-2 text-xl font-bold text-gray-900">Reportes Avanzados</h3>
+              <p className="leading-relaxed text-gray-600">
                 Estadísticas de tu práctica, tendencias y métricas de rendimiento en tiempo real.
               </p>
             </div>
 
             {/* Seguridad */}
-            <div className="group relative overflow-hidden rounded-3xl bg-white border border-gray-200 p-8 hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-300">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500 to-rose-500 flex items-center justify-center mb-5 shadow-lg shadow-red-500/25">
-                <Shield className="w-6 h-6 text-white" />
+            <div className="group relative overflow-hidden rounded-3xl border border-gray-200 bg-white p-8 transition-all duration-300 hover:shadow-xl hover:shadow-gray-200/50">
+              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-red-500 to-rose-500 shadow-lg shadow-red-500/25">
+                <Shield className="h-6 w-6 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Seguridad Total</h3>
-              <p className="text-gray-600 leading-relaxed">
+              <h3 className="mb-2 text-xl font-bold text-gray-900">Seguridad Total</h3>
+              <p className="leading-relaxed text-gray-600">
                 Datos cifrados, autenticación segura y cumplimiento con normativas de salud.
               </p>
             </div>
@@ -240,9 +251,9 @@ export default function HomePage() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-24 px-6">
+      <section className="px-6 py-24">
         <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+          <div className="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-12">
             <StatCard number="500+" label="Médicos activos" />
             <StatCard number="50k+" label="Consultas procesadas" />
             <StatCard number="2hrs" label="Ahorro diario promedio" />
@@ -252,20 +263,16 @@ export default function HomePage() {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-24 px-6 bg-gray-50">
+      <section id="pricing" className="bg-gray-50 px-6 py-24">
         <div className="mx-auto max-w-5xl">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
-              Precios simples
-            </h2>
-            <p className="mt-4 text-xl text-gray-600">
-              Sin sorpresas. Cancela cuando quieras.
-            </p>
+          <div className="mb-16 text-center">
+            <h2 className="text-4xl font-bold text-gray-900 md:text-5xl">Precios simples</h2>
+            <p className="mt-4 text-xl text-gray-600">Sin sorpresas. Cancela cuando quieras.</p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid gap-8 md:grid-cols-2">
             {/* Basic Plan */}
-            <div className="rounded-3xl bg-white border border-gray-200 p-8 md:p-10">
+            <div className="rounded-3xl border border-gray-200 bg-white p-8 md:p-10">
               <h3 className="text-xl font-bold text-gray-900">Básico</h3>
               <p className="mt-2 text-gray-600">Para consultorios individuales</p>
               <div className="mt-6">
@@ -281,15 +288,15 @@ export default function HomePage() {
               </ul>
               <Link
                 href="/sign-up"
-                className="mt-8 block w-full text-center py-4 rounded-full border-2 border-gray-900 text-gray-900 font-medium hover:bg-gray-900 hover:text-white transition-colors"
+                className="mt-8 block w-full rounded-full border-2 border-gray-900 py-4 text-center font-medium text-gray-900 transition-colors hover:bg-gray-900 hover:text-white"
               >
                 Comenzar gratis
               </Link>
             </div>
 
             {/* Pro Plan */}
-            <div className="rounded-3xl bg-gradient-to-br from-gray-900 to-gray-800 p-8 md:p-10 text-white relative overflow-hidden">
-              <div className="absolute top-6 right-6 px-3 py-1 rounded-full bg-teal-500 text-xs font-medium">
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900 to-gray-800 p-8 text-white md:p-10">
+              <div className="absolute top-6 right-6 rounded-full bg-teal-500 px-3 py-1 text-xs font-medium">
                 Popular
               </div>
               <h3 className="text-xl font-bold">Profesional</h3>
@@ -308,7 +315,7 @@ export default function HomePage() {
               </ul>
               <Link
                 href="/sign-up"
-                className="mt-8 block w-full text-center py-4 rounded-full bg-white text-gray-900 font-medium hover:bg-gray-100 transition-colors"
+                className="mt-8 block w-full rounded-full bg-white py-4 text-center font-medium text-gray-900 transition-colors hover:bg-gray-100"
               >
                 Comenzar gratis
               </Link>
@@ -318,9 +325,9 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 px-6">
+      <section className="px-6 py-24">
         <div className="mx-auto max-w-4xl text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
+          <h2 className="text-4xl font-bold text-gray-900 md:text-5xl">
             Empieza a transformar tu práctica hoy
           </h2>
           <p className="mt-6 text-xl text-gray-600">
@@ -329,29 +336,35 @@ export default function HomePage() {
           <div className="mt-10">
             <Link
               href="/sign-up"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-teal-600 to-cyan-600 text-white rounded-full font-medium hover:from-teal-700 hover:to-cyan-700 transition-all shadow-xl shadow-teal-500/25 hover:scale-105"
+              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-teal-600 to-cyan-600 px-8 py-4 font-medium text-white shadow-xl shadow-teal-500/25 transition-all hover:scale-105 hover:from-teal-700 hover:to-cyan-700"
             >
               Prueba gratis 14 días
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-gray-200 py-12 px-6">
+      <footer className="border-t border-gray-200 px-6 py-12">
         <div className="mx-auto max-w-7xl">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center">
-                <span className="text-white font-bold">D</span>
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-teal-500 to-cyan-600">
+                <span className="font-bold text-white">D</span>
               </div>
               <span className="text-lg font-semibold text-gray-900">Doci</span>
             </div>
             <div className="flex items-center gap-8 text-sm text-gray-600">
-              <a href="#" className="hover:text-gray-900 transition-colors">Privacidad</a>
-              <a href="#" className="hover:text-gray-900 transition-colors">Términos</a>
-              <a href="#" className="hover:text-gray-900 transition-colors">Contacto</a>
+              <a href="#" className="transition-colors hover:text-gray-900">
+                Privacidad
+              </a>
+              <a href="#" className="transition-colors hover:text-gray-900">
+                Términos
+              </a>
+              <a href="#" className="transition-colors hover:text-gray-900">
+                Contacto
+              </a>
             </div>
             <p className="text-sm text-gray-500">
               © {new Date().getFullYear()} Doci. Todos los derechos reservados.
@@ -366,7 +379,7 @@ export default function HomePage() {
 function StatCard({ number, label }: { number: string; label: string }) {
   return (
     <div className="text-center">
-      <p className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
+      <p className="bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-4xl font-bold text-transparent md:text-5xl">
         {number}
       </p>
       <p className="mt-2 text-gray-600">{label}</p>
@@ -377,10 +390,12 @@ function StatCard({ number, label }: { number: string; label: string }) {
 function PricingFeature({ children, light }: { children: React.ReactNode; light?: boolean }) {
   return (
     <li className="flex items-center gap-3">
-      <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
-        light ? 'bg-teal-500' : 'bg-teal-100'
-      }`}>
-        <Check className={`w-3 h-3 ${light ? 'text-white' : 'text-teal-600'}`} />
+      <div
+        className={`flex h-5 w-5 items-center justify-center rounded-full ${
+          light ? 'bg-teal-500' : 'bg-teal-100'
+        }`}
+      >
+        <Check className={`h-3 w-3 ${light ? 'text-white' : 'text-teal-600'}`} />
       </div>
       <span className={light ? 'text-white/90' : 'text-gray-700'}>{children}</span>
     </li>

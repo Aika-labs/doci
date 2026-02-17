@@ -17,7 +17,7 @@ export class SearchController {
     @TenantId() tenantId: string,
     @Query('q') query: string,
     @Query('types') types?: string,
-    @Query('limit') limit?: number,
+    @Query('limit') limit?: number
   ) {
     if (!query || query.length < 2) {
       throw new BadRequestException('Query must be at least 2 characters');

@@ -9,9 +9,29 @@ export const PlanSchema = z.enum(['BASIC', 'PROFESSIONAL', 'ENTERPRISE']);
 export const UserRoleSchema = z.enum(['ADMIN', 'DOCTOR', 'NURSE', 'RECEPTIONIST']);
 export const GenderSchema = z.enum(['MALE', 'FEMALE', 'OTHER', 'PREFER_NOT_TO_SAY']);
 export const ConsultationStatusSchema = z.enum(['IN_PROGRESS', 'COMPLETED', 'CANCELLED']);
-export const AppointmentTypeSchema = z.enum(['CONSULTATION', 'FOLLOW_UP', 'PROCEDURE', 'TELEMEDICINE', 'EMERGENCY']);
-export const AppointmentStatusSchema = z.enum(['SCHEDULED', 'CONFIRMED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED', 'NO_SHOW']);
-export const FileTypeSchema = z.enum(['IMAGE', 'DOCUMENT', 'LAB_RESULT', 'IMAGING', 'PRESCRIPTION', 'OTHER']);
+export const AppointmentTypeSchema = z.enum([
+  'CONSULTATION',
+  'FOLLOW_UP',
+  'PROCEDURE',
+  'TELEMEDICINE',
+  'EMERGENCY',
+]);
+export const AppointmentStatusSchema = z.enum([
+  'SCHEDULED',
+  'CONFIRMED',
+  'IN_PROGRESS',
+  'COMPLETED',
+  'CANCELLED',
+  'NO_SHOW',
+]);
+export const FileTypeSchema = z.enum([
+  'IMAGE',
+  'DOCUMENT',
+  'LAB_RESULT',
+  'IMAGING',
+  'PRESCRIPTION',
+  'OTHER',
+]);
 
 // ============================================
 // Pacientes
@@ -106,7 +126,10 @@ export const TemplateFieldTypeSchema = z.enum([
 ]);
 
 export const TemplateFieldSchema = z.object({
-  name: z.string().min(1, 'El nombre del campo es requerido').regex(/^[a-z_][a-z0-9_]*$/, 'Nombre inválido (use snake_case)'),
+  name: z
+    .string()
+    .min(1, 'El nombre del campo es requerido')
+    .regex(/^[a-z_][a-z0-9_]*$/, 'Nombre inválido (use snake_case)'),
   label: z.string().min(1, 'La etiqueta es requerida'),
   type: TemplateFieldTypeSchema,
   required: z.boolean().optional(),
@@ -158,10 +181,12 @@ export const UpdateAppointmentSchema = CreateAppointmentSchema.partial().extend(
 export const VitalSignsSchema = z.object({
   weight: z.number().positive().optional(),
   height: z.number().positive().optional(),
-  bloodPressure: z.object({
-    systolic: z.number().positive(),
-    diastolic: z.number().positive(),
-  }).optional(),
+  bloodPressure: z
+    .object({
+      systolic: z.number().positive(),
+      diastolic: z.number().positive(),
+    })
+    .optional(),
   heartRate: z.number().positive().optional(),
   temperature: z.number().optional(),
   oxygenSaturation: z.number().min(0).max(100).optional(),

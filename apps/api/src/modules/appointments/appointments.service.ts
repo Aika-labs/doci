@@ -15,7 +15,7 @@ export class AppointmentsService {
       end?: string;
       patientId?: string;
       status?: AppointmentStatus;
-    },
+    }
   ) {
     const where: Prisma.AppointmentWhereInput = {
       tenantId: ctx.tenantId,
@@ -103,7 +103,7 @@ export class AppointmentsService {
       type: AppointmentType;
       reason?: string;
       notes?: string;
-    },
+    }
   ) {
     const startTime = new Date(data.scheduledAt);
     const endTime = new Date(startTime.getTime() + data.duration * 60000);
@@ -150,7 +150,7 @@ export class AppointmentsService {
       status?: AppointmentStatus;
       reason?: string;
       notes?: string;
-    },
+    }
   ) {
     // Verify appointment exists and belongs to tenant
     await this.findOne(ctx, id);
@@ -236,7 +236,7 @@ export class AppointmentsService {
         // TODO: Implement actual notification sending (email, SMS, push)
         console.log(
           `Reminder: ${appointment.patient.firstName} ${appointment.patient.lastName} ` +
-            `has appointment at ${appointment.startTime}`,
+            `has appointment at ${appointment.startTime}`
         );
 
         await this.prisma.appointment.update({

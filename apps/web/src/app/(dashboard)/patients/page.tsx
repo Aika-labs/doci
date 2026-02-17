@@ -95,14 +95,14 @@ export default function PatientsPage() {
   return (
     <div>
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+      <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Pacientes</h1>
           <p className="text-gray-600">Gestiona la información de tus pacientes</p>
         </div>
         <Link
           href="/patients/new"
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
         >
           <Plus className="h-4 w-4" />
           Nuevo Paciente
@@ -110,10 +110,10 @@ export default function PatientsPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
+      <div className="mb-6 grid grid-cols-3 gap-4">
+        <div className="rounded-lg border border-gray-200 bg-white p-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
               <Users className="h-5 w-5 text-blue-600" />
             </div>
             <div>
@@ -122,9 +122,9 @@ export default function PatientsPage() {
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
+        <div className="rounded-lg border border-gray-200 bg-white p-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-pink-100 rounded-lg flex items-center justify-center">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-pink-100">
               <User className="h-5 w-5 text-pink-600" />
             </div>
             <div>
@@ -135,9 +135,9 @@ export default function PatientsPage() {
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
+        <div className="rounded-lg border border-gray-200 bg-white p-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
               <User className="h-5 w-5 text-blue-600" />
             </div>
             <div>
@@ -151,21 +151,21 @@ export default function PatientsPage() {
       </div>
 
       {/* Search and Filters */}
-      <div className="flex flex-col md:flex-row gap-4 mb-6">
+      <div className="mb-6 flex flex-col gap-4 md:flex-row">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
             value={search}
             onChange={handleSearch}
             placeholder="Buscar por nombre, email o teléfono..."
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border border-gray-300 py-2 pr-4 pl-10 focus:ring-2 focus:ring-blue-500"
           />
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`flex items-center gap-2 px-4 py-2 border rounded-lg transition-colors ${
+            className={`flex items-center gap-2 rounded-lg border px-4 py-2 transition-colors ${
               showFilters || genderFilter !== 'ALL'
                 ? 'border-blue-500 bg-blue-50 text-blue-700'
                 : 'border-gray-300 text-gray-700 hover:bg-gray-50'
@@ -173,19 +173,19 @@ export default function PatientsPage() {
           >
             <Filter className="h-4 w-4" />
             Filtros
-            {genderFilter !== 'ALL' && <span className="w-2 h-2 bg-blue-600 rounded-full" />}
+            {genderFilter !== 'ALL' && <span className="h-2 w-2 rounded-full bg-blue-600" />}
           </button>
-          <div className="flex items-center bg-gray-100 rounded-lg p-1">
+          <div className="flex items-center rounded-lg bg-gray-100 p-1">
             <button
               onClick={() => setViewMode('grid')}
-              className={`p-2 rounded ${viewMode === 'grid' ? 'bg-white shadow-sm' : ''}`}
+              className={`rounded p-2 ${viewMode === 'grid' ? 'bg-white shadow-sm' : ''}`}
               title="Vista cuadrícula"
             >
               <Grid className="h-4 w-4" />
             </button>
             <button
               onClick={() => setViewMode('list')}
-              className={`p-2 rounded ${viewMode === 'list' ? 'bg-white shadow-sm' : ''}`}
+              className={`rounded p-2 ${viewMode === 'list' ? 'bg-white shadow-sm' : ''}`}
               title="Vista lista"
             >
               <List className="h-4 w-4" />
@@ -196,8 +196,8 @@ export default function PatientsPage() {
 
       {/* Filter Panel */}
       {showFilters && (
-        <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Género</label>
+        <div className="mb-6 rounded-lg border border-gray-200 bg-white p-4">
+          <label className="mb-2 block text-sm font-medium text-gray-700">Género</label>
           <div className="flex flex-wrap gap-2">
             {[
               { value: 'ALL', label: 'Todos' },
@@ -211,7 +211,7 @@ export default function PatientsPage() {
                   setGenderFilter(option.value as GenderFilter);
                   setPage(1);
                 }}
-                className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
                   genderFilter === option.value
                     ? 'bg-blue-600 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -230,9 +230,9 @@ export default function PatientsPage() {
           <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
         </div>
       ) : patients.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
-          <Users className="h-12 w-12 mx-auto text-gray-300 mb-3" />
-          <p className="text-gray-500 mb-4">
+        <div className="rounded-lg border border-gray-200 bg-white py-12 text-center">
+          <Users className="mx-auto mb-3 h-12 w-12 text-gray-300" />
+          <p className="mb-4 text-gray-500">
             {search || genderFilter !== 'ALL'
               ? 'No se encontraron pacientes con esos filtros'
               : 'No hay pacientes registrados'}
@@ -240,7 +240,7 @@ export default function PatientsPage() {
           {!search && genderFilter === 'ALL' && (
             <Link
               href="/patients/new"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
             >
               <Plus className="h-4 w-4" />
               Registrar primer paciente
@@ -248,35 +248,38 @@ export default function PatientsPage() {
           )}
         </div>
       ) : viewMode === 'grid' ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {patients.map((patient) => (
             <Link
               key={patient.id}
               href={`/patients/${patient.id}`}
-              className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow"
+              className="rounded-lg border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md"
             >
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-blue-600 font-semibold">
-                    {patient.firstName[0]}{patient.lastName[0]}
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
+                  <span className="font-semibold text-blue-600">
+                    {patient.firstName[0]}
+                    {patient.lastName[0]}
                   </span>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-gray-900 truncate">
+                <div className="min-w-0 flex-1">
+                  <h3 className="truncate font-medium text-gray-900">
                     {patient.firstName} {patient.lastName}
                   </h3>
                   <p className="text-sm text-gray-500">
                     {calculateAge(patient.dateOfBirth)} años • {getGenderLabel(patient.gender)}
                   </p>
                   {patient.allergies && patient.allergies.length > 0 && (
-                    <div className="flex items-center gap-1 mt-1 text-xs text-red-600">
+                    <div className="mt-1 flex items-center gap-1 text-xs text-red-600">
                       <AlertTriangle className="h-3 w-3" />
-                      <span>{patient.allergies.length} alergia{patient.allergies.length > 1 ? 's' : ''}</span>
+                      <span>
+                        {patient.allergies.length} alergia{patient.allergies.length > 1 ? 's' : ''}
+                      </span>
                     </div>
                   )}
                 </div>
               </div>
-              <div className="mt-3 pt-3 border-t space-y-1">
+              <div className="mt-3 space-y-1 border-t pt-3">
                 {patient.phone && (
                   <div className="flex items-center gap-2 text-sm text-gray-500">
                     <Phone className="h-3.5 w-3.5" />
@@ -294,14 +297,22 @@ export default function PatientsPage() {
           ))}
         </div>
       ) : (
-        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Paciente</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase hidden md:table-cell">Contacto</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase hidden lg:table-cell">Fecha de nacimiento</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Género</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Paciente
+                </th>
+                <th className="hidden px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase md:table-cell">
+                  Contacto
+                </th>
+                <th className="hidden px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase lg:table-cell">
+                  Fecha de nacimiento
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Género
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -309,37 +320,46 @@ export default function PatientsPage() {
                 <tr key={patient.id} className="hover:bg-gray-50">
                   <td className="px-4 py-3">
                     <Link href={`/patients/${patient.id}`} className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                        <span className="text-blue-600 font-semibold text-sm">
-                          {patient.firstName[0]}{patient.lastName[0]}
+                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
+                        <span className="text-sm font-semibold text-blue-600">
+                          {patient.firstName[0]}
+                          {patient.lastName[0]}
                         </span>
                       </div>
                       <div>
                         <p className="font-medium text-gray-900">
                           {patient.firstName} {patient.lastName}
                         </p>
-                        <p className="text-sm text-gray-500">{calculateAge(patient.dateOfBirth)} años</p>
+                        <p className="text-sm text-gray-500">
+                          {calculateAge(patient.dateOfBirth)} años
+                        </p>
                       </div>
                     </Link>
                   </td>
-                  <td className="px-4 py-3 hidden md:table-cell">
+                  <td className="hidden px-4 py-3 md:table-cell">
                     <div className="text-sm">
                       {patient.phone && <p className="text-gray-900">{patient.phone}</p>}
-                      {patient.email && <p className="text-gray-500 truncate max-w-[200px]">{patient.email}</p>}
+                      {patient.email && (
+                        <p className="max-w-[200px] truncate text-gray-500">{patient.email}</p>
+                      )}
                     </div>
                   </td>
-                  <td className="px-4 py-3 hidden lg:table-cell">
+                  <td className="hidden px-4 py-3 lg:table-cell">
                     <div className="flex items-center gap-2 text-sm text-gray-500">
                       <Calendar className="h-4 w-4" />
-                      {format(new Date(patient.dateOfBirth), "d MMM yyyy", { locale: es })}
+                      {format(new Date(patient.dateOfBirth), 'd MMM yyyy', { locale: es })}
                     </div>
                   </td>
                   <td className="px-4 py-3">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      patient.gender === 'FEMALE' ? 'bg-pink-100 text-pink-700' :
-                      patient.gender === 'MALE' ? 'bg-blue-100 text-blue-700' :
-                      'bg-gray-100 text-gray-700'
-                    }`}>
+                    <span
+                      className={`rounded-full px-2 py-1 text-xs font-medium ${
+                        patient.gender === 'FEMALE'
+                          ? 'bg-pink-100 text-pink-700'
+                          : patient.gender === 'MALE'
+                            ? 'bg-blue-100 text-blue-700'
+                            : 'bg-gray-100 text-gray-700'
+                      }`}
+                    >
                       {getGenderLabel(patient.gender)}
                     </span>
                   </td>
@@ -352,15 +372,16 @@ export default function PatientsPage() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between mt-6">
+        <div className="mt-6 flex items-center justify-between">
           <p className="text-sm text-gray-500">
-            Mostrando {(page - 1) * limit + 1} - {Math.min(page * limit, total)} de {total} pacientes
+            Mostrando {(page - 1) * limit + 1} - {Math.min(page * limit, total)} de {total}{' '}
+            pacientes
           </p>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setPage(page - 1)}
               disabled={page === 1}
-              className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="rounded-lg border border-gray-300 p-2 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
@@ -370,7 +391,7 @@ export default function PatientsPage() {
             <button
               onClick={() => setPage(page + 1)}
               disabled={page === totalPages}
-              className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="rounded-lg border border-gray-300 p-2 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <ChevronRight className="h-4 w-4" />
             </button>

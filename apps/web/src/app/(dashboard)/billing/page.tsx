@@ -74,7 +74,11 @@ export default function BillingPage() {
     fetchData();
   }, [fetchData]);
 
-  const handleAddPayment = async (invoiceId: string, amount: number, method: 'CASH' | 'CARD' | 'TRANSFER' | 'CHECK' | 'OTHER') => {
+  const handleAddPayment = async (
+    invoiceId: string,
+    amount: number,
+    method: 'CASH' | 'CARD' | 'TRANSFER' | 'CHECK' | 'OTHER'
+  ) => {
     try {
       const token = await getToken();
       if (!token) return;
@@ -103,17 +107,52 @@ export default function BillingPage() {
   };
 
   const getStatusBadge = (status: string) => {
-    const config: Record<string, { bg: string; text: string; icon: React.ReactNode; label: string }> = {
-      DRAFT: { bg: 'bg-gray-100', text: 'text-gray-700', icon: <FileText className="h-3 w-3" />, label: 'Borrador' },
-      PENDING: { bg: 'bg-yellow-100', text: 'text-yellow-700', icon: <Clock className="h-3 w-3" />, label: 'Pendiente' },
-      PAID: { bg: 'bg-green-100', text: 'text-green-700', icon: <CheckCircle className="h-3 w-3" />, label: 'Pagada' },
-      PARTIAL: { bg: 'bg-blue-100', text: 'text-blue-700', icon: <DollarSign className="h-3 w-3" />, label: 'Parcial' },
-      OVERDUE: { bg: 'bg-red-100', text: 'text-red-700', icon: <AlertTriangle className="h-3 w-3" />, label: 'Vencida' },
-      CANCELLED: { bg: 'bg-gray-100', text: 'text-gray-500', icon: <XCircle className="h-3 w-3" />, label: 'Cancelada' },
+    const config: Record<
+      string,
+      { bg: string; text: string; icon: React.ReactNode; label: string }
+    > = {
+      DRAFT: {
+        bg: 'bg-gray-100',
+        text: 'text-gray-700',
+        icon: <FileText className="h-3 w-3" />,
+        label: 'Borrador',
+      },
+      PENDING: {
+        bg: 'bg-yellow-100',
+        text: 'text-yellow-700',
+        icon: <Clock className="h-3 w-3" />,
+        label: 'Pendiente',
+      },
+      PAID: {
+        bg: 'bg-green-100',
+        text: 'text-green-700',
+        icon: <CheckCircle className="h-3 w-3" />,
+        label: 'Pagada',
+      },
+      PARTIAL: {
+        bg: 'bg-blue-100',
+        text: 'text-blue-700',
+        icon: <DollarSign className="h-3 w-3" />,
+        label: 'Parcial',
+      },
+      OVERDUE: {
+        bg: 'bg-red-100',
+        text: 'text-red-700',
+        icon: <AlertTriangle className="h-3 w-3" />,
+        label: 'Vencida',
+      },
+      CANCELLED: {
+        bg: 'bg-gray-100',
+        text: 'text-gray-500',
+        icon: <XCircle className="h-3 w-3" />,
+        label: 'Cancelada',
+      },
     };
     const c = config[status] || config.PENDING;
     return (
-      <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${c.bg} ${c.text}`}>
+      <span
+        className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium ${c.bg} ${c.text}`}
+      >
         {c.icon}
         {c.label}
       </span>
@@ -131,7 +170,9 @@ export default function BillingPage() {
   const filteredInvoices = invoices.filter((inv) => {
     if (!searchTerm) return true;
     const search = searchTerm.toLowerCase();
-    const patientName = inv.patient ? `${inv.patient.firstName} ${inv.patient.lastName}`.toLowerCase() : '';
+    const patientName = inv.patient
+      ? `${inv.patient.firstName} ${inv.patient.lastName}`.toLowerCase()
+      : '';
     return patientName.includes(search) || inv.invoiceNumber.toLowerCase().includes(search);
   });
 
@@ -139,13 +180,15 @@ export default function BillingPage() {
   const filteredServices = services.filter((svc) => {
     if (!searchTerm) return true;
     const search = searchTerm.toLowerCase();
-    return svc.name.toLowerCase().includes(search) || (svc.code?.toLowerCase().includes(search) ?? false);
+    return (
+      svc.name.toLowerCase().includes(search) || (svc.code?.toLowerCase().includes(search) ?? false)
+    );
   });
 
   return (
     <div>
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+      <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Facturación</h1>
           <p className="text-gray-600">Gestiona facturas, servicios y pagos</p>
@@ -154,7 +197,7 @@ export default function BillingPage() {
           {activeTab === 'invoices' ? (
             <Link
               href="/billing/new"
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
             >
               <Plus className="h-4 w-4" />
               Nueva Factura
@@ -162,7 +205,7 @@ export default function BillingPage() {
           ) : (
             <button
               onClick={() => setShowServiceModal(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
             >
               <Plus className="h-4 w-4" />
               Nuevo Servicio
@@ -173,43 +216,49 @@ export default function BillingPage() {
 
       {/* Summary Cards */}
       {summary && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
+        <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
+          <div className="rounded-lg border border-gray-200 bg-white p-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100">
                 <TrendingUp className="h-5 w-5 text-green-600" />
               </div>
               <div>
                 <p className="text-sm text-gray-500">Ingresos</p>
-                <p className="text-xl font-bold text-gray-900">{formatCurrency(summary.totalRevenue)}</p>
+                <p className="text-xl font-bold text-gray-900">
+                  {formatCurrency(summary.totalRevenue)}
+                </p>
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="rounded-lg border border-gray-200 bg-white p-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-yellow-100">
                 <Clock className="h-5 w-5 text-yellow-600" />
               </div>
               <div>
                 <p className="text-sm text-gray-500">Pendiente</p>
-                <p className="text-xl font-bold text-yellow-600">{formatCurrency(summary.totalPending)}</p>
+                <p className="text-xl font-bold text-yellow-600">
+                  {formatCurrency(summary.totalPending)}
+                </p>
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="rounded-lg border border-gray-200 bg-white p-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-100">
                 <AlertTriangle className="h-5 w-5 text-red-600" />
               </div>
               <div>
                 <p className="text-sm text-gray-500">Vencido</p>
-                <p className="text-xl font-bold text-red-600">{formatCurrency(summary.totalOverdue)}</p>
+                <p className="text-xl font-bold text-red-600">
+                  {formatCurrency(summary.totalOverdue)}
+                </p>
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="rounded-lg border border-gray-200 bg-white p-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
                 <Receipt className="h-5 w-5 text-blue-600" />
               </div>
               <div>
@@ -222,43 +271,49 @@ export default function BillingPage() {
       )}
 
       {/* Tabs */}
-      <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1 w-fit mb-6">
+      <div className="mb-6 flex w-fit items-center gap-1 rounded-lg bg-gray-100 p-1">
         <button
           onClick={() => setActiveTab('invoices')}
-          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-            activeTab === 'invoices' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-600 hover:text-gray-900'
+          className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+            activeTab === 'invoices'
+              ? 'bg-white text-gray-900 shadow-sm'
+              : 'text-gray-600 hover:text-gray-900'
           }`}
         >
-          <FileText className="h-4 w-4 inline mr-2" />
+          <FileText className="mr-2 inline h-4 w-4" />
           Facturas
         </button>
         <button
           onClick={() => setActiveTab('services')}
-          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-            activeTab === 'services' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-600 hover:text-gray-900'
+          className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+            activeTab === 'services'
+              ? 'bg-white text-gray-900 shadow-sm'
+              : 'text-gray-600 hover:text-gray-900'
           }`}
         >
-          <Banknote className="h-4 w-4 inline mr-2" />
+          <Banknote className="mr-2 inline h-4 w-4" />
           Servicios
         </button>
       </div>
 
       {/* Search and Filters */}
-      <div className="flex flex-col md:flex-row gap-4 mb-6">
+      <div className="mb-6 flex flex-col gap-4 md:flex-row">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder={activeTab === 'invoices' ? 'Buscar por paciente o número...' : 'Buscar servicio...'}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            placeholder={
+              activeTab === 'invoices' ? 'Buscar por paciente o número...' : 'Buscar servicio...'
+            }
+            className="w-full rounded-lg border border-gray-300 py-2 pr-4 pl-10 focus:ring-2 focus:ring-blue-500"
           />
         </div>
         {activeTab === 'invoices' && (
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`flex items-center gap-2 px-4 py-2 border rounded-lg transition-colors ${
+            className={`flex items-center gap-2 rounded-lg border px-4 py-2 transition-colors ${
               showFilters || statusFilter !== 'ALL'
                 ? 'border-blue-500 bg-blue-50 text-blue-700'
                 : 'border-gray-300 text-gray-700 hover:bg-gray-50'
@@ -266,15 +321,15 @@ export default function BillingPage() {
           >
             <Filter className="h-4 w-4" />
             Filtros
-            {statusFilter !== 'ALL' && <span className="w-2 h-2 bg-blue-600 rounded-full" />}
+            {statusFilter !== 'ALL' && <span className="h-2 w-2 rounded-full bg-blue-600" />}
           </button>
         )}
       </div>
 
       {/* Filter Panel */}
       {showFilters && activeTab === 'invoices' && (
-        <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Estado</label>
+        <div className="mb-6 rounded-lg border border-gray-200 bg-white p-4">
+          <label className="mb-2 block text-sm font-medium text-gray-700">Estado</label>
           <div className="flex flex-wrap gap-2">
             {[
               { value: 'ALL', label: 'Todos' },
@@ -287,7 +342,7 @@ export default function BillingPage() {
               <button
                 key={option.value}
                 onClick={() => setStatusFilter(option.value as StatusFilter)}
-                className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
                   statusFilter === option.value
                     ? 'bg-blue-600 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -306,15 +361,17 @@ export default function BillingPage() {
       ) : activeTab === 'invoices' ? (
         /* Invoices List */
         filteredInvoices.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
-            <FileText className="h-12 w-12 mx-auto text-gray-300 mb-3" />
-            <p className="text-gray-500 mb-4">
-              {searchTerm || statusFilter !== 'ALL' ? 'No se encontraron facturas' : 'No hay facturas'}
+          <div className="rounded-lg border border-gray-200 bg-white py-12 text-center">
+            <FileText className="mx-auto mb-3 h-12 w-12 text-gray-300" />
+            <p className="mb-4 text-gray-500">
+              {searchTerm || statusFilter !== 'ALL'
+                ? 'No se encontraron facturas'
+                : 'No hay facturas'}
             </p>
             {!searchTerm && statusFilter === 'ALL' && (
               <Link
                 href="/billing/new"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
               >
                 <Plus className="h-4 w-4" />
                 Crear primera factura
@@ -322,16 +379,28 @@ export default function BillingPage() {
             )}
           </div>
         ) : (
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
             <table className="w-full">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Factura</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Paciente</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase hidden md:table-cell">Fecha</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Acciones</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Factura
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Paciente
+                  </th>
+                  <th className="hidden px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase md:table-cell">
+                    Fecha
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Total
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Estado
+                  </th>
+                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                    Acciones
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -342,31 +411,38 @@ export default function BillingPage() {
                     </td>
                     <td className="px-4 py-3">
                       {invoice.patient ? (
-                        <Link href={`/patients/${invoice.patient.id}`} className="text-blue-600 hover:text-blue-700">
+                        <Link
+                          href={`/patients/${invoice.patient.id}`}
+                          className="text-blue-600 hover:text-blue-700"
+                        >
                           {invoice.patient.firstName} {invoice.patient.lastName}
                         </Link>
                       ) : (
                         <span className="text-gray-500">-</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 hidden md:table-cell">
+                    <td className="hidden px-4 py-3 md:table-cell">
                       <p className="text-sm text-gray-500">
                         {format(new Date(invoice.issueDate), 'd MMM yyyy', { locale: es })}
                       </p>
                     </td>
                     <td className="px-4 py-3">
-                      <p className="font-medium text-gray-900">{formatCurrency(invoice.total, invoice.currency)}</p>
+                      <p className="font-medium text-gray-900">
+                        {formatCurrency(invoice.total, invoice.currency)}
+                      </p>
                     </td>
                     <td className="px-4 py-3">{getStatusBadge(invoice.status)}</td>
                     <td className="px-4 py-3 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        {(invoice.status === 'PENDING' || invoice.status === 'PARTIAL' || invoice.status === 'OVERDUE') && (
+                        {(invoice.status === 'PENDING' ||
+                          invoice.status === 'PARTIAL' ||
+                          invoice.status === 'OVERDUE') && (
                           <button
                             onClick={() => {
                               setSelectedInvoice(invoice);
                               setShowPaymentModal(true);
                             }}
-                            className="p-2 text-green-600 hover:bg-green-50 rounded-lg"
+                            className="rounded-lg p-2 text-green-600 hover:bg-green-50"
                             title="Registrar pago"
                           >
                             <CreditCard className="h-4 w-4" />
@@ -375,7 +451,7 @@ export default function BillingPage() {
                         {invoice.status !== 'CANCELLED' && invoice.status !== 'PAID' && (
                           <button
                             onClick={() => handleCancelInvoice(invoice.id)}
-                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+                            className="rounded-lg p-2 text-red-600 hover:bg-red-50"
                             title="Cancelar factura"
                           >
                             <XCircle className="h-4 w-4" />
@@ -383,7 +459,7 @@ export default function BillingPage() {
                         )}
                         <Link
                           href={`/billing/${invoice.id}`}
-                          className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
+                          className="rounded-lg p-2 text-gray-600 hover:bg-gray-100"
                         >
                           <ChevronRight className="h-4 w-4" />
                         </Link>
@@ -395,62 +471,62 @@ export default function BillingPage() {
             </table>
           </div>
         )
+      ) : /* Services List */
+      filteredServices.length === 0 ? (
+        <div className="rounded-lg border border-gray-200 bg-white py-12 text-center">
+          <Banknote className="mx-auto mb-3 h-12 w-12 text-gray-300" />
+          <p className="mb-4 text-gray-500">
+            {searchTerm ? 'No se encontraron servicios' : 'No hay servicios'}
+          </p>
+          {!searchTerm && (
+            <button
+              onClick={() => setShowServiceModal(true)}
+              className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+            >
+              <Plus className="h-4 w-4" />
+              Crear primer servicio
+            </button>
+          )}
+        </div>
       ) : (
-        /* Services List */
-        filteredServices.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
-            <Banknote className="h-12 w-12 mx-auto text-gray-300 mb-3" />
-            <p className="text-gray-500 mb-4">
-              {searchTerm ? 'No se encontraron servicios' : 'No hay servicios'}
-            </p>
-            {!searchTerm && (
-              <button
-                onClick={() => setShowServiceModal(true)}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-              >
-                <Plus className="h-4 w-4" />
-                Crear primer servicio
-              </button>
-            )}
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredServices.map((service) => (
-              <div
-                key={service.id}
-                className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow"
-              >
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h3 className="font-medium text-gray-900">{service.name}</h3>
-                    {service.code && <p className="text-xs text-gray-500">Código: {service.code}</p>}
-                  </div>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {filteredServices.map((service) => (
+            <div
+              key={service.id}
+              className="rounded-lg border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md"
+            >
+              <div className="flex items-start justify-between">
+                <div>
+                  <h3 className="font-medium text-gray-900">{service.name}</h3>
+                  {service.code && <p className="text-xs text-gray-500">Código: {service.code}</p>}
+                </div>
+                <span
+                  className={`rounded-full px-2 py-1 text-xs font-medium ${
                     service.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
-                  }`}>
-                    {service.isActive ? 'Activo' : 'Inactivo'}
-                  </span>
-                </div>
-                {service.description && (
-                  <p className="text-sm text-gray-600 mt-2 line-clamp-2">{service.description}</p>
-                )}
-                <div className="mt-4 pt-4 border-t flex items-center justify-between">
-                  <p className="text-lg font-bold text-gray-900">
-                    {formatCurrency(service.price, service.currency)}
-                  </p>
-                  {service.duration && (
-                    <p className="text-sm text-gray-500">{service.duration} min</p>
-                  )}
-                </div>
-                {service.category && (
-                  <span className="inline-block mt-2 px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">
-                    {service.category}
-                  </span>
+                  }`}
+                >
+                  {service.isActive ? 'Activo' : 'Inactivo'}
+                </span>
+              </div>
+              {service.description && (
+                <p className="mt-2 line-clamp-2 text-sm text-gray-600">{service.description}</p>
+              )}
+              <div className="mt-4 flex items-center justify-between border-t pt-4">
+                <p className="text-lg font-bold text-gray-900">
+                  {formatCurrency(service.price, service.currency)}
+                </p>
+                {service.duration && (
+                  <p className="text-sm text-gray-500">{service.duration} min</p>
                 )}
               </div>
-            ))}
-          </div>
-        )
+              {service.category && (
+                <span className="mt-2 inline-block rounded bg-gray-100 px-2 py-1 text-xs text-gray-600">
+                  {service.category}
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
       )}
 
       {/* Payment Modal */}
@@ -487,9 +563,15 @@ function PaymentModal({
 }: {
   invoice: Invoice;
   onClose: () => void;
-  onSubmit: (invoiceId: string, amount: number, method: 'CASH' | 'CARD' | 'TRANSFER' | 'CHECK' | 'OTHER') => void;
+  onSubmit: (
+    invoiceId: string,
+    amount: number,
+    method: 'CASH' | 'CARD' | 'TRANSFER' | 'CHECK' | 'OTHER'
+  ) => void;
 }) {
-  const [amount, setAmount] = useState(invoice.total - (invoice.payments?.reduce((sum, p) => sum + p.amount, 0) || 0));
+  const [amount, setAmount] = useState(
+    invoice.total - (invoice.payments?.reduce((sum, p) => sum + p.amount, 0) || 0)
+  );
   const [method, setMethod] = useState<'CASH' | 'CARD' | 'TRANSFER' | 'CHECK' | 'OTHER'>('CASH');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -504,20 +586,24 @@ function PaymentModal({
   const pendingAmount = invoice.total - paidAmount;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl max-w-md w-full p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Registrar Pago</h2>
-        
-        <div className="bg-gray-50 rounded-lg p-4 mb-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="w-full max-w-md rounded-xl bg-white p-6">
+        <h2 className="mb-4 text-lg font-semibold text-gray-900">Registrar Pago</h2>
+
+        <div className="mb-4 rounded-lg bg-gray-50 p-4">
           <p className="text-sm text-gray-500">Factura: {invoice.invoiceNumber}</p>
           <p className="text-lg font-bold text-gray-900">
-            Pendiente: {new Intl.NumberFormat('es-MX', { style: 'currency', currency: invoice.currency }).format(pendingAmount)}
+            Pendiente:{' '}
+            {new Intl.NumberFormat('es-MX', {
+              style: 'currency',
+              currency: invoice.currency,
+            }).format(pendingAmount)}
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Monto</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Monto</label>
             <input
               type="number"
               step="0.01"
@@ -525,17 +611,17 @@ function PaymentModal({
               max={pendingAmount}
               value={amount}
               onChange={(e) => setAmount(parseFloat(e.target.value))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Método de pago</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Método de pago</label>
             <select
               value={method}
               onChange={(e) => setMethod(e.target.value as typeof method)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500"
             >
               <option value="CASH">Efectivo</option>
               <option value="CARD">Tarjeta</option>
@@ -549,16 +635,16 @@ function PaymentModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+              className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              className="flex-1 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
             >
-              {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin mx-auto" /> : 'Registrar'}
+              {isSubmitting ? <Loader2 className="mx-auto h-4 w-4 animate-spin" /> : 'Registrar'}
             </button>
           </div>
         </form>
@@ -568,13 +654,7 @@ function PaymentModal({
 }
 
 // Service Modal Component
-function ServiceModal({
-  onClose,
-  onSuccess,
-}: {
-  onClose: () => void;
-  onSuccess: () => void;
-}) {
+function ServiceModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: () => void }) {
   const { getToken } = useAuth();
   const { success, error: showError } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -614,51 +694,51 @@ function ServiceModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl max-w-md w-full p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Nuevo Servicio</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="w-full max-w-md rounded-xl bg-white p-6">
+        <h2 className="mb-4 text-lg font-semibold text-gray-900">Nuevo Servicio</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Nombre *</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Nombre *</label>
             <input
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Descripción</label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               rows={2}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Código</label>
+              <label className="mb-1 block text-sm font-medium text-gray-700">Código</label>
               <input
                 type="text"
                 value={formData.code}
                 onChange={(e) => setFormData({ ...formData, code: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Precio *</label>
+              <label className="mb-1 block text-sm font-medium text-gray-700">Precio *</label>
               <input
                 type="number"
                 step="0.01"
                 min="0"
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500"
                 required
               />
             </div>
@@ -666,22 +746,22 @@ function ServiceModal({
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Duración (min)</label>
+              <label className="mb-1 block text-sm font-medium text-gray-700">Duración (min)</label>
               <input
                 type="number"
                 min="0"
                 value={formData.duration}
                 onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
+              <label className="mb-1 block text-sm font-medium text-gray-700">Categoría</label>
               <input
                 type="text"
                 value={formData.category}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500"
               />
             </div>
           </div>
@@ -690,16 +770,16 @@ function ServiceModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+              className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              className="flex-1 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
             >
-              {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin mx-auto" /> : 'Crear'}
+              {isSubmitting ? <Loader2 className="mx-auto h-4 w-4 animate-spin" /> : 'Crear'}
             </button>
           </div>
         </form>

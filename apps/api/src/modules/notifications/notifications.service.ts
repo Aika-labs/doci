@@ -22,7 +22,7 @@ export class NotificationsService {
 
   constructor(
     private prisma: PrismaService,
-    private configService: ConfigService,
+    private configService: ConfigService
   ) {
     this.whatsappApiUrl = 'https://graph.facebook.com/v18.0';
     this.whatsappToken = this.configService.get<string>('WHATSAPP_ACCESS_TOKEN') || '';
@@ -30,7 +30,9 @@ export class NotificationsService {
     this.enabled = Boolean(this.whatsappToken && this.whatsappPhoneId);
 
     if (!this.enabled) {
-      this.logger.warn('WhatsApp notifications disabled: missing WHATSAPP_ACCESS_TOKEN or WHATSAPP_PHONE_ID');
+      this.logger.warn(
+        'WhatsApp notifications disabled: missing WHATSAPP_ACCESS_TOKEN or WHATSAPP_PHONE_ID'
+      );
     }
   }
 
@@ -39,7 +41,9 @@ export class NotificationsService {
    */
   async sendAppointmentReminder(data: AppointmentReminder): Promise<boolean> {
     if (!this.enabled) {
-      this.logger.log(`[MOCK] Would send reminder to ${data.patientPhone}: ${data.patientName} - ${data.appointmentDate} ${data.appointmentTime}`);
+      this.logger.log(
+        `[MOCK] Would send reminder to ${data.patientPhone}: ${data.patientName} - ${data.appointmentDate} ${data.appointmentTime}`
+      );
       return true;
     }
 
@@ -54,7 +58,7 @@ export class NotificationsService {
       const response = await fetch(`${this.whatsappApiUrl}/${this.whatsappPhoneId}/messages`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${this.whatsappToken}`,
+          Authorization: `Bearer ${this.whatsappToken}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -113,7 +117,7 @@ export class NotificationsService {
       const response = await fetch(`${this.whatsappApiUrl}/${this.whatsappPhoneId}/messages`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${this.whatsappToken}`,
+          Authorization: `Bearer ${this.whatsappToken}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -184,7 +188,9 @@ export class NotificationsService {
 
     for (const appointment of appointments) {
       if (!appointment.patient.phone) {
-        this.logger.warn(`No phone number for patient ${appointment.patient.firstName} ${appointment.patient.lastName}`);
+        this.logger.warn(
+          `No phone number for patient ${appointment.patient.firstName} ${appointment.patient.lastName}`
+        );
         failed++;
         continue;
       }

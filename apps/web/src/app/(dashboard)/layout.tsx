@@ -22,11 +22,7 @@ import {
 import { CommandPalette } from '@/components/search';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
@@ -84,7 +80,7 @@ export default function DashboardLayout({
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 space-y-1 p-3 overflow-y-auto">
+        <nav className="flex-1 space-y-1 overflow-y-auto p-3">
           {navigation.map((item) => (
             <NavItem
               key={item.name}
@@ -136,8 +132,8 @@ export default function DashboardLayout({
               }}
             />
             {!collapsed && (
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-900 truncate">Mi cuenta</p>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-medium text-gray-900">Mi cuenta</p>
                 <p className="text-xs text-gray-500">Gestionar perfil</p>
               </div>
             )}
@@ -147,16 +143,18 @@ export default function DashboardLayout({
         {/* Collapse button (desktop only) */}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="hidden md:flex absolute -right-3 top-20 h-6 w-6 items-center justify-center rounded-full border border-gray-200 bg-white shadow-sm hover:bg-gray-50"
+          className="absolute top-20 -right-3 hidden h-6 w-6 items-center justify-center rounded-full border border-gray-200 bg-white shadow-sm hover:bg-gray-50 md:flex"
         >
-          <ChevronLeft className={`h-4 w-4 transition-transform ${collapsed ? 'rotate-180' : ''}`} />
+          <ChevronLeft
+            className={`h-4 w-4 transition-transform ${collapsed ? 'rotate-180' : ''}`}
+          />
         </button>
       </aside>
 
       {/* Main content */}
       <main className={`flex-1 transition-all duration-300 ${collapsed ? 'md:ml-20' : 'md:ml-64'}`}>
         {/* Top bar */}
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-gray-200/60 bg-white/80 backdrop-blur-xl px-4">
+        <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-gray-200/60 bg-white/80 px-4 backdrop-blur-xl">
           <button
             onClick={() => setSidebarOpen(true)}
             className="rounded-lg p-2 hover:bg-gray-100 md:hidden"
@@ -169,7 +167,7 @@ export default function DashboardLayout({
             </div>
             <span className="text-lg font-semibold text-gray-900">Doci</span>
           </Link>
-          <div className="flex-1 hidden md:block">
+          <div className="hidden flex-1 md:block">
             <CommandPalette />
           </div>
           <div className="ml-auto">
@@ -186,7 +184,12 @@ export default function DashboardLayout({
       <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-gray-200/60 bg-white/80 backdrop-blur-xl md:hidden">
         <div className="flex items-center justify-around py-2">
           <MobileNavItem href="/" icon={Home} label="Inicio" active={pathname === '/'} />
-          <MobileNavItem href="/patients" icon={Users} label="Pacientes" active={pathname.startsWith('/patients')} />
+          <MobileNavItem
+            href="/patients"
+            icon={Users}
+            label="Pacientes"
+            active={pathname.startsWith('/patients')}
+          />
           <MobileNavItem
             href="/consultations/new"
             icon={Mic}
@@ -194,8 +197,18 @@ export default function DashboardLayout({
             highlight
             active={pathname === '/consultations/new'}
           />
-          <MobileNavItem href="/appointments" icon={Calendar} label="Agenda" active={pathname.startsWith('/appointments')} />
-          <MobileNavItem href="/settings" icon={Settings} label="Config" active={pathname.startsWith('/settings')} />
+          <MobileNavItem
+            href="/appointments"
+            icon={Calendar}
+            label="Agenda"
+            active={pathname.startsWith('/appointments')}
+          />
+          <MobileNavItem
+            href="/settings"
+            icon={Settings}
+            label="Config"
+            active={pathname.startsWith('/settings')}
+          />
         </div>
       </nav>
     </div>
@@ -217,11 +230,13 @@ function NavItem({
   collapsed?: boolean;
   active?: boolean;
 }) {
-  const baseStyles = 'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200';
-  
+  const baseStyles =
+    'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200';
+
   let styles = baseStyles;
   if (highlight) {
-    styles += ' bg-gradient-to-r from-teal-500 to-cyan-600 text-white shadow-lg shadow-teal-500/25 hover:shadow-xl hover:shadow-teal-500/30';
+    styles +=
+      ' bg-gradient-to-r from-teal-500 to-cyan-600 text-white shadow-lg shadow-teal-500/25 hover:shadow-xl hover:shadow-teal-500/30';
   } else if (active) {
     styles += ' bg-teal-50 text-teal-700';
   } else {
@@ -258,7 +273,10 @@ function MobileNavItem({
   else if (active) textColor = 'text-teal-600';
 
   return (
-    <Link href={href} className={`flex flex-col items-center gap-1 px-3 py-1 transition-colors ${textColor}`}>
+    <Link
+      href={href}
+      className={`flex flex-col items-center gap-1 px-3 py-1 transition-colors ${textColor}`}
+    >
       <Icon className="h-5 w-5" />
       <span className="text-xs font-medium">{label}</span>
     </Link>

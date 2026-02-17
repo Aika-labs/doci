@@ -90,29 +90,32 @@ export function FileUpload({
     return 'OTHER';
   };
 
-  const handleFiles = useCallback((fileList: FileList | File[]) => {
-    const newFiles: FileToUpload[] = Array.from(fileList).map((file) => ({
-      file,
-      type: detectFileType(file),
-      description: '',
-      status: 'pending' as const,
-    }));
+  const handleFiles = useCallback(
+    (fileList: FileList | File[]) => {
+      const newFiles: FileToUpload[] = Array.from(fileList).map((file) => ({
+        file,
+        type: detectFileType(file),
+        description: '',
+        status: 'pending' as const,
+      }));
 
-    // Validate file sizes
-    const validFiles = newFiles.map((f) => {
-      const sizeMb = f.file.size / (1024 * 1024);
-      if (sizeMb > maxSizeMb) {
-        return {
-          ...f,
-          status: 'error' as const,
-          error: `El archivo excede el límite de ${maxSizeMb}MB`,
-        };
-      }
-      return f;
-    });
+      // Validate file sizes
+      const validFiles = newFiles.map((f) => {
+        const sizeMb = f.file.size / (1024 * 1024);
+        if (sizeMb > maxSizeMb) {
+          return {
+            ...f,
+            status: 'error' as const,
+            error: `El archivo excede el límite de ${maxSizeMb}MB`,
+          };
+        }
+        return f;
+      });
 
-    setFiles((prev) => [...prev, ...validFiles]);
-  }, [maxSizeMb]);
+      setFiles((prev) => [...prev, ...validFiles]);
+    },
+    [maxSizeMb]
+  );
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -124,35 +127,37 @@ export function FileUpload({
     setIsDragging(false);
   }, []);
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-    
-    if (e.dataTransfer.files.length > 0) {
-      handleFiles(e.dataTransfer.files);
-    }
-  }, [handleFiles]);
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setIsDragging(false);
 
-  const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      handleFiles(e.target.files);
-    }
-  }, [handleFiles]);
+      if (e.dataTransfer.files.length > 0) {
+        handleFiles(e.dataTransfer.files);
+      }
+    },
+    [handleFiles]
+  );
+
+  const handleFileSelect = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files && e.target.files.length > 0) {
+        handleFiles(e.target.files);
+      }
+    },
+    [handleFiles]
+  );
 
   const removeFile = (index: number) => {
     setFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
   const updateFileType = (index: number, type: FileType) => {
-    setFiles((prev) =>
-      prev.map((f, i) => (i === index ? { ...f, type } : f))
-    );
+    setFiles((prev) => prev.map((f, i) => (i === index ? { ...f, type } : f)));
   };
 
   const updateFileDescription = (index: number, description: string) => {
-    setFiles((prev) =>
-      prev.map((f, i) => (i === index ? { ...f, description } : f))
-    );
+    setFiles((prev) => prev.map((f, i) => (i === index ? { ...f, description } : f)));
   };
 
   const uploadFile = async (fileToUpload: FileToUpload, index: number) => {
@@ -160,9 +165,7 @@ export function FileUpload({
       const token = await getToken();
       if (!token) throw new Error('No autenticado');
 
-      setFiles((prev) =>
-        prev.map((f, i) => (i === index ? { ...f, status: 'uploading' } : f))
-      );
+      setFiles((prev) => prev.map((f, i) => (i === index ? { ...f, status: 'uploading' } : f)));
 
       const formData = new FormData();
       formData.append('file', fileToUpload.file);
@@ -188,9 +191,7 @@ export function FileUpload({
       const uploadedFile = await response.json();
 
       setFiles((prev) =>
-        prev.map((f, i) =>
-          i === index ? { ...f, status: 'success', uploadedFile } : f
-        )
+        prev.map((f, i) => (i === index ? { ...f, status: 'success', uploadedFile } : f))
       );
 
       success('Archivo subido', `${fileToUpload.file.name} se subió correctamente`);
@@ -198,11 +199,7 @@ export function FileUpload({
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
       setFiles((prev) =>
-        prev.map((f, i) =>
-          i === index
-            ? { ...f, status: 'error', error: errorMessage }
-            : f
-        )
+        prev.map((f, i) => (i === index ? { ...f, status: 'error', error: errorMessage } : f))
       );
       showError('Error al subir', errorMessage);
     }
@@ -210,13 +207,13 @@ export function FileUpload({
 
   const uploadAllFiles = async () => {
     setIsUploading(true);
-    
+
     for (let i = 0; i < files.length; i++) {
       if (files[i].status === 'pending') {
         await uploadFile(files[i], i);
       }
     }
-    
+
     setIsUploading(false);
   };
 
@@ -237,9 +234,9 @@ export function FileUpload({
   const successCount = files.filter((f) => f.status === 'success').length;
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b">
+      <div className="flex items-center justify-between border-b p-4">
         <h3 className="text-lg font-semibold text-gray-900">Subir archivos</h3>
         {onClose && (
           <button onClick={onClose} className="p-1 text-gray-400 hover:text-gray-600">
@@ -254,7 +251,7 @@ export function FileUpload({
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onClick={() => fileInputRef.current?.click()}
-        className={`m-4 p-8 border-2 border-dashed rounded-lg cursor-pointer transition-colors ${
+        className={`m-4 cursor-pointer rounded-lg border-2 border-dashed p-8 transition-colors ${
           isDragging
             ? 'border-blue-500 bg-blue-50'
             : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
@@ -269,11 +266,15 @@ export function FileUpload({
           className="hidden"
         />
         <div className="text-center">
-          <Upload className={`h-10 w-10 mx-auto mb-3 ${isDragging ? 'text-blue-500' : 'text-gray-400'}`} />
-          <p className="text-gray-700 font-medium">
-            {isDragging ? 'Suelta los archivos aquí' : 'Arrastra archivos aquí o haz clic para seleccionar'}
+          <Upload
+            className={`mx-auto mb-3 h-10 w-10 ${isDragging ? 'text-blue-500' : 'text-gray-400'}`}
+          />
+          <p className="font-medium text-gray-700">
+            {isDragging
+              ? 'Suelta los archivos aquí'
+              : 'Arrastra archivos aquí o haz clic para seleccionar'}
           </p>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="mt-1 text-sm text-gray-500">
             Máximo {maxSizeMb}MB por archivo • PDF, imágenes, documentos
           </p>
         </div>
@@ -286,21 +287,21 @@ export function FileUpload({
             {files.map((fileItem, index) => (
               <div
                 key={index}
-                className={`p-3 rounded-lg border ${
+                className={`rounded-lg border p-3 ${
                   fileItem.status === 'error'
                     ? 'border-red-200 bg-red-50'
                     : fileItem.status === 'success'
-                    ? 'border-green-200 bg-green-50'
-                    : 'border-gray-200 bg-gray-50'
+                      ? 'border-green-200 bg-green-50'
+                      : 'border-gray-200 bg-gray-50'
                 }`}
               >
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center border">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg border bg-white">
                     {getFileIcon(fileItem.file)}
                   </div>
-                  <div className="flex-1 min-w-0">
+                  <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <p className="font-medium text-gray-900 truncate">{fileItem.file.name}</p>
+                      <p className="truncate font-medium text-gray-900">{fileItem.file.name}</p>
                       {fileItem.status === 'uploading' && (
                         <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
                       )}
@@ -313,7 +314,7 @@ export function FileUpload({
                     </div>
                     <p className="text-sm text-gray-500">{formatFileSize(fileItem.file.size)}</p>
                     {fileItem.error && (
-                      <p className="text-sm text-red-600 mt-1">{fileItem.error}</p>
+                      <p className="mt-1 text-sm text-red-600">{fileItem.error}</p>
                     )}
                   </div>
                   {fileItem.status === 'pending' && (
@@ -329,11 +330,11 @@ export function FileUpload({
                 {fileItem.status === 'pending' && (
                   <div className="mt-3 grid grid-cols-2 gap-2">
                     <div>
-                      <label className="block text-xs text-gray-500 mb-1">Tipo</label>
+                      <label className="mb-1 block text-xs text-gray-500">Tipo</label>
                       <select
                         value={fileItem.type}
                         onChange={(e) => updateFileType(index, e.target.value as FileType)}
-                        className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-blue-500"
+                        className="w-full rounded border border-gray-300 px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500"
                       >
                         {Object.entries(fileTypeLabels).map(([value, label]) => (
                           <option key={value} value={value}>
@@ -343,13 +344,13 @@ export function FileUpload({
                       </select>
                     </div>
                     <div>
-                      <label className="block text-xs text-gray-500 mb-1">Descripción</label>
+                      <label className="mb-1 block text-xs text-gray-500">Descripción</label>
                       <input
                         type="text"
                         value={fileItem.description}
                         onChange={(e) => updateFileDescription(index, e.target.value)}
                         placeholder="Opcional"
-                        className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-blue-500"
+                        className="w-full rounded border border-gray-300 px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500"
                       />
                     </div>
                   </div>
@@ -359,7 +360,7 @@ export function FileUpload({
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-between mt-4 pt-4 border-t">
+          <div className="mt-4 flex items-center justify-between border-t pt-4">
             <p className="text-sm text-gray-500">
               {successCount > 0 && `${successCount} subido${successCount > 1 ? 's' : ''}`}
               {successCount > 0 && pendingCount > 0 && ' • '}
@@ -369,7 +370,7 @@ export function FileUpload({
               {onClose && (
                 <button
                   onClick={onClose}
-                  className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50"
+                  className="rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50"
                 >
                   Cerrar
                 </button>
@@ -378,7 +379,7 @@ export function FileUpload({
                 <button
                   onClick={uploadAllFiles}
                   disabled={isUploading}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                  className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
                 >
                   {isUploading ? (
                     <>

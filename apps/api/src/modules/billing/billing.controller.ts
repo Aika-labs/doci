@@ -1,14 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Put,
-  Delete,
-  Body,
-  Param,
-  Query,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import {
   BillingService,
@@ -35,7 +25,7 @@ export class BillingController {
   async listServices(
     @TenantId() tenantId: string,
     @Query('category') category?: string,
-    @Query('includeInactive') includeInactive?: boolean,
+    @Query('includeInactive') includeInactive?: boolean
   ) {
     return this.billingService.findAllServices(tenantId, { category, includeInactive });
   }
@@ -57,7 +47,7 @@ export class BillingController {
   async updateService(
     @TenantId() tenantId: string,
     @Param('id') id: string,
-    @Body() data: Partial<CreateServiceDto>,
+    @Body() data: Partial<CreateServiceDto>
   ) {
     return this.billingService.updateService(tenantId, id, data);
   }
@@ -81,7 +71,7 @@ export class BillingController {
     @Query('status') status?: string,
     @Query('patientId') patientId?: string,
     @Query('startDate') startDate?: string,
-    @Query('endDate') endDate?: string,
+    @Query('endDate') endDate?: string
   ) {
     return this.billingService.findAllInvoices(tenantId, {
       page: page || 1,
@@ -110,7 +100,7 @@ export class BillingController {
   async createInvoice(
     @TenantId() tenantId: string,
     @CurrentUser('id') userId: string,
-    @Body() data: CreateInvoiceDto,
+    @Body() data: CreateInvoiceDto
   ) {
     return this.billingService.createInvoice(tenantId, userId, data);
   }
@@ -137,7 +127,7 @@ export class BillingController {
     @TenantId() tenantId: string,
     @Param('id') id: string,
     @CurrentUser('id') userId: string,
-    @Body() data: RecordPaymentDto,
+    @Body() data: RecordPaymentDto
   ) {
     return this.billingService.recordPayment(tenantId, id, userId, data);
   }
@@ -151,7 +141,7 @@ export class BillingController {
   async getFinancialSummary(
     @TenantId() tenantId: string,
     @Query('startDate') startDate?: string,
-    @Query('endDate') endDate?: string,
+    @Query('endDate') endDate?: string
   ) {
     return this.billingService.getFinancialSummary(tenantId, {
       startDate: startDate ? new Date(startDate) : undefined,

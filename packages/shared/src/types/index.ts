@@ -7,8 +7,19 @@ export type Plan = 'BASIC' | 'PROFESSIONAL' | 'ENTERPRISE';
 export type UserRole = 'ADMIN' | 'DOCTOR' | 'NURSE' | 'RECEPTIONIST';
 export type Gender = 'MALE' | 'FEMALE' | 'OTHER' | 'PREFER_NOT_TO_SAY';
 export type ConsultationStatus = 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
-export type AppointmentType = 'CONSULTATION' | 'FOLLOW_UP' | 'PROCEDURE' | 'TELEMEDICINE' | 'EMERGENCY';
-export type AppointmentStatus = 'SCHEDULED' | 'CONFIRMED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED' | 'NO_SHOW';
+export type AppointmentType =
+  | 'CONSULTATION'
+  | 'FOLLOW_UP'
+  | 'PROCEDURE'
+  | 'TELEMEDICINE'
+  | 'EMERGENCY';
+export type AppointmentStatus =
+  | 'SCHEDULED'
+  | 'CONFIRMED'
+  | 'IN_PROGRESS'
+  | 'COMPLETED'
+  | 'CANCELLED'
+  | 'NO_SHOW';
 export type FileType = 'IMAGE' | 'DOCUMENT' | 'LAB_RESULT' | 'IMAGING' | 'PRESCRIPTION' | 'OTHER';
 
 // ============================================
@@ -71,7 +82,7 @@ export interface TenantSettings {
 // Tipos para plantillas clínicas dinámicas
 // ============================================
 
-export type TemplateFieldType = 
+export type TemplateFieldType =
   | 'text'
   | 'textarea'
   | 'number'
@@ -105,10 +116,10 @@ export type TemplateSchema = TemplateField[];
 // ============================================
 
 export interface SOAPNotes {
-  subjective?: string;  // Lo que el paciente reporta
-  objective?: string;   // Hallazgos del examen
-  assessment?: string;  // Diagnóstico/evaluación
-  plan?: string;        // Plan de tratamiento
+  subjective?: string; // Lo que el paciente reporta
+  objective?: string; // Hallazgos del examen
+  assessment?: string; // Diagnóstico/evaluación
+  plan?: string; // Plan de tratamiento
 }
 
 // ============================================
@@ -116,16 +127,16 @@ export interface SOAPNotes {
 // ============================================
 
 export interface VitalSigns {
-  weight?: number;           // kg
-  height?: number;           // cm
+  weight?: number; // kg
+  height?: number; // cm
   bloodPressure?: {
     systolic: number;
     diastolic: number;
   };
-  heartRate?: number;        // bpm
-  temperature?: number;      // °C
+  heartRate?: number; // bpm
+  temperature?: number; // °C
   oxygenSaturation?: number; // %
-  respiratoryRate?: number;  // rpm
+  respiratoryRate?: number; // rpm
 }
 
 // ============================================
@@ -133,7 +144,7 @@ export interface VitalSigns {
 // ============================================
 
 export interface Diagnosis {
-  code: string;        // Código CIE-10
+  code: string; // Código CIE-10
   description: string;
   type: 'primary' | 'secondary';
 }

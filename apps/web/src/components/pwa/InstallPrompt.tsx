@@ -84,7 +84,7 @@ export function InstallPrompt() {
   }
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:max-w-sm z-50 bg-white rounded-xl shadow-xl border border-gray-200 p-4">
+    <div className="fixed right-4 bottom-4 left-4 z-50 rounded-xl border border-gray-200 bg-white p-4 shadow-xl md:right-4 md:left-auto md:max-w-sm">
       <button
         onClick={handleDismiss}
         className="absolute top-2 right-2 p-1 text-gray-400 hover:text-gray-600"
@@ -93,25 +93,25 @@ export function InstallPrompt() {
       </button>
 
       <div className="flex items-start gap-4">
-        <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+        <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-blue-100">
           <Smartphone className="h-6 w-6 text-blue-600" />
         </div>
         <div className="flex-1">
-          <h3 className="font-semibold text-gray-900 mb-1">Instalar Doci</h3>
-          <p className="text-sm text-gray-600 mb-3">
+          <h3 className="mb-1 font-semibold text-gray-900">Instalar Doci</h3>
+          <p className="mb-3 text-sm text-gray-600">
             Instala la app para acceso rápido y funciones offline
           </p>
           <div className="flex gap-2">
             <button
               onClick={handleInstall}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+              className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
             >
               <Download className="h-4 w-4" />
               Instalar
             </button>
             <button
               onClick={handleDismiss}
-              className="px-4 py-2 text-gray-600 text-sm font-medium hover:bg-gray-100 rounded-lg transition-colors"
+              className="rounded-lg px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100"
             >
               Ahora no
             </button>

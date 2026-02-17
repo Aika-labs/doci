@@ -54,7 +54,14 @@ export function VoiceRecorder({
     onRecordingStopRef.current = onRecordingStop;
     patientIdRef.current = patientId;
     autoProcessRef.current = autoProcess;
-  }, [onTranscription, onRecordingComplete, onRecordingStart, onRecordingStop, patientId, autoProcess]);
+  }, [
+    onTranscription,
+    onRecordingComplete,
+    onRecordingStart,
+    onRecordingStop,
+    patientId,
+    autoProcess,
+  ]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -138,10 +145,10 @@ export function VoiceRecorder({
 
       mediaRecorder.onstop = () => {
         const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
-        
+
         // Call onRecordingComplete callback with the blob
         onRecordingCompleteRef.current?.(audioBlob);
-        
+
         // Only auto-process if autoProcess is true
         if (autoProcessRef.current) {
           processAudio(audioBlob);
@@ -239,11 +246,11 @@ export function VoiceRecorder({
         disabled={disabled || state === 'processing'}
         className={cn(
           'relative flex h-16 w-16 items-center justify-center rounded-full transition-all',
-          state === 'idle' && 'bg-blue-600 hover:bg-blue-700 text-white',
-          state === 'recording' && 'bg-red-500 hover:bg-red-600 text-white',
-          state === 'processing' && 'bg-slate-300 text-slate-500 cursor-wait',
+          state === 'idle' && 'bg-blue-600 text-white hover:bg-blue-700',
+          state === 'recording' && 'bg-red-500 text-white hover:bg-red-600',
+          state === 'processing' && 'cursor-wait bg-slate-300 text-slate-500',
           state === 'error' && 'bg-red-100 text-red-600 hover:bg-red-200',
-          disabled && 'opacity-50 cursor-not-allowed'
+          disabled && 'cursor-not-allowed opacity-50'
         )}
         aria-label={state === 'recording' ? 'Detener grabación' : 'Iniciar grabación'}
       >
