@@ -69,10 +69,18 @@ export class AuditService {
       action?: AuditAction;
       startDate?: Date;
       endDate?: Date;
-    },
+    }
   ) {
-    const { page = 1, limit = 50, entity, entityId, userId, action, startDate, endDate } =
-      options || {};
+    const {
+      page = 1,
+      limit = 50,
+      entity,
+      entityId,
+      userId,
+      action,
+      startDate,
+      endDate,
+    } = options || {};
     const skip = (page - 1) * limit;
 
     const where = {

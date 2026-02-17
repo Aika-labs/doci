@@ -1,13 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Patch,
-  Delete,
-  Body,
-  Param,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { TemplatesService, CreateTemplateDto, UpdateTemplateDto } from './templates.service';
 import { CurrentTenant, TenantContext } from '../../common/decorators';
@@ -23,7 +14,7 @@ export class TemplatesController {
   async findAll(
     @CurrentTenant() ctx: TenantContext,
     @Query('specialty') specialty?: string,
-    @Query('isActive') isActive?: string,
+    @Query('isActive') isActive?: string
   ) {
     return this.templatesService.findAll(ctx, {
       specialty,
@@ -33,10 +24,7 @@ export class TemplatesController {
 
   @Get('default')
   @ApiOperation({ summary: 'Get default template for specialty' })
-  async getDefault(
-    @CurrentTenant() ctx: TenantContext,
-    @Query('specialty') specialty?: string,
-  ) {
+  async getDefault(@CurrentTenant() ctx: TenantContext, @Query('specialty') specialty?: string) {
     return this.templatesService.getDefault(ctx, specialty);
   }
 
@@ -44,7 +32,7 @@ export class TemplatesController {
   @ApiOperation({ summary: 'Get templates by specialty' })
   async findBySpecialty(
     @CurrentTenant() ctx: TenantContext,
-    @Param('specialty') specialty: string,
+    @Param('specialty') specialty: string
   ) {
     return this.templatesService.findBySpecialty(ctx, specialty);
   }
@@ -72,7 +60,7 @@ export class TemplatesController {
   async duplicate(
     @CurrentTenant() ctx: TenantContext,
     @Param('id') id: string,
-    @Body('name') name: string,
+    @Body('name') name: string
   ) {
     return this.templatesService.duplicate(ctx, id, name);
   }
@@ -82,7 +70,7 @@ export class TemplatesController {
   async update(
     @CurrentTenant() ctx: TenantContext,
     @Param('id') id: string,
-    @Body() data: UpdateTemplateDto,
+    @Body() data: UpdateTemplateDto
   ) {
     return this.templatesService.update(ctx, id, data);
   }

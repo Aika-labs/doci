@@ -11,13 +11,7 @@ import {
   HttpStatus,
   NotFoundException,
 } from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiBearerAuth,
-  ApiQuery,
-  ApiResponse,
-} from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { PatientsService } from './patients.service';
 import { CurrentTenant, TenantContext } from '../../common/decorators';
 import { CreatePatientDto, UpdatePatientDto } from './dto';
@@ -41,7 +35,7 @@ export class PatientsController {
     @Query('limit') limit?: number,
     @Query('search') search?: string,
     @Query('sortBy') sortBy?: string,
-    @Query('sortOrder') sortOrder?: 'asc' | 'desc',
+    @Query('sortOrder') sortOrder?: 'asc' | 'desc'
   ) {
     return this.patientsService.findAll(ctx, {
       page,
@@ -77,7 +71,7 @@ export class PatientsController {
     @CurrentTenant() ctx: TenantContext,
     @Param('id') id: string,
     @Query('page') page?: number,
-    @Query('limit') limit?: number,
+    @Query('limit') limit?: number
   ) {
     return this.patientsService.getHistory(ctx, id, { page, limit });
   }
@@ -91,10 +85,7 @@ export class PatientsController {
   @Post()
   @ApiOperation({ summary: 'Create a new patient' })
   @ApiResponse({ status: 201, description: 'Patient created successfully' })
-  async create(
-    @CurrentTenant() ctx: TenantContext,
-    @Body() createPatientDto: CreatePatientDto,
-  ) {
+  async create(@CurrentTenant() ctx: TenantContext, @Body() createPatientDto: CreatePatientDto) {
     return this.patientsService.create(ctx, createPatientDto);
   }
 
@@ -105,7 +96,7 @@ export class PatientsController {
   async update(
     @CurrentTenant() ctx: TenantContext,
     @Param('id') id: string,
-    @Body() updatePatientDto: UpdatePatientDto,
+    @Body() updatePatientDto: UpdatePatientDto
   ) {
     const patient = await this.patientsService.update(ctx, id, updatePatientDto);
     if (!patient) {

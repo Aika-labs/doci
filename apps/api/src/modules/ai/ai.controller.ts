@@ -21,10 +21,7 @@ export class AIController {
   @ApiOperation({ summary: 'Transcribe audio to text using Whisper' })
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('audio'))
-  async transcribe(
-    @UploadedFile() file: Express.Multer.File,
-    @Body('language') language?: string,
-  ) {
+  async transcribe(@UploadedFile() file: Express.Multer.File, @Body('language') language?: string) {
     if (!file) {
       throw new BadRequestException('Audio file is required');
     }
@@ -41,12 +38,13 @@ export class AIController {
   @ApiOperation({ summary: 'Structure transcription into SOAP notes' })
   async structureNotes(
     @CurrentTenant() ctx: TenantContext,
-    @Body() body: {
+    @Body()
+    body: {
       transcription: string;
       patientId: string;
       templateId?: string;
       includeHistory?: boolean;
-    },
+    }
   ) {
     if (!body.transcription || !body.patientId) {
       throw new BadRequestException('Transcription and patientId are required');
@@ -65,10 +63,7 @@ export class AIController {
 
   @Post('summary')
   @ApiOperation({ summary: 'Generate patient history summary' })
-  async generateSummary(
-    @CurrentTenant() ctx: TenantContext,
-    @Body() body: { patientId: string },
-  ) {
+  async generateSummary(@CurrentTenant() ctx: TenantContext, @Body() body: { patientId: string }) {
     if (!body.patientId) {
       throw new BadRequestException('PatientId is required');
     }
@@ -88,7 +83,7 @@ export class AIController {
   async processConsultation(
     @CurrentTenant() ctx: TenantContext,
     @UploadedFile() file: Express.Multer.File,
-    @Body('patientId') patientId: string,
+    @Body('patientId') patientId: string
   ) {
     if (!file) {
       throw new BadRequestException('Audio file is required');
@@ -106,7 +101,7 @@ export class AIController {
       ctx,
       transcription.text,
       patientId,
-      { includeHistory: true },
+      { includeHistory: true }
     );
 
     return {

@@ -23,6 +23,7 @@ pnpm dev
 ```
 
 **URLs de desarrollo:**
+
 - Frontend: http://localhost:3000
 - API: http://localhost:3001
 - API Docs (Swagger): http://localhost:3001/api
@@ -30,6 +31,7 @@ pnpm dev
 ## Características Principales
 
 ### Core EHR
+
 - **Gestión de Pacientes**: CRUD completo con historial médico, alergias, medicamentos
 - **Consultas con IA**: Transcripción de voz en tiempo real, notas SOAP automáticas
 - **Citas y Agenda**: Calendario con recordatorios automáticos
@@ -37,6 +39,7 @@ pnpm dev
 - **Plantillas Clínicas**: Personalizables por especialidad médica
 
 ### Módulos Avanzados
+
 - **Vademécum RAG**: Base de datos de medicamentos con búsqueda semántica y verificación de interacciones
 - **Facturación**: Catálogo de servicios, facturas con soporte CFDI (México), reportes financieros
 - **Calendar Sync**: Integración con Google Calendar y Microsoft Outlook
@@ -44,6 +47,7 @@ pnpm dev
 - **Backup/DR**: Respaldos automáticos diarios con retención de 30 días
 
 ### UX & Business
+
 - **Onboarding Wizard**: Guía de configuración inicial en 6 pasos
 - **Búsqueda Global**: Búsqueda unificada de pacientes, consultas, citas, servicios
 - **Plantillas por Especialidad**: 6 especialidades médicas preconfiguradas
@@ -51,13 +55,13 @@ pnpm dev
 
 ## Tech Stack
 
-| Capa | Tecnología |
-|------|------------|
-| **Frontend** | Next.js 15, React 19, TailwindCSS, Clerk Auth |
-| **Backend** | NestJS 11, Prisma ORM, PostgreSQL (Supabase) |
-| **IA** | OpenAI GPT-4, Whisper, text-embedding-ada-002 |
-| **Infraestructura** | Pulumi, Hetzner Cloud, Docker |
-| **Monorepo** | Turborepo, pnpm workspaces |
+| Capa                | Tecnología                                    |
+| ------------------- | --------------------------------------------- |
+| **Frontend**        | Next.js 15, React 19, TailwindCSS, Clerk Auth |
+| **Backend**         | NestJS 11, Prisma ORM, PostgreSQL (Supabase)  |
+| **IA**              | OpenAI GPT-4, Whisper, text-embedding-ada-002 |
+| **Infraestructura** | Pulumi, Hetzner Cloud, Docker                 |
+| **Monorepo**        | Turborepo, pnpm workspaces                    |
 
 ## Estructura del Proyecto
 
@@ -94,19 +98,19 @@ Ver [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) para la estructura completa.
 
 Copiar `.env.example` a `.env` y configurar:
 
-| Variable | Descripción | Requerido |
-|----------|-------------|-----------|
-| `DATABASE_URL` | PostgreSQL connection (pooler) | ✅ |
-| `DIRECT_URL` | PostgreSQL direct (migrations) | ✅ |
-| `SUPABASE_URL` | URL del proyecto Supabase | ✅ |
-| `SUPABASE_SERVICE_KEY` | Service role key | ✅ |
-| `CLERK_SECRET_KEY` | Clerk authentication | ✅ |
-| `OPENAI_API_KEY` | OpenAI API | ✅ |
-| `STRIPE_SECRET_KEY` | Stripe payments | Opcional |
-| `GOOGLE_CLIENT_ID` | Google Calendar OAuth | Opcional |
-| `MICROSOFT_CLIENT_ID` | Outlook OAuth | Opcional |
-| `TWILIO_ACCOUNT_SID` | WhatsApp notifications | Opcional |
-| `RESEND_API_KEY` | Email notifications | Opcional |
+| Variable               | Descripción                    | Requerido |
+| ---------------------- | ------------------------------ | --------- |
+| `DATABASE_URL`         | PostgreSQL connection (pooler) | ✅        |
+| `DIRECT_URL`           | PostgreSQL direct (migrations) | ✅        |
+| `SUPABASE_URL`         | URL del proyecto Supabase      | ✅        |
+| `SUPABASE_SERVICE_KEY` | Service role key               | ✅        |
+| `CLERK_SECRET_KEY`     | Clerk authentication           | ✅        |
+| `OPENAI_API_KEY`       | OpenAI API                     | ✅        |
+| `STRIPE_SECRET_KEY`    | Stripe payments                | Opcional  |
+| `GOOGLE_CLIENT_ID`     | Google Calendar OAuth          | Opcional  |
+| `MICROSOFT_CLIENT_ID`  | Outlook OAuth                  | Opcional  |
+| `TWILIO_ACCOUNT_SID`   | WhatsApp notifications         | Opcional  |
+| `RESEND_API_KEY`       | Email notifications            | Opcional  |
 
 ## Scripts Disponibles
 
@@ -129,20 +133,20 @@ pnpm --filter @doci/web dev      # Solo Web
 
 ## API Endpoints
 
-| Módulo | Path | Descripción |
-|--------|------|-------------|
-| Patients | `/patients` | CRUD pacientes |
-| Consultations | `/consultations` | Consultas médicas |
-| Appointments | `/appointments` | Gestión de citas |
-| Prescriptions | `/prescriptions` | Recetas digitales |
-| AI | `/ai` | Transcripción y análisis |
-| Vademecum | `/vademecum` | Base de medicamentos |
-| Billing | `/billing` | Facturación |
-| Calendar | `/calendar` | Sync calendarios |
-| Search | `/search` | Búsqueda global |
-| Subscriptions | `/subscriptions` | Planes y pagos |
-| Audit | `/audit` | Logs de actividad |
-| Onboarding | `/onboarding` | Wizard inicial |
+| Módulo        | Path             | Descripción              |
+| ------------- | ---------------- | ------------------------ |
+| Patients      | `/patients`      | CRUD pacientes           |
+| Consultations | `/consultations` | Consultas médicas        |
+| Appointments  | `/appointments`  | Gestión de citas         |
+| Prescriptions | `/prescriptions` | Recetas digitales        |
+| AI            | `/ai`            | Transcripción y análisis |
+| Vademecum     | `/vademecum`     | Base de medicamentos     |
+| Billing       | `/billing`       | Facturación              |
+| Calendar      | `/calendar`      | Sync calendarios         |
+| Search        | `/search`        | Búsqueda global          |
+| Subscriptions | `/subscriptions` | Planes y pagos           |
+| Audit         | `/audit`         | Logs de actividad        |
+| Onboarding    | `/onboarding`    | Wizard inicial           |
 
 ## Despliegue
 
@@ -168,26 +172,29 @@ Ver [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) para guía completa.
 
 ## Planes de Suscripción
 
-| Plan | Precio/mes | Usuarios | Pacientes | Storage |
-|------|------------|----------|-----------|---------|
-| **Básico** | $499 MXN | 2 | 500 | 5 GB |
-| **Profesional** | $999 MXN | 5 | 2,000 | 20 GB |
-| **Empresarial** | $2,499 MXN | ∞ | ∞ | 100 GB |
+| Plan            | Precio/mes | Usuarios | Pacientes | Storage |
+| --------------- | ---------- | -------- | --------- | ------- |
+| **Básico**      | $499 MXN   | 2        | 500       | 5 GB    |
+| **Profesional** | $999 MXN   | 5        | 2,000     | 20 GB   |
+| **Empresarial** | $2,499 MXN | ∞        | ∞         | 100 GB  |
 
 ## Servicios Externos
 
 ### Obligatorios
+
 - **Supabase**: PostgreSQL + Storage (Free tier disponible)
 - **Clerk**: Autenticación (Free tier disponible)
 - **OpenAI**: IA (~$50-200/mes según uso)
 
 ### Opcionales
+
 - **Stripe**: Pagos (2.9% + $0.30/tx)
 - **Twilio**: WhatsApp (~$0.005/msg)
 - **Resend**: Email (Free tier disponible)
 - **Google/Microsoft**: Calendar sync (Gratis)
 
 ### Monitoreo Recomendado
+
 - **UptimeRobot**: Monitoreo uptime (Gratis)
 - **Sentry**: Error tracking (Free tier)
 

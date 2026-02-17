@@ -1,13 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Put,
-  Delete,
-  Body,
-  Param,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { AppointmentsService } from './appointments.service';
 import { CurrentTenant, TenantContext } from '../../common/decorators';
@@ -26,13 +17,13 @@ export class AppointmentsController {
     @Query('start') start?: string,
     @Query('end') end?: string,
     @Query('patientId') patientId?: string,
-    @Query('status') status?: AppointmentStatus,
+    @Query('status') status?: AppointmentStatus
   ) {
     return this.appointmentsService.findAll(ctx, { start, end, patientId, status });
   }
 
   @Get('today')
-  @ApiOperation({ summary: 'Get today\'s appointments' })
+  @ApiOperation({ summary: "Get today's appointments" })
   async getTodayAppointments(@CurrentTenant() ctx: TenantContext) {
     return this.appointmentsService.getTodayAppointments(ctx);
   }
@@ -55,7 +46,7 @@ export class AppointmentsController {
       type: AppointmentType;
       reason?: string;
       notes?: string;
-    },
+    }
   ) {
     return this.appointmentsService.create(ctx, data);
   }
@@ -73,7 +64,7 @@ export class AppointmentsController {
       status?: AppointmentStatus;
       reason?: string;
       notes?: string;
-    },
+    }
   ) {
     return this.appointmentsService.update(ctx, id, data);
   }
@@ -83,7 +74,7 @@ export class AppointmentsController {
   async updateStatus(
     @CurrentTenant() ctx: TenantContext,
     @Param('id') id: string,
-    @Body('status') status: AppointmentStatus,
+    @Body('status') status: AppointmentStatus
   ) {
     return this.appointmentsService.updateStatus(ctx, id, status);
   }

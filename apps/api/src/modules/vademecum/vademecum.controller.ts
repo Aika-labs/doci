@@ -75,10 +75,7 @@ export class VademecumController {
   @ApiOperation({ summary: 'Ingest vademecum data from PDF' })
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('file'))
-  async ingestPDF(
-    @UploadedFile() file: Express.Multer.File,
-    @Body('fuente') fuente?: string,
-  ) {
+  async ingestPDF(@UploadedFile() file: Express.Multer.File, @Body('fuente') fuente?: string) {
     if (!file) {
       throw new BadRequestException('PDF file is required');
     }

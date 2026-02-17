@@ -182,6 +182,7 @@ chown doci:doci /opt/doci
 ### 2. Configurar DNS
 
 Apuntar tu dominio al VPS:
+
 ```
 A     @       -> IP_DEL_VPS
 A     api     -> IP_DEL_VPS
@@ -243,18 +244,18 @@ services:
   traefik:
     image: traefik:v3.0
     command:
-      - "--api.dashboard=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
-      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.letsencrypt.acme.email=admin@tudominio.com"
-      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      - '--api.dashboard=true'
+      - '--providers.docker=true'
+      - '--providers.docker.exposedbydefault=false'
+      - '--entrypoints.web.address=:80'
+      - '--entrypoints.websecure.address=:443'
+      - '--certificatesresolvers.letsencrypt.acme.httpchallenge=true'
+      - '--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web'
+      - '--certificatesresolvers.letsencrypt.acme.email=admin@tudominio.com'
+      - '--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json'
     ports:
-      - "80:80"
-      - "443:443"
+      - '80:80'
+      - '443:443'
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - traefik-certificates:/letsencrypt
@@ -269,16 +270,16 @@ services:
     env_file:
       - ../.env.production
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.api.rule=Host(`api.doci.tudominio.com`)"
-      - "traefik.http.routers.api.entrypoints=websecure"
-      - "traefik.http.routers.api.tls.certresolver=letsencrypt"
-      - "traefik.http.services.api.loadbalancer.server.port=3001"
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.api.rule=Host(`api.doci.tudominio.com`)'
+      - 'traefik.http.routers.api.entrypoints=websecure'
+      - 'traefik.http.routers.api.tls.certresolver=letsencrypt'
+      - 'traefik.http.services.api.loadbalancer.server.port=3001'
     networks:
       - doci-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      test: ['CMD', 'curl', '-f', 'http://localhost:3001/health']
       interval: 30s
       timeout: 10s
       retries: 3
@@ -290,11 +291,11 @@ services:
     env_file:
       - ../.env.production
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.web.rule=Host(`doci.tudominio.com`)"
-      - "traefik.http.routers.web.entrypoints=websecure"
-      - "traefik.http.routers.web.tls.certresolver=letsencrypt"
-      - "traefik.http.services.web.loadbalancer.server.port=3000"
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.web.rule=Host(`doci.tudominio.com`)'
+      - 'traefik.http.routers.web.entrypoints=websecure'
+      - 'traefik.http.routers.web.tls.certresolver=letsencrypt'
+      - 'traefik.http.services.web.loadbalancer.server.port=3000'
     networks:
       - doci-network
     restart: unless-stopped

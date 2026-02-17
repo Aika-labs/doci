@@ -29,8 +29,18 @@ export default function NewPatientPage() {
       }
 
       // Transform form data to API format
-      const allergiesArray = data.allergies ? data.allergies.split(',').map(s => s.trim()).filter(Boolean) : [];
-      const medicationsArray = data.currentMedications ? data.currentMedications.split(',').map(s => s.trim()).filter(Boolean) : [];
+      const allergiesArray = data.allergies
+        ? data.allergies
+            .split(',')
+            .map((s) => s.trim())
+            .filter(Boolean)
+        : [];
+      const medicationsArray = data.currentMedications
+        ? data.currentMedications
+            .split(',')
+            .map((s) => s.trim())
+            .filter(Boolean)
+        : [];
 
       const patientData = {
         firstName: data.firstName,
@@ -80,7 +90,7 @@ export default function NewPatientPage() {
       <div className="mb-6">
         <Link
           href="/patients"
-          className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4"
+          className="mb-4 inline-flex items-center gap-2 text-gray-600 hover:text-gray-900"
         >
           <ArrowLeft className="h-4 w-4" />
           Volver a pacientes
@@ -90,7 +100,7 @@ export default function NewPatientPage() {
       </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+        <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
           {error}
         </div>
       )}

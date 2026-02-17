@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  NestInterceptor,
-  ExecutionContext,
-  CallHandler,
-} from '@nestjs/common';
+import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -55,7 +50,7 @@ export class AuditInterceptor implements NestInterceptor {
           // Don't fail the request if audit logging fails
           console.error('Audit log error:', error);
         }
-      }),
+      })
     );
   }
 }

@@ -112,64 +112,67 @@ export default function PatientDetailPage() {
     }
   }, [getToken, patientId]);
 
-  const fetchTabData = useCallback(async (tab: TabType) => {
-    if (tab === 'overview') return;
-    
-    try {
-      setTabLoading(true);
-      const token = await getToken();
-      if (!token) return;
+  const fetchTabData = useCallback(
+    async (tab: TabType) => {
+      if (tab === 'overview') return;
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      try {
+        setTabLoading(true);
+        const token = await getToken();
+        if (!token) return;
 
-      switch (tab) {
-        case 'consultations': {
-          const res = await fetch(`${apiUrl}/consultations?patientId=${patientId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          if (res.ok) {
-            const data = await res.json();
-            setConsultations(data.data || []);
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+
+        switch (tab) {
+          case 'consultations': {
+            const res = await fetch(`${apiUrl}/consultations?patientId=${patientId}`, {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            if (res.ok) {
+              const data = await res.json();
+              setConsultations(data.data || []);
+            }
+            break;
           }
-          break;
-        }
-        case 'prescriptions': {
-          const res = await fetch(`${apiUrl}/prescriptions?patientId=${patientId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          if (res.ok) {
-            const data = await res.json();
-            setPrescriptions(data || []);
+          case 'prescriptions': {
+            const res = await fetch(`${apiUrl}/prescriptions?patientId=${patientId}`, {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            if (res.ok) {
+              const data = await res.json();
+              setPrescriptions(data || []);
+            }
+            break;
           }
-          break;
-        }
-        case 'files': {
-          const res = await fetch(`${apiUrl}/storage/patient/${patientId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          if (res.ok) {
-            const data = await res.json();
-            setFiles(data || []);
+          case 'files': {
+            const res = await fetch(`${apiUrl}/storage/patient/${patientId}`, {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            if (res.ok) {
+              const data = await res.json();
+              setFiles(data || []);
+            }
+            break;
           }
-          break;
-        }
-        case 'appointments': {
-          const res = await fetch(`${apiUrl}/appointments?patientId=${patientId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          if (res.ok) {
-            const data = await res.json();
-            setAppointments(data.data || data || []);
+          case 'appointments': {
+            const res = await fetch(`${apiUrl}/appointments?patientId=${patientId}`, {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            if (res.ok) {
+              const data = await res.json();
+              setAppointments(data.data || data || []);
+            }
+            break;
           }
-          break;
         }
+      } catch (err) {
+        console.error('Error fetching tab data:', err);
+      } finally {
+        setTabLoading(false);
       }
-    } catch (err) {
-      console.error('Error fetching tab data:', err);
-    } finally {
-      setTabLoading(false);
-    }
-  }, [getToken, patientId]);
+    },
+    [getToken, patientId]
+  );
 
   useEffect(() => {
     fetchPatient();
@@ -190,8 +193,18 @@ export default function PatientDetailPage() {
         return;
       }
 
-      const allergiesArray = data.allergies ? data.allergies.split(',').map(s => s.trim()).filter(Boolean) : [];
-      const medicationsArray = data.currentMedications ? data.currentMedications.split(',').map(s => s.trim()).filter(Boolean) : [];
+      const allergiesArray = data.allergies
+        ? data.allergies
+            .split(',')
+            .map((s) => s.trim())
+            .filter(Boolean)
+        : [];
+      const medicationsArray = data.currentMedications
+        ? data.currentMedications
+            .split(',')
+            .map((s) => s.trim())
+            .filter(Boolean)
+        : [];
 
       const patientData = {
         firstName: data.firstName,
@@ -268,7 +281,7 @@ export default function PatientDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex min-h-[400px] items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
       </div>
     );
@@ -276,7 +289,7 @@ export default function PatientDetailPage() {
 
   if (!patient) {
     return (
-      <div className="text-center py-12">
+      <div className="py-12 text-center">
         <h2 className="text-xl font-semibold text-gray-900">Paciente no encontrado</h2>
         <Link href="/patients" className="mt-4 text-blue-600 hover:text-blue-700">
           Volver a pacientes
@@ -287,7 +300,12 @@ export default function PatientDetailPage() {
 
   const tabs = [
     { id: 'overview' as const, label: 'Resumen', icon: User },
-    { id: 'consultations' as const, label: 'Consultas', icon: FileText, count: consultations.length },
+    {
+      id: 'consultations' as const,
+      label: 'Consultas',
+      icon: FileText,
+      count: consultations.length,
+    },
     { id: 'prescriptions' as const, label: 'Recetas', icon: Pill, count: prescriptions.length },
     { id: 'files' as const, label: 'Archivos', icon: FolderOpen, count: files.length },
     { id: 'appointments' as const, label: 'Citas', icon: Calendar, count: appointments.length },
@@ -299,18 +317,19 @@ export default function PatientDetailPage() {
       <div className="mb-6">
         <Link
           href="/patients"
-          className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4"
+          className="mb-4 inline-flex items-center gap-2 text-gray-600 hover:text-gray-900"
         >
           <ArrowLeft className="h-4 w-4" />
           Volver a pacientes
         </Link>
 
         {!isEditing && (
-          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100">
                 <span className="text-2xl font-bold text-blue-600">
-                  {patient.firstName[0]}{patient.lastName[0]}
+                  {patient.firstName[0]}
+                  {patient.lastName[0]}
                 </span>
               </div>
               <div>
@@ -318,7 +337,12 @@ export default function PatientDetailPage() {
                   {patient.firstName} {patient.lastName}
                 </h1>
                 <p className="text-gray-600">
-                  {calculateAge(patient.dateOfBirth)} años • {patient.gender === 'MALE' ? 'Masculino' : patient.gender === 'FEMALE' ? 'Femenino' : 'Otro'}
+                  {calculateAge(patient.dateOfBirth)} años •{' '}
+                  {patient.gender === 'MALE'
+                    ? 'Masculino'
+                    : patient.gender === 'FEMALE'
+                      ? 'Femenino'
+                      : 'Otro'}
                   {patient.bloodType && ` • ${patient.bloodType}`}
                 </p>
               </div>
@@ -326,21 +350,21 @@ export default function PatientDetailPage() {
             <div className="flex flex-wrap items-center gap-2">
               <Link
                 href={`/consultations/new?patientId=${patient.id}`}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
               >
                 <FileText className="h-4 w-4" />
                 Nueva Consulta
               </Link>
               <button
                 onClick={() => setIsEditing(true)}
-                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                className="rounded-lg border border-gray-300 px-4 py-2 transition-colors hover:bg-gray-50"
               >
                 Editar
               </button>
               <button
                 onClick={() => setShowDeleteConfirm(true)}
                 disabled={isDeleting}
-                className="p-2 text-red-600 border border-red-300 rounded-lg hover:bg-red-50 transition-colors disabled:opacity-50"
+                className="rounded-lg border border-red-300 p-2 text-red-600 transition-colors hover:bg-red-50 disabled:opacity-50"
               >
                 <Trash2 className="h-4 w-4" />
               </button>
@@ -350,7 +374,7 @@ export default function PatientDetailPage() {
       </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+        <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
           {error}
         </div>
       )}
@@ -365,22 +389,22 @@ export default function PatientDetailPage() {
       ) : (
         <>
           {/* Tabs */}
-          <div className="border-b border-gray-200 mb-6">
+          <div className="mb-6 border-b border-gray-200">
             <nav className="flex gap-4 overflow-x-auto">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-4 py-3 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${
+                  className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors ${
                     activeTab === tab.id
                       ? 'border-blue-600 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
                   }`}
                 >
                   <tab.icon className="h-4 w-4" />
                   {tab.label}
                   {tab.count !== undefined && tab.count > 0 && (
-                    <span className="ml-1 px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full text-xs">
+                    <span className="ml-1 rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
                       {tab.count}
                     </span>
                   )}
@@ -402,11 +426,13 @@ export default function PatientDetailPage() {
               {activeTab === 'consultations' && (
                 <ConsultationsTab consultations={consultations} patientId={patientId} />
               )}
-              {activeTab === 'prescriptions' && (
-                <PrescriptionsTab prescriptions={prescriptions} />
-              )}
+              {activeTab === 'prescriptions' && <PrescriptionsTab prescriptions={prescriptions} />}
               {activeTab === 'files' && (
-                <FilesTab files={files} patientId={patientId} onUploadComplete={() => fetchTabData('files')} />
+                <FilesTab
+                  files={files}
+                  patientId={patientId}
+                  onUploadComplete={() => fetchTabData('files')}
+                />
               )}
               {activeTab === 'appointments' && (
                 <AppointmentsTab appointments={appointments} patientId={patientId} />
@@ -432,13 +458,19 @@ export default function PatientDetailPage() {
   );
 }
 
-function OverviewTab({ patient, calculateAge }: { patient: Patient; calculateAge: (dob: string) => number }) {
+function OverviewTab({
+  patient,
+  calculateAge,
+}: {
+  patient: Patient;
+  calculateAge: (dob: string) => number;
+}) {
   return (
     <div className="space-y-6">
       {/* Quick Info */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {patient.phone && (
-          <div className="bg-white rounded-lg border border-gray-200 p-4 flex items-center gap-3">
+          <div className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4">
             <Phone className="h-5 w-5 text-gray-400" />
             <div>
               <p className="text-sm text-gray-500">Teléfono</p>
@@ -447,7 +479,7 @@ function OverviewTab({ patient, calculateAge }: { patient: Patient; calculateAge
           </div>
         )}
         {patient.email && (
-          <div className="bg-white rounded-lg border border-gray-200 p-4 flex items-center gap-3">
+          <div className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4">
             <Mail className="h-5 w-5 text-gray-400" />
             <div>
               <p className="text-sm text-gray-500">Email</p>
@@ -456,12 +488,13 @@ function OverviewTab({ patient, calculateAge }: { patient: Patient; calculateAge
           </div>
         )}
         {patient.address && (
-          <div className="bg-white rounded-lg border border-gray-200 p-4 flex items-center gap-3">
+          <div className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4">
             <MapPin className="h-5 w-5 text-gray-400" />
             <div>
               <p className="text-sm text-gray-500">Dirección</p>
               <p className="font-medium text-gray-900">
-                {patient.address}{patient.city && `, ${patient.city}`}
+                {patient.address}
+                {patient.city && `, ${patient.city}`}
               </p>
             </div>
           </div>
@@ -470,14 +503,14 @@ function OverviewTab({ patient, calculateAge }: { patient: Patient; calculateAge
 
       {/* Alerts */}
       {patient.allergies && patient.allergies.length > 0 && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <div className="flex items-center gap-2 mb-2">
+        <div className="rounded-lg border border-red-200 bg-red-50 p-4">
+          <div className="mb-2 flex items-center gap-2">
             <AlertTriangle className="h-5 w-5 text-red-600" />
             <h3 className="font-semibold text-red-900">Alergias</h3>
           </div>
           <div className="flex flex-wrap gap-2">
             {patient.allergies.map((allergy, i) => (
-              <span key={i} className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm">
+              <span key={i} className="rounded-full bg-red-100 px-3 py-1 text-sm text-red-700">
                 {allergy}
               </span>
             ))}
@@ -486,29 +519,32 @@ function OverviewTab({ patient, calculateAge }: { patient: Patient; calculateAge
       )}
 
       {/* Medical Info */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+      <div className="rounded-lg border border-gray-200 bg-white p-6">
+        <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900">
           <Heart className="h-5 w-5 text-red-500" />
           Información Médica
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div>
-            <p className="text-sm text-gray-500 mb-2">Fecha de Nacimiento</p>
+            <p className="mb-2 text-sm text-gray-500">Fecha de Nacimiento</p>
             <p className="text-gray-900">
               {format(new Date(patient.dateOfBirth), "d 'de' MMMM, yyyy", { locale: es })}
-              <span className="text-gray-500 ml-2">({calculateAge(patient.dateOfBirth)} años)</span>
+              <span className="ml-2 text-gray-500">({calculateAge(patient.dateOfBirth)} años)</span>
             </p>
           </div>
           <div>
-            <p className="text-sm text-gray-500 mb-2">Tipo de Sangre</p>
+            <p className="mb-2 text-sm text-gray-500">Tipo de Sangre</p>
             <p className="text-gray-900">{patient.bloodType || 'No registrado'}</p>
           </div>
           <div className="md:col-span-2">
-            <p className="text-sm text-gray-500 mb-2">Medicamentos Actuales</p>
+            <p className="mb-2 text-sm text-gray-500">Medicamentos Actuales</p>
             {patient.currentMedications && patient.currentMedications.length > 0 ? (
               <div className="flex flex-wrap gap-2">
                 {patient.currentMedications.map((med, i) => (
-                  <span key={i} className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
+                  <span
+                    key={i}
+                    className="rounded-full bg-blue-100 px-3 py-1 text-sm text-blue-700"
+                  >
                     {med}
                   </span>
                 ))}
@@ -519,8 +555,8 @@ function OverviewTab({ patient, calculateAge }: { patient: Patient; calculateAge
           </div>
         </div>
         {patient.notes && (
-          <div className="mt-4 pt-4 border-t">
-            <p className="text-sm text-gray-500 mb-2">Notas</p>
+          <div className="mt-4 border-t pt-4">
+            <p className="mb-2 text-sm text-gray-500">Notas</p>
             <p className="text-gray-700">{patient.notes}</p>
           </div>
         )}
@@ -528,9 +564,9 @@ function OverviewTab({ patient, calculateAge }: { patient: Patient; calculateAge
 
       {/* Emergency Contact */}
       {patient.emergencyContact && (
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Contacto de Emergencia</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="rounded-lg border border-gray-200 bg-white p-6">
+          <h3 className="mb-4 text-lg font-semibold text-gray-900">Contacto de Emergencia</h3>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <div>
               <p className="text-sm text-gray-500">Nombre</p>
               <p className="font-medium text-gray-900">
@@ -555,9 +591,9 @@ function OverviewTab({ patient, calculateAge }: { patient: Patient; calculateAge
 
       {/* Insurance */}
       {patient.insuranceInfo && (
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Seguro Médico</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="rounded-lg border border-gray-200 bg-white p-6">
+          <h3 className="mb-4 text-lg font-semibold text-gray-900">Seguro Médico</h3>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
               <p className="text-sm text-gray-500">Aseguradora</p>
               <p className="font-medium text-gray-900">
@@ -577,15 +613,21 @@ function OverviewTab({ patient, calculateAge }: { patient: Patient; calculateAge
   );
 }
 
-function ConsultationsTab({ consultations, patientId }: { consultations: Consultation[]; patientId: string }) {
+function ConsultationsTab({
+  consultations,
+  patientId,
+}: {
+  consultations: Consultation[];
+  patientId: string;
+}) {
   if (consultations.length === 0) {
     return (
-      <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
-        <FileText className="h-12 w-12 mx-auto text-gray-300 mb-3" />
-        <p className="text-gray-500 mb-4">No hay consultas registradas</p>
+      <div className="rounded-lg border border-gray-200 bg-white py-12 text-center">
+        <FileText className="mx-auto mb-3 h-12 w-12 text-gray-300" />
+        <p className="mb-4 text-gray-500">No hay consultas registradas</p>
         <Link
           href={`/consultations/new?patientId=${patientId}`}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
         >
           <FileText className="h-4 w-4" />
           Nueva Consulta
@@ -600,7 +642,7 @@ function ConsultationsTab({ consultations, patientId }: { consultations: Consult
         <Link
           key={consultation.id}
           href={`/consultations/${consultation.id}`}
-          className="block bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow"
+          className="block rounded-lg border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md"
         >
           <div className="flex items-center justify-between">
             <div>
@@ -611,15 +653,19 @@ function ConsultationsTab({ consultations, patientId }: { consultations: Consult
                 {consultation.clinicalData?.soapNotes?.assessment || 'Sin diagnóstico registrado'}
               </p>
               {consultation.user && (
-                <p className="text-xs text-gray-400 mt-1">
+                <p className="mt-1 text-xs text-gray-400">
                   Dr. {consultation.user.firstName} {consultation.user.lastName}
                 </p>
               )}
             </div>
             <div className="flex items-center gap-2">
-              <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                consultation.status === 'COMPLETED' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
-              }`}>
+              <span
+                className={`rounded-full px-2 py-1 text-xs font-medium ${
+                  consultation.status === 'COMPLETED'
+                    ? 'bg-green-100 text-green-700'
+                    : 'bg-yellow-100 text-yellow-700'
+                }`}
+              >
                 {consultation.status === 'COMPLETED' ? 'Completada' : 'En progreso'}
               </span>
               <ChevronRight className="h-5 w-5 text-gray-400" />
@@ -634,8 +680,8 @@ function ConsultationsTab({ consultations, patientId }: { consultations: Consult
 function PrescriptionsTab({ prescriptions }: { prescriptions: Prescription[] }) {
   if (prescriptions.length === 0) {
     return (
-      <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
-        <Pill className="h-12 w-12 mx-auto text-gray-300 mb-3" />
+      <div className="rounded-lg border border-gray-200 bg-white py-12 text-center">
+        <Pill className="mx-auto mb-3 h-12 w-12 text-gray-300" />
         <p className="text-gray-500">No hay recetas registradas</p>
       </div>
     );
@@ -644,11 +690,8 @@ function PrescriptionsTab({ prescriptions }: { prescriptions: Prescription[] }) 
   return (
     <div className="space-y-3">
       {prescriptions.map((prescription) => (
-        <div
-          key={prescription.id}
-          className="bg-white rounded-lg border border-gray-200 p-4"
-        >
-          <div className="flex items-center justify-between mb-3">
+        <div key={prescription.id} className="rounded-lg border border-gray-200 bg-white p-4">
+          <div className="mb-3 flex items-center justify-between">
             <div>
               <p className="font-medium text-gray-900">
                 {format(new Date(prescription.createdAt), "d 'de' MMMM, yyyy", { locale: es })}
@@ -658,16 +701,18 @@ function PrescriptionsTab({ prescriptions }: { prescriptions: Prescription[] }) 
               )}
             </div>
             <div className="flex items-center gap-2">
-              <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                prescription.isValid ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-              }`}>
+              <span
+                className={`rounded-full px-2 py-1 text-xs font-medium ${
+                  prescription.isValid ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                }`}
+              >
                 {prescription.isValid ? 'Válida' : 'Invalidada'}
               </span>
               <a
                 href={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/prescriptions/${prescription.id}/pdf`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
+                className="rounded-lg p-2 text-blue-600 hover:bg-blue-50"
               >
                 <Download className="h-4 w-4" />
               </a>
@@ -675,12 +720,12 @@ function PrescriptionsTab({ prescriptions }: { prescriptions: Prescription[] }) 
           </div>
           <div className="flex flex-wrap gap-2">
             {prescription.medications.slice(0, 3).map((med, i) => (
-              <span key={i} className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-sm">
+              <span key={i} className="rounded bg-gray-100 px-2 py-1 text-sm text-gray-700">
                 {med.name} - {med.dose}
               </span>
             ))}
             {prescription.medications.length > 3 && (
-              <span className="px-2 py-1 bg-gray-100 text-gray-500 rounded text-sm">
+              <span className="rounded bg-gray-100 px-2 py-1 text-sm text-gray-500">
                 +{prescription.medications.length - 3} más
               </span>
             )}
@@ -691,7 +736,15 @@ function PrescriptionsTab({ prescriptions }: { prescriptions: Prescription[] }) 
   );
 }
 
-function FilesTab({ files, patientId, onUploadComplete }: { files: PatientFile[]; patientId: string; onUploadComplete: () => void }) {
+function FilesTab({
+  files,
+  patientId,
+  onUploadComplete,
+}: {
+  files: PatientFile[];
+  patientId: string;
+  onUploadComplete: () => void;
+}) {
   const [showUpload, setShowUpload] = useState(false);
 
   const getFileIcon = (type: string) => {
@@ -716,7 +769,7 @@ function FilesTab({ files, patientId, onUploadComplete }: { files: PatientFile[]
       ) : (
         <button
           onClick={() => setShowUpload(true)}
-          className="w-full flex items-center justify-center gap-2 p-4 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-blue-500 hover:text-blue-600 transition-colors"
+          className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-dashed border-gray-300 p-4 text-gray-600 transition-colors hover:border-blue-500 hover:text-blue-600"
         >
           <Plus className="h-5 w-5" />
           Subir archivos
@@ -725,22 +778,23 @@ function FilesTab({ files, patientId, onUploadComplete }: { files: PatientFile[]
 
       {/* Files List */}
       {files.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
-          <FolderOpen className="h-12 w-12 mx-auto text-gray-300 mb-3" />
+        <div className="rounded-lg border border-gray-200 bg-white py-12 text-center">
+          <FolderOpen className="mx-auto mb-3 h-12 w-12 text-gray-300" />
           <p className="text-gray-500">No hay archivos subidos</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {files.map((file) => (
             <div
               key={file.id}
-              className="bg-white rounded-lg border border-gray-200 p-4 flex items-center gap-4"
+              className="flex items-center gap-4 rounded-lg border border-gray-200 bg-white p-4"
             >
               <span className="text-2xl">{getFileIcon(file.type)}</span>
-              <div className="flex-1 min-w-0">
-                <p className="font-medium text-gray-900 truncate">{file.name}</p>
+              <div className="min-w-0 flex-1">
+                <p className="truncate font-medium text-gray-900">{file.name}</p>
                 <p className="text-sm text-gray-500">
-                  {format(new Date(file.createdAt), "d MMM yyyy", { locale: es })} • {file.sizeMb.toFixed(2)} MB
+                  {format(new Date(file.createdAt), 'd MMM yyyy', { locale: es })} •{' '}
+                  {file.sizeMb.toFixed(2)} MB
                 </p>
               </div>
               {file.storageUrl && (
@@ -748,7 +802,7 @@ function FilesTab({ files, patientId, onUploadComplete }: { files: PatientFile[]
                   href={file.storageUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
+                  className="rounded-lg p-2 text-blue-600 hover:bg-blue-50"
                 >
                   <Download className="h-4 w-4" />
                 </a>
@@ -761,15 +815,21 @@ function FilesTab({ files, patientId, onUploadComplete }: { files: PatientFile[]
   );
 }
 
-function AppointmentsTab({ appointments, patientId }: { appointments: Appointment[]; patientId: string }) {
+function AppointmentsTab({
+  appointments,
+  patientId,
+}: {
+  appointments: Appointment[];
+  patientId: string;
+}) {
   if (appointments.length === 0) {
     return (
-      <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
-        <Calendar className="h-12 w-12 mx-auto text-gray-300 mb-3" />
-        <p className="text-gray-500 mb-4">No hay citas registradas</p>
+      <div className="rounded-lg border border-gray-200 bg-white py-12 text-center">
+        <Calendar className="mx-auto mb-3 h-12 w-12 text-gray-300" />
+        <p className="mb-4 text-gray-500">No hay citas registradas</p>
         <Link
           href={`/appointments?patientId=${patientId}`}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
         >
           <Calendar className="h-4 w-4" />
           Agendar Cita
@@ -803,10 +863,7 @@ function AppointmentsTab({ appointments, patientId }: { appointments: Appointmen
   return (
     <div className="space-y-3">
       {appointments.map((appointment) => (
-        <div
-          key={appointment.id}
-          className="bg-white rounded-lg border border-gray-200 p-4"
-        >
+        <div key={appointment.id} className="rounded-lg border border-gray-200 bg-white p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="text-center">
@@ -821,16 +878,19 @@ function AppointmentsTab({ appointments, patientId }: { appointments: Appointmen
                 <div className="flex items-center gap-2">
                   <Clock className="h-4 w-4 text-gray-400" />
                   <p className="font-medium text-gray-900">
-                    {format(new Date(appointment.startTime), 'HH:mm')} - {format(new Date(appointment.endTime), 'HH:mm')}
+                    {format(new Date(appointment.startTime), 'HH:mm')} -{' '}
+                    {format(new Date(appointment.endTime), 'HH:mm')}
                   </p>
                 </div>
                 <p className="text-sm text-gray-500">{appointment.type || 'Consulta'}</p>
                 {appointment.notes && (
-                  <p className="text-xs text-gray-400 mt-1">{appointment.notes}</p>
+                  <p className="mt-1 text-xs text-gray-400">{appointment.notes}</p>
                 )}
               </div>
             </div>
-            <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusStyle(appointment.status)}`}>
+            <span
+              className={`rounded-full px-3 py-1 text-xs font-medium ${getStatusStyle(appointment.status)}`}
+            >
               {getStatusLabel(appointment.status)}
             </span>
           </div>
