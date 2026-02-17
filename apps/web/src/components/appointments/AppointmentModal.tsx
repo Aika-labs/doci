@@ -63,17 +63,20 @@ export function AppointmentModal({
   watch('patientId');
 
   // Search patients
-  const searchPatients = useCallback(async (search: string) => {
-    try {
-      const token = await getToken();
-      if (!token) return;
+  const searchPatients = useCallback(
+    async (search: string) => {
+      try {
+        const token = await getToken();
+        if (!token) return;
 
-      const response = await patientsApi.getAll(token, { search, limit: 10 });
-      setPatients(response.data);
-    } catch (error) {
-      console.error('Error searching patients:', error);
-    }
-  }, [getToken]);
+        const response = await patientsApi.getAll(token, { search, limit: 10 });
+        setPatients(response.data);
+      } catch (error) {
+        console.error('Error searching patients:', error);
+      }
+    },
+    [getToken]
+  );
 
   useEffect(() => {
     if (searchTerm.length >= 2) {
@@ -149,35 +152,35 @@ export function AppointmentModal({
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex min-h-full items-center justify-center p-4">
         <div className="fixed inset-0 bg-black/50" onClick={onClose} />
-        
-        <div className="relative bg-white rounded-xl shadow-xl w-full max-w-lg">
+
+        <div className="relative w-full max-w-lg rounded-xl bg-white shadow-xl">
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b">
+          <div className="flex items-center justify-between border-b p-4">
             <h2 className="text-lg font-semibold text-gray-900">
               {appointment ? 'Editar Cita' : 'Nueva Cita'}
             </h2>
             <button
               onClick={onClose}
-              className="p-1 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100"
+              className="rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
             >
               <X className="h-5 w-5" />
             </button>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit(handleFormSubmit)} className="p-4 space-y-4">
+          <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4 p-4">
             {/* Patient Selection */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Paciente *
-              </label>
+              <label className="mb-1 block text-sm font-medium text-gray-700">Paciente *</label>
               {selectedPatient ? (
-                <div className="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="flex items-center justify-between rounded-lg border border-blue-200 bg-blue-50 p-3">
                   <div>
                     <p className="font-medium text-gray-900">
                       {selectedPatient.firstName} {selectedPatient.lastName}
                     </p>
-                    <p className="text-sm text-gray-500">{selectedPatient.email || selectedPatient.phone}</p>
+                    <p className="text-sm text-gray-500">
+                      {selectedPatient.email || selectedPatient.phone}
+                    </p>
                   </div>
                   <button
                     type="button"
@@ -185,7 +188,7 @@ export function AppointmentModal({
                       setSelectedPatient(null);
                       setValue('patientId', '');
                     }}
-                    className="text-blue-600 hover:text-blue-700 text-sm"
+                    className="text-sm text-blue-600 hover:text-blue-700"
                   >
                     Cambiar
                   </button>
@@ -193,7 +196,7 @@ export function AppointmentModal({
               ) : (
                 <div className="relative">
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
                     <input
                       type="text"
                       value={searchTerm}
@@ -203,17 +206,17 @@ export function AppointmentModal({
                       }}
                       onFocus={() => setShowPatientSearch(true)}
                       placeholder="Buscar paciente..."
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full rounded-lg border border-gray-300 py-2 pr-4 pl-10 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
                   {showPatientSearch && patients.length > 0 && (
-                    <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                    <div className="absolute z-10 mt-1 max-h-48 w-full overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg">
                       {patients.map((patient) => (
                         <button
                           key={patient.id}
                           type="button"
                           onClick={() => selectPatient(patient)}
-                          className="w-full px-4 py-2 text-left hover:bg-gray-50 border-b last:border-b-0"
+                          className="w-full border-b px-4 py-2 text-left last:border-b-0 hover:bg-gray-50"
                         >
                           <p className="font-medium text-gray-900">
                             {patient.firstName} {patient.lastName}
@@ -234,13 +237,13 @@ export function AppointmentModal({
             {/* Date and Time */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="mb-1 block text-sm font-medium text-gray-700">
                   Fecha y Hora *
                 </label>
                 <input
                   type="datetime-local"
                   {...register('scheduledAt')}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
                 />
                 {errors.scheduledAt && (
                   <p className="mt-1 text-sm text-red-600">{errors.scheduledAt.message}</p>
@@ -248,12 +251,12 @@ export function AppointmentModal({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="mb-1 block text-sm font-medium text-gray-700">
                   Duración (min) *
                 </label>
                 <select
                   {...register('duration', { valueAsNumber: true })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
                 >
                   <option value={15}>15 min</option>
                   <option value={30}>30 min</option>
@@ -267,12 +270,10 @@ export function AppointmentModal({
 
             {/* Type */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Tipo de Cita *
-              </label>
+              <label className="mb-1 block text-sm font-medium text-gray-700">Tipo de Cita *</label>
               <select
                 {...register('type')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
               >
                 <option value="FIRST_VISIT">Primera Visita</option>
                 <option value="FOLLOW_UP">Seguimiento</option>
@@ -284,43 +285,41 @@ export function AppointmentModal({
 
             {/* Reason */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="mb-1 block text-sm font-medium text-gray-700">
                 Motivo de la Consulta
               </label>
               <input
                 type="text"
                 {...register('reason')}
                 placeholder="Ej: Dolor de cabeza, revisión anual..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             {/* Notes */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Notas
-              </label>
+              <label className="mb-1 block text-sm font-medium text-gray-700">Notas</label>
               <textarea
                 {...register('notes')}
                 rows={2}
                 placeholder="Notas adicionales..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             {/* Actions */}
-            <div className="flex justify-end gap-3 pt-4 border-t">
+            <div className="flex justify-end gap-3 border-t pt-4">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+                className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-700 hover:bg-gray-50"
               >
                 Cancelar
               </button>
               <button
                 type="submit"
                 disabled={isLoading}
-                className="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
               >
                 {isLoading ? 'Guardando...' : appointment ? 'Actualizar' : 'Crear Cita'}
               </button>

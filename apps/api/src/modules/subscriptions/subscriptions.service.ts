@@ -79,7 +79,7 @@ export class SubscriptionsService {
 
   constructor(
     private prisma: PrismaService,
-    private configService: ConfigService,
+    private configService: ConfigService
   ) {
     this.stripe = new Stripe(this.configService.get<string>('STRIPE_SECRET_KEY') || '');
   }
@@ -251,9 +251,8 @@ export class SubscriptionsService {
       await this.stripe.subscriptions.update(subscription.stripeSubscriptionId, {
         items: [
           {
-            id: (
-              await this.stripe.subscriptions.retrieve(subscription.stripeSubscriptionId)
-            ).items.data[0].id,
+            id: (await this.stripe.subscriptions.retrieve(subscription.stripeSubscriptionId)).items
+              .data[0].id,
             price: stripePriceId,
           },
         ],
@@ -306,7 +305,7 @@ export class SubscriptionsService {
   async createCheckoutSession(
     tenantId: string,
     planName: string,
-    billingCycle: 'MONTHLY' | 'YEARLY',
+    billingCycle: 'MONTHLY' | 'YEARLY'
   ) {
     const plan = await this.prisma.pricingPlan.findUnique({
       where: { name: planName },
@@ -436,7 +435,7 @@ export class SubscriptionsService {
    */
   async checkLimit(
     tenantId: string,
-    limitType: 'users' | 'patients' | 'appointments' | 'storage',
+    limitType: 'users' | 'patients' | 'appointments' | 'storage'
   ): Promise<{ allowed: boolean; current: number; limit: number | null }> {
     const subscription = await this.prisma.subscription.findUnique({
       where: { tenantId },
@@ -483,11 +482,10 @@ export class SubscriptionsService {
 
   private async getOrCreateStripePrice(
     plan: { name: string; monthlyPrice: Prisma.Decimal; yearlyPrice: Prisma.Decimal },
-    billingCycle: 'MONTHLY' | 'YEARLY' = 'MONTHLY',
+    billingCycle: 'MONTHLY' | 'YEARLY' = 'MONTHLY'
   ): Promise<string> {
     const interval = billingCycle === 'YEARLY' ? 'year' : 'month';
-    const amount =
-      billingCycle === 'YEARLY' ? Number(plan.yearlyPrice) : Number(plan.monthlyPrice);
+    const amount = billingCycle === 'YEARLY' ? Number(plan.yearlyPrice) : Number(plan.monthlyPrice);
 
     // Search for existing price
     const prices = await this.stripe.prices.search({

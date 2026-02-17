@@ -32,19 +32,89 @@ interface SearchResult {
 }
 
 const staticPages: SearchResult[] = [
-  { id: 'home', type: 'page', title: 'Inicio', subtitle: 'Dashboard principal', icon: <Home className="h-4 w-4" />, href: '/' },
-  { id: 'patients', type: 'page', title: 'Pacientes', subtitle: 'Lista de pacientes', icon: <User className="h-4 w-4" />, href: '/patients' },
-  { id: 'appointments', type: 'page', title: 'Agenda', subtitle: 'Calendario de citas', icon: <Calendar className="h-4 w-4" />, href: '/appointments' },
-  { id: 'consultations', type: 'page', title: 'Consultas', subtitle: 'Historial de consultas', icon: <FileText className="h-4 w-4" />, href: '/consultations' },
-  { id: 'templates', type: 'page', title: 'Plantillas', subtitle: 'Plantillas médicas', icon: <FileStack className="h-4 w-4" />, href: '/templates' },
-  { id: 'reports', type: 'page', title: 'Reportes', subtitle: 'Estadísticas y análisis', icon: <BarChart3 className="h-4 w-4" />, href: '/reports' },
-  { id: 'storage', type: 'page', title: 'Almacenamiento', subtitle: 'Archivos y documentos', icon: <HardDrive className="h-4 w-4" />, href: '/storage' },
-  { id: 'settings', type: 'page', title: 'Configuración', subtitle: 'Ajustes de la cuenta', icon: <Settings className="h-4 w-4" />, href: '/settings' },
+  {
+    id: 'home',
+    type: 'page',
+    title: 'Inicio',
+    subtitle: 'Dashboard principal',
+    icon: <Home className="h-4 w-4" />,
+    href: '/',
+  },
+  {
+    id: 'patients',
+    type: 'page',
+    title: 'Pacientes',
+    subtitle: 'Lista de pacientes',
+    icon: <User className="h-4 w-4" />,
+    href: '/patients',
+  },
+  {
+    id: 'appointments',
+    type: 'page',
+    title: 'Agenda',
+    subtitle: 'Calendario de citas',
+    icon: <Calendar className="h-4 w-4" />,
+    href: '/appointments',
+  },
+  {
+    id: 'consultations',
+    type: 'page',
+    title: 'Consultas',
+    subtitle: 'Historial de consultas',
+    icon: <FileText className="h-4 w-4" />,
+    href: '/consultations',
+  },
+  {
+    id: 'templates',
+    type: 'page',
+    title: 'Plantillas',
+    subtitle: 'Plantillas médicas',
+    icon: <FileStack className="h-4 w-4" />,
+    href: '/templates',
+  },
+  {
+    id: 'reports',
+    type: 'page',
+    title: 'Reportes',
+    subtitle: 'Estadísticas y análisis',
+    icon: <BarChart3 className="h-4 w-4" />,
+    href: '/reports',
+  },
+  {
+    id: 'storage',
+    type: 'page',
+    title: 'Almacenamiento',
+    subtitle: 'Archivos y documentos',
+    icon: <HardDrive className="h-4 w-4" />,
+    href: '/storage',
+  },
+  {
+    id: 'settings',
+    type: 'page',
+    title: 'Configuración',
+    subtitle: 'Ajustes de la cuenta',
+    icon: <Settings className="h-4 w-4" />,
+    href: '/settings',
+  },
 ];
 
 const quickActions: SearchResult[] = [
-  { id: 'new-consultation', type: 'action', title: 'Nueva consulta', subtitle: 'Iniciar grabación de voz', icon: <Mic className="h-4 w-4" />, href: '/consultations/new' },
-  { id: 'new-patient', type: 'action', title: 'Nuevo paciente', subtitle: 'Registrar paciente', icon: <User className="h-4 w-4" />, href: '/patients/new' },
+  {
+    id: 'new-consultation',
+    type: 'action',
+    title: 'Nueva consulta',
+    subtitle: 'Iniciar grabación de voz',
+    icon: <Mic className="h-4 w-4" />,
+    href: '/consultations/new',
+  },
+  {
+    id: 'new-patient',
+    type: 'action',
+    title: 'Nuevo paciente',
+    subtitle: 'Registrar paciente',
+    icon: <User className="h-4 w-4" />,
+    href: '/patients/new',
+  },
 ];
 
 export function CommandPalette() {
@@ -90,26 +160,31 @@ export function CommandPalette() {
   }, [isOpen]);
 
   // Search patients
-  const searchPatients = useCallback(async (searchQuery: string) => {
-    if (searchQuery.length < 2) return [];
+  const searchPatients = useCallback(
+    async (searchQuery: string) => {
+      if (searchQuery.length < 2) return [];
 
-    try {
-      const token = await getToken();
-      if (!token) return [];
+      try {
+        const token = await getToken();
+        if (!token) return [];
 
-      const response = await patientsApi.getAll(token, { search: searchQuery, limit: 5 });
-      return response.data.map((patient: Patient): SearchResult => ({
-        id: patient.id,
-        type: 'patient',
-        title: `${patient.firstName} ${patient.lastName}`,
-        subtitle: `${patient.phone || patient.email || 'Sin contacto'}`,
-        icon: <User className="h-4 w-4" />,
-        href: `/patients/${patient.id}`,
-      }));
-    } catch {
-      return [];
-    }
-  }, [getToken]);
+        const response = await patientsApi.getAll(token, { search: searchQuery, limit: 5 });
+        return response.data.map(
+          (patient: Patient): SearchResult => ({
+            id: patient.id,
+            type: 'patient',
+            title: `${patient.firstName} ${patient.lastName}`,
+            subtitle: `${patient.phone || patient.email || 'Sin contacto'}`,
+            icon: <User className="h-4 w-4" />,
+            href: `/patients/${patient.id}`,
+          })
+        );
+      } catch {
+        return [];
+      }
+    },
+    [getToken]
+  );
 
   // Filter and search
   useEffect(() => {
@@ -124,10 +199,14 @@ export function CommandPalette() {
 
       // Filter static pages and actions
       const filteredPages = staticPages.filter(
-        (p) => p.title.toLowerCase().includes(lowerQuery) || p.subtitle?.toLowerCase().includes(lowerQuery)
+        (p) =>
+          p.title.toLowerCase().includes(lowerQuery) ||
+          p.subtitle?.toLowerCase().includes(lowerQuery)
       );
       const filteredActions = quickActions.filter(
-        (a) => a.title.toLowerCase().includes(lowerQuery) || a.subtitle?.toLowerCase().includes(lowerQuery)
+        (a) =>
+          a.title.toLowerCase().includes(lowerQuery) ||
+          a.subtitle?.toLowerCase().includes(lowerQuery)
       );
 
       // Search patients
@@ -142,14 +221,17 @@ export function CommandPalette() {
     return () => clearTimeout(debounce);
   }, [query, searchPatients]);
 
-  const handleSelect = useCallback((result: SearchResult) => {
-    setIsOpen(false);
-    if (result.href) {
-      router.push(result.href);
-    } else if (result.action) {
-      result.action();
-    }
-  }, [router]);
+  const handleSelect = useCallback(
+    (result: SearchResult) => {
+      setIsOpen(false);
+      if (result.href) {
+        router.push(result.href);
+      } else if (result.action) {
+        result.action();
+      }
+    },
+    [router]
+  );
 
   // Keyboard navigation
   useEffect(() => {
@@ -186,11 +268,11 @@ export function CommandPalette() {
     return (
       <button
         onClick={openPalette}
-        className="hidden md:flex items-center gap-2 px-3 py-1.5 text-sm text-gray-500 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+        className="hidden items-center gap-2 rounded-lg bg-gray-100 px-3 py-1.5 text-sm text-gray-500 transition-colors hover:bg-gray-200 md:flex"
       >
         <Search className="h-4 w-4" />
         <span>Buscar...</span>
-        <kbd className="hidden lg:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-xs bg-white rounded border border-gray-300">
+        <kbd className="hidden items-center gap-0.5 rounded border border-gray-300 bg-white px-1.5 py-0.5 text-xs lg:inline-flex">
           <Command className="h-3 w-3" />K
         </kbd>
       </button>
@@ -207,9 +289,9 @@ export function CommandPalette() {
 
       {/* Dialog */}
       <div className="relative flex items-start justify-center pt-[15vh]">
-        <div className="w-full max-w-xl bg-white rounded-xl shadow-2xl overflow-hidden mx-4">
+        <div className="mx-4 w-full max-w-xl overflow-hidden rounded-xl bg-white shadow-2xl">
           {/* Search Input */}
-          <div className="flex items-center gap-3 px-4 py-3 border-b">
+          <div className="flex items-center gap-3 border-b px-4 py-3">
             <Search className="h-5 w-5 text-gray-400" />
             <input
               ref={inputRef}
@@ -222,7 +304,7 @@ export function CommandPalette() {
             {isSearching && <Loader2 className="h-5 w-5 animate-spin text-gray-400" />}
             <button
               onClick={() => setIsOpen(false)}
-              className="p-1 text-gray-400 hover:text-gray-600 rounded"
+              className="rounded p-1 text-gray-400 hover:text-gray-600"
             >
               <X className="h-5 w-5" />
             </button>
@@ -239,7 +321,7 @@ export function CommandPalette() {
                 {/* Group by type */}
                 {results.some((r) => r.type === 'action') && (
                   <div className="px-3 py-1">
-                    <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">
+                    <p className="text-xs font-medium tracking-wider text-gray-400 uppercase">
                       Acciones rápidas
                     </p>
                   </div>
@@ -260,8 +342,8 @@ export function CommandPalette() {
                   })}
 
                 {results.some((r) => r.type === 'patient') && (
-                  <div className="px-3 py-1 mt-2">
-                    <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">
+                  <div className="mt-2 px-3 py-1">
+                    <p className="text-xs font-medium tracking-wider text-gray-400 uppercase">
                       Pacientes
                     </p>
                   </div>
@@ -282,8 +364,8 @@ export function CommandPalette() {
                   })}
 
                 {results.some((r) => r.type === 'page') && (
-                  <div className="px-3 py-1 mt-2">
-                    <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">
+                  <div className="mt-2 px-3 py-1">
+                    <p className="text-xs font-medium tracking-wider text-gray-400 uppercase">
                       Páginas
                     </p>
                   </div>
@@ -307,18 +389,18 @@ export function CommandPalette() {
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-between px-4 py-2 border-t bg-gray-50 text-xs text-gray-500">
+          <div className="flex items-center justify-between border-t bg-gray-50 px-4 py-2 text-xs text-gray-500">
             <div className="flex items-center gap-4">
               <span className="flex items-center gap-1">
-                <kbd className="px-1.5 py-0.5 bg-white rounded border">↑↓</kbd>
+                <kbd className="rounded border bg-white px-1.5 py-0.5">↑↓</kbd>
                 navegar
               </span>
               <span className="flex items-center gap-1">
-                <kbd className="px-1.5 py-0.5 bg-white rounded border">↵</kbd>
+                <kbd className="rounded border bg-white px-1.5 py-0.5">↵</kbd>
                 seleccionar
               </span>
               <span className="flex items-center gap-1">
-                <kbd className="px-1.5 py-0.5 bg-white rounded border">esc</kbd>
+                <kbd className="rounded border bg-white px-1.5 py-0.5">esc</kbd>
                 cerrar
               </span>
             </div>
@@ -344,17 +426,19 @@ function ResultItem({
     <button
       onClick={onSelect}
       onMouseEnter={onHover}
-      className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors ${
+      className={`flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors ${
         isSelected ? 'bg-blue-50 text-blue-900' : 'hover:bg-gray-50'
       }`}
     >
-      <div className={`p-2 rounded-lg ${isSelected ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-500'}`}>
+      <div
+        className={`rounded-lg p-2 ${isSelected ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-500'}`}
+      >
         {result.icon}
       </div>
-      <div className="flex-1 min-w-0">
-        <p className="font-medium truncate">{result.title}</p>
+      <div className="min-w-0 flex-1">
+        <p className="truncate font-medium">{result.title}</p>
         {result.subtitle && (
-          <p className={`text-sm truncate ${isSelected ? 'text-blue-700' : 'text-gray-500'}`}>
+          <p className={`truncate text-sm ${isSelected ? 'text-blue-700' : 'text-gray-500'}`}>
             {result.subtitle}
           </p>
         )}

@@ -248,31 +248,33 @@ doci/
 ## Modelos de Base de Datos (Prisma Schema)
 
 ### Core Models
-| Modelo | Descripción | Relaciones |
-|--------|-------------|------------|
-| `Tenant` | Clínica/consultorio | Users, Patients, Templates |
-| `User` | Médico/staff | Tenant, Consultations, Appointments |
-| `Patient` | Paciente | Tenant, Consultations, Files |
-| `Consultation` | Consulta médica | Patient, User, Prescriptions |
-| `Appointment` | Cita | Patient, User, Consultation |
-| `Prescription` | Receta | Consultation |
-| `PatientFile` | Archivo adjunto | Patient |
-| `ClinicalTemplate` | Plantilla SOAP | Tenant |
+
+| Modelo             | Descripción         | Relaciones                          |
+| ------------------ | ------------------- | ----------------------------------- |
+| `Tenant`           | Clínica/consultorio | Users, Patients, Templates          |
+| `User`             | Médico/staff        | Tenant, Consultations, Appointments |
+| `Patient`          | Paciente            | Tenant, Consultations, Files        |
+| `Consultation`     | Consulta médica     | Patient, User, Prescriptions        |
+| `Appointment`      | Cita                | Patient, User, Consultation         |
+| `Prescription`     | Receta              | Consultation                        |
+| `PatientFile`      | Archivo adjunto     | Patient                             |
+| `ClinicalTemplate` | Plantilla SOAP      | Tenant                              |
 
 ### Extended Models
-| Modelo | Descripción |
-|--------|-------------|
-| `AuditLog` | Registro de actividad |
-| `Vademecum` | Medicamentos con embeddings |
-| `Service` | Catálogo de servicios |
-| `Invoice` | Factura |
-| `InvoiceItem` | Línea de factura |
-| `Payment` | Pago |
-| `PricingPlan` | Plan de suscripción |
-| `Subscription` | Suscripción activa |
-| `CalendarIntegration` | OAuth tokens |
-| `OnboardingProgress` | Progreso onboarding |
-| `SpecialtyTemplate` | Plantilla por especialidad |
+
+| Modelo                | Descripción                 |
+| --------------------- | --------------------------- |
+| `AuditLog`            | Registro de actividad       |
+| `Vademecum`           | Medicamentos con embeddings |
+| `Service`             | Catálogo de servicios       |
+| `Invoice`             | Factura                     |
+| `InvoiceItem`         | Línea de factura            |
+| `Payment`             | Pago                        |
+| `PricingPlan`         | Plan de suscripción         |
+| `Subscription`        | Suscripción activa          |
+| `CalendarIntegration` | OAuth tokens                |
+| `OnboardingProgress`  | Progreso onboarding         |
+| `SpecialtyTemplate`   | Plantilla por especialidad  |
 
 ## Flujo de Datos
 

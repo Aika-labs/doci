@@ -1,6 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { SentryModule } from '@sentry/nestjs/setup';
+import { APP_GUARD } from '@nestjs/core';
 import { AuthModule } from './modules/auth/auth.module';
 import { AIModule } from './modules/ai/ai.module';
 import { PatientsModule } from './modules/patients/patients.module';
@@ -20,14 +23,28 @@ import { OnboardingModule } from './modules/onboarding/onboarding.module';
 import { SearchModule } from './modules/search/search.module';
 import { SpecialtyTemplatesModule } from './modules/specialty-templates/specialty-templates.module';
 import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
+import { HealthModule } from './modules/health/health.module';
 import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
+    // Sentry error tracking (must be first)
+    SentryModule.forRoot(),
+
     // Configuration
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env.local', '.env'],
+    }),
+
+    // Rate limiting: 60 requests per 60 seconds per IP
+    ThrottlerModule.forRoot({
+      throttlers: [
+        {
+          ttl: 60000,
+          limit: 60,
+        },
+      ],
     }),
 
     // Scheduling for cron jobs (reminders, etc.)
@@ -38,6 +55,9 @@ import { PrismaModule } from './prisma/prisma.module';
 
     // Authentication (global guard)
     AuthModule,
+
+    // Health check
+    HealthModule,
 
     // Feature modules
     AIModule,
@@ -58,6 +78,13 @@ import { PrismaModule } from './prisma/prisma.module';
     SearchModule,
     SpecialtyTemplatesModule,
     SubscriptionsModule,
+  ],
+  providers: [
+    // Global rate limiting guard
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
   ],
 })
 export class AppModule {}

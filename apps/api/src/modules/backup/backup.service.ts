@@ -30,11 +30,11 @@ export class BackupService {
 
   constructor(
     private prisma: PrismaService,
-    private configService: ConfigService,
+    private configService: ConfigService
   ) {
     this.supabase = createClient(
       this.configService.get<string>('SUPABASE_URL') || '',
-      this.configService.get<string>('SUPABASE_SERVICE_KEY') || '',
+      this.configService.get<string>('SUPABASE_SERVICE_KEY') || ''
     );
   }
 
@@ -63,12 +63,10 @@ export class BackupService {
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
       // List old backups
-      const { data: files, error } = await this.supabase.storage
-        .from(this.backupBucket)
-        .list('', {
-          limit: 1000,
-          sortBy: { column: 'created_at', order: 'asc' },
-        });
+      const { data: files, error } = await this.supabase.storage.from(this.backupBucket).list('', {
+        limit: 1000,
+        sortBy: { column: 'created_at', order: 'asc' },
+      });
 
       if (error) throw error;
 
@@ -229,12 +227,10 @@ export class BackupService {
 
     const prefix = tenantId ? `tenants/tenant-${tenantId}` : '';
 
-    const { data, error } = await this.supabase.storage
-      .from(this.backupBucket)
-      .list(prefix, {
-        limit,
-        sortBy: { column: 'created_at', order: 'desc' },
-      });
+    const { data, error } = await this.supabase.storage.from(this.backupBucket).list(prefix, {
+      limit,
+      sortBy: { column: 'created_at', order: 'desc' },
+    });
 
     if (error) throw error;
 
@@ -264,9 +260,7 @@ export class BackupService {
     this.logger.log(`Starting restore for tenant ${tenantId} from ${filename}`);
 
     // Download backup
-    const { data, error } = await this.supabase.storage
-      .from(this.backupBucket)
-      .download(filename);
+    const { data, error } = await this.supabase.storage.from(this.backupBucket).download(filename);
 
     if (error) throw error;
 

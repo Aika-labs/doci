@@ -48,6 +48,9 @@ infrastructure/Pulumi.*.yaml
 # Docker
 .docker/
 
+# Vercel
+.vercel/
+
 # Misc
 *.tsbuildinfo
 .eslintcache

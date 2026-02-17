@@ -49,9 +49,7 @@ export function AppointmentCalendar({
 
   const events = appointments.map((apt) => ({
     id: apt.id,
-    title: apt.patient
-      ? `${apt.patient.firstName} ${apt.patient.lastName}`
-      : 'Paciente',
+    title: apt.patient ? `${apt.patient.firstName} ${apt.patient.lastName}` : 'Paciente',
     start: apt.scheduledAt,
     end: new Date(new Date(apt.scheduledAt).getTime() + apt.duration * 60000).toISOString(),
     backgroundColor: statusColors[apt.status] || statusColors.SCHEDULED,
@@ -74,7 +72,9 @@ export function AppointmentCalendar({
   };
 
   return (
-    <div className={`bg-white rounded-lg border border-gray-200 p-4 ${isLoading ? 'opacity-50' : ''}`}>
+    <div
+      className={`rounded-lg border border-gray-200 bg-white p-4 ${isLoading ? 'opacity-50' : ''}`}
+    >
       <FullCalendar
         ref={calendarRef}
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -104,11 +104,9 @@ export function AppointmentCalendar({
         slotDuration="00:30:00"
         height="auto"
         eventContent={(eventInfo) => (
-          <div className="p-1 overflow-hidden">
-            <div className="font-medium text-xs truncate">{eventInfo.event.title}</div>
-            <div className="text-xs opacity-75 truncate">
-              {eventInfo.event.extendedProps.type}
-            </div>
+          <div className="overflow-hidden p-1">
+            <div className="truncate text-xs font-medium">{eventInfo.event.title}</div>
+            <div className="truncate text-xs opacity-75">{eventInfo.event.extendedProps.type}</div>
           </div>
         )}
       />

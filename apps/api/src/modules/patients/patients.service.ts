@@ -15,7 +15,7 @@ export class PatientsService {
       search?: string;
       sortBy?: string;
       sortOrder?: 'asc' | 'desc';
-    },
+    }
   ) {
     const { page = 1, limit = 20, search, sortBy = 'lastName', sortOrder = 'asc' } = options || {};
     const skip = (page - 1) * limit;
@@ -129,7 +129,7 @@ export class PatientsService {
   async getHistory(
     ctx: TenantContext,
     patientId: string,
-    options?: { page?: number; limit?: number },
+    options?: { page?: number; limit?: number }
   ) {
     const { page = 1, limit = 20 } = options || {};
     const skip = (page - 1) * limit;
@@ -205,7 +205,7 @@ export class PatientsService {
           acc[item.gender || 'UNKNOWN'] = item._count;
           return acc;
         },
-        {} as Record<string, number>,
+        {} as Record<string, number>
       ),
     };
   }
@@ -345,9 +345,7 @@ export class PatientsService {
         id: patient.id,
         name: `${patient.firstName} ${patient.lastName}`,
         age: patient.birthDate
-          ? Math.floor(
-              (Date.now() - patient.birthDate.getTime()) / (365.25 * 24 * 60 * 60 * 1000),
-            )
+          ? Math.floor((Date.now() - patient.birthDate.getTime()) / (365.25 * 24 * 60 * 60 * 1000))
           : null,
         gender: patient.gender,
         bloodType: patient.bloodType,

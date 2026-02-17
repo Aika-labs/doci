@@ -22,7 +22,7 @@ export class OnboardingController {
   async completeStep(
     @CurrentUser('id') userId: string,
     @TenantId() tenantId: string,
-    @Param('stepId') stepId: string,
+    @Param('stepId') stepId: string
   ) {
     return this.onboardingService.completeStep(userId, tenantId, stepId);
   }

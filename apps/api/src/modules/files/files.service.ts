@@ -28,11 +28,11 @@ export class FilesService {
 
   constructor(
     private prisma: PrismaService,
-    private configService: ConfigService,
+    private configService: ConfigService
   ) {
     this.supabase = createClient(
       this.configService.get<string>('SUPABASE_URL') || '',
-      this.configService.get<string>('SUPABASE_SERVICE_KEY') || '',
+      this.configService.get<string>('SUPABASE_SERVICE_KEY') || ''
     );
   }
 
@@ -153,9 +153,7 @@ export class FilesService {
     const file = await this.getFile(tenantId, fileId);
 
     // Delete from storage
-    const { error } = await this.supabase.storage
-      .from(this.bucket)
-      .remove([file.storagePath]);
+    const { error } = await this.supabase.storage.from(this.bucket).remove([file.storagePath]);
 
     if (error) {
       this.logger.error(`Failed to delete from storage: ${error.message}`);
@@ -183,7 +181,7 @@ export class FilesService {
   async getFilesByType(
     tenantId: string,
     patientId: string,
-    type: 'LAB_RESULT' | 'IMAGING' | 'DOCUMENT' | 'PRESCRIPTION' | 'OTHER',
+    type: 'LAB_RESULT' | 'IMAGING' | 'DOCUMENT' | 'PRESCRIPTION' | 'OTHER'
   ) {
     const patient = await this.prisma.patient.findFirst({
       where: { id: patientId, tenantId },

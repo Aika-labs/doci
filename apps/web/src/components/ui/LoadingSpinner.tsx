@@ -23,11 +23,7 @@ export function LoadingSpinner({ size = 'md', text, fullPage = false }: LoadingS
   );
 
   if (fullPage) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        {content}
-      </div>
-    );
+    return <div className="flex min-h-[400px] items-center justify-center">{content}</div>;
   }
 
   return content;

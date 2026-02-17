@@ -119,7 +119,7 @@ export class BillingService {
 
   async findAllServices(
     tenantId: string,
-    options?: { category?: string; includeInactive?: boolean },
+    options?: { category?: string; includeInactive?: boolean }
   ) {
     const { category, includeInactive = false } = options || {};
 
@@ -230,7 +230,7 @@ export class BillingService {
       patientId?: string;
       startDate?: Date;
       endDate?: Date;
-    },
+    }
   ) {
     const { page = 1, limit = 50, status, patientId, startDate, endDate } = options || {};
     const skip = (page - 1) * limit;
@@ -297,12 +297,7 @@ export class BillingService {
   // Payments
   // ============================================
 
-  async recordPayment(
-    tenantId: string,
-    invoiceId: string,
-    userId: string,
-    data: RecordPaymentDto,
-  ) {
+  async recordPayment(tenantId: string, invoiceId: string, userId: string, data: RecordPaymentDto) {
     const invoice = await this.prisma.invoice.findFirst({
       where: { id: invoiceId, tenantId },
     });
@@ -369,10 +364,7 @@ export class BillingService {
   // Financial Reports
   // ============================================
 
-  async getFinancialSummary(
-    tenantId: string,
-    options?: { startDate?: Date; endDate?: Date },
-  ) {
+  async getFinancialSummary(tenantId: string, options?: { startDate?: Date; endDate?: Date }) {
     const { startDate, endDate } = options || {};
 
     const dateFilter = {

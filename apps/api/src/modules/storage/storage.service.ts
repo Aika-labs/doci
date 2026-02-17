@@ -35,7 +35,7 @@ export class StorageService {
 
   constructor(
     private configService: ConfigService,
-    private prisma: PrismaService,
+    private prisma: PrismaService
   ) {
     const supabaseUrl = this.configService.get<string>('SUPABASE_URL');
     const supabaseKey = this.configService.get<string>('SUPABASE_SERVICE_KEY');
@@ -64,7 +64,7 @@ export class StorageService {
       patientId: string;
       fileType?: FileType;
       description?: string;
-    },
+    }
   ): Promise<UploadedFile> {
     this.ensureSupabase();
 
@@ -80,7 +80,7 @@ export class StorageService {
 
     if (!allowedTypes.includes(file.mimetype)) {
       throw new BadRequestException(
-        'Tipo de archivo no permitido. Solo se permiten imágenes (JPEG, PNG, WebP), PDFs y documentos Word.',
+        'Tipo de archivo no permitido. Solo se permiten imágenes (JPEG, PNG, WebP), PDFs y documentos Word.'
       );
     }
 
@@ -121,9 +121,7 @@ export class StorageService {
     }
 
     // Get public URL
-    const { data: urlData } = this.supabase.storage
-      .from(this.bucketName)
-      .getPublicUrl(path);
+    const { data: urlData } = this.supabase.storage.from(this.bucketName).getPublicUrl(path);
 
     // Determine file type
     const fileType = options.fileType || getFileType(file.mimetype);
@@ -166,11 +164,7 @@ export class StorageService {
   /**
    * Get all files for a patient
    */
-  async getPatientFiles(
-    ctx: TenantContext,
-    patientId: string,
-    options?: { type?: FileType },
-  ) {
+  async getPatientFiles(ctx: TenantContext, patientId: string, options?: { type?: FileType }) {
     // Verify patient belongs to tenant
     const patient = await this.prisma.patient.findFirst({
       where: {
@@ -233,9 +227,7 @@ export class StorageService {
     const file = await this.getFile(ctx, fileId);
 
     // Delete from Supabase
-    const { error } = await this.supabase.storage
-      .from(this.bucketName)
-      .remove([file.storagePath]);
+    const { error } = await this.supabase.storage.from(this.bucketName).remove([file.storagePath]);
 
     if (error) {
       console.error('Supabase delete error:', error);

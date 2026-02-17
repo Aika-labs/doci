@@ -11,7 +11,7 @@ export class AIService {
 
   constructor(
     private configService: ConfigService,
-    private patientsService: PatientsService,
+    private patientsService: PatientsService
   ) {
     this.openai = new OpenAI({
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),
@@ -21,7 +21,10 @@ export class AIService {
   /**
    * Transcribe audio using Whisper API
    */
-  async transcribe(audioBuffer: Buffer, language: string = 'es'): Promise<{
+  async transcribe(
+    audioBuffer: Buffer,
+    language: string = 'es'
+  ): Promise<{
     text: string;
     confidence: number;
     duration: number;
@@ -54,7 +57,7 @@ export class AIService {
     options?: {
       templateId?: string;
       includeHistory?: boolean;
-    },
+    }
   ): Promise<{
     soapNotes: SOAPNotes;
     suggestedDiagnoses: Diagnosis[];
@@ -119,10 +122,7 @@ Responde SOLO en formato JSON con esta estructura:
   /**
    * Generate a summary of patient history
    */
-  async generatePatientSummary(
-    ctx: TenantContext,
-    patientId: string,
-  ): Promise<string> {
+  async generatePatientSummary(ctx: TenantContext, patientId: string): Promise<string> {
     const patientData = await this.patientsService.getPatientContext(ctx, patientId);
     if (!patientData) {
       throw new Error('Patient not found');

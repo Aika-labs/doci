@@ -1,7 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import { Search, CheckCircle, XCircle, Shield, FileText, User, Stethoscope, Calendar, Loader2 } from 'lucide-react';
+import {
+  Search,
+  CheckCircle,
+  XCircle,
+  Shield,
+  FileText,
+  User,
+  Stethoscope,
+  Calendar,
+  Loader2,
+} from 'lucide-react';
 import { prescriptionsApi, PrescriptionVerification } from '@/lib/api';
 import Link from 'next/link';
 
@@ -32,13 +42,13 @@ export default function VerifyPrescriptionPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+      <header className="border-b border-gray-200 bg-white/80 backdrop-blur-sm">
+        <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-4">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
               <FileText className="h-5 w-5 text-white" />
             </div>
-            <span className="font-bold text-xl text-gray-900">Doci</span>
+            <span className="text-xl font-bold text-gray-900">Doci</span>
           </Link>
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <Shield className="h-4 w-4" />
@@ -47,15 +57,13 @@ export default function VerifyPrescriptionPage() {
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-4 py-12">
+      <main className="mx-auto max-w-2xl px-4 py-12">
         {/* Title */}
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <div className="mb-8 text-center">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-100">
             <Shield className="h-8 w-8 text-blue-600" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Verificar Receta Médica
-          </h1>
+          <h1 className="mb-2 text-3xl font-bold text-gray-900">Verificar Receta Médica</h1>
           <p className="text-gray-600">
             Ingresa el código de seguridad para verificar la autenticidad de una receta
           </p>
@@ -63,25 +71,25 @@ export default function VerifyPrescriptionPage() {
 
         {/* Search Form */}
         <form onSubmit={handleVerify} className="mb-8">
-          <div className="bg-white rounded-2xl shadow-lg p-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+          <div className="rounded-2xl bg-white p-6 shadow-lg">
+            <label className="mb-2 block text-sm font-medium text-gray-700">
               Código de verificación
             </label>
             <div className="flex gap-3">
               <div className="relative flex-1">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Search className="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-gray-400" />
                 <input
                   type="text"
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
                   placeholder="Ej: clxyz123abc..."
-                  className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg"
+                  className="w-full rounded-xl border border-gray-300 py-3 pr-4 pl-12 text-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
                 />
               </div>
               <button
                 type="submit"
                 disabled={isLoading || !code.trim()}
-                className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium flex items-center gap-2"
+                className="flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isLoading ? (
                   <>
@@ -101,27 +109,33 @@ export default function VerifyPrescriptionPage() {
 
         {/* Error */}
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 flex items-center gap-3">
-            <XCircle className="h-5 w-5 text-red-500 flex-shrink-0" />
+          <div className="mb-6 flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 p-4">
+            <XCircle className="h-5 w-5 flex-shrink-0 text-red-500" />
             <p className="text-red-700">{error}</p>
           </div>
         )}
 
         {/* Result */}
         {result && (
-          <div className={`rounded-2xl shadow-lg overflow-hidden ${
-            result.valid ? 'bg-white' : 'bg-red-50'
-          }`}>
+          <div
+            className={`overflow-hidden rounded-2xl shadow-lg ${
+              result.valid ? 'bg-white' : 'bg-red-50'
+            }`}
+          >
             {/* Status Header */}
-            <div className={`p-6 ${
-              result.valid 
-                ? 'bg-gradient-to-r from-green-500 to-emerald-600' 
-                : 'bg-gradient-to-r from-red-500 to-rose-600'
-            }`}>
+            <div
+              className={`p-6 ${
+                result.valid
+                  ? 'bg-gradient-to-r from-green-500 to-emerald-600'
+                  : 'bg-gradient-to-r from-red-500 to-rose-600'
+              }`}
+            >
               <div className="flex items-center gap-4">
-                <div className={`w-14 h-14 rounded-full flex items-center justify-center ${
-                  result.valid ? 'bg-white/20' : 'bg-white/20'
-                }`}>
+                <div
+                  className={`flex h-14 w-14 items-center justify-center rounded-full ${
+                    result.valid ? 'bg-white/20' : 'bg-white/20'
+                  }`}
+                >
                   {result.valid ? (
                     <CheckCircle className="h-8 w-8 text-white" />
                   ) : (
@@ -133,10 +147,9 @@ export default function VerifyPrescriptionPage() {
                     {result.valid ? 'Receta Válida' : 'Receta No Válida'}
                   </h2>
                   <p className="text-white/80">
-                    {result.valid 
+                    {result.valid
                       ? 'Esta receta es auténtica y está vigente'
-                      : result.message || 'No se pudo verificar la receta'
-                    }
+                      : result.message || 'No se pudo verificar la receta'}
                   </p>
                 </div>
               </div>
@@ -144,9 +157,9 @@ export default function VerifyPrescriptionPage() {
 
             {/* Details */}
             {result.valid && result.prescription && (
-              <div className="p-6 space-y-4">
-                <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
-                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+              <div className="space-y-4 p-6">
+                <div className="flex items-center gap-4 rounded-xl bg-gray-50 p-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100">
                     <User className="h-5 w-5 text-blue-600" />
                   </div>
                   <div>
@@ -155,21 +168,25 @@ export default function VerifyPrescriptionPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
-                  <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                <div className="flex items-center gap-4 rounded-xl bg-gray-50 p-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
                     <Stethoscope className="h-5 w-5 text-green-600" />
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Médico</p>
-                    <p className="font-semibold text-gray-900">Dr(a). {result.prescription.doctor}</p>
+                    <p className="font-semibold text-gray-900">
+                      Dr(a). {result.prescription.doctor}
+                    </p>
                     {result.prescription.licenseNumber && (
-                      <p className="text-sm text-gray-500">Cédula: {result.prescription.licenseNumber}</p>
+                      <p className="text-sm text-gray-500">
+                        Cédula: {result.prescription.licenseNumber}
+                      </p>
                     )}
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
-                  <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                <div className="flex items-center gap-4 rounded-xl bg-gray-50 p-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-100">
                     <Calendar className="h-5 w-5 text-purple-600" />
                   </div>
                   <div>
@@ -191,8 +208,8 @@ export default function VerifyPrescriptionPage() {
         {/* Info */}
         <div className="mt-12 text-center text-sm text-gray-500">
           <p>
-            Este sistema de verificación permite confirmar la autenticidad de las recetas
-            emitidas a través de la plataforma Doci.
+            Este sistema de verificación permite confirmar la autenticidad de las recetas emitidas a
+            través de la plataforma Doci.
           </p>
           <p className="mt-2">
             Si tienes dudas sobre una receta, contacta directamente al consultorio médico.

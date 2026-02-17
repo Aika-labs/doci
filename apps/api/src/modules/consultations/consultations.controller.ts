@@ -15,7 +15,7 @@ export class ConsultationsController {
     @CurrentTenant() ctx: TenantContext,
     @Query('page') page?: number,
     @Query('limit') limit?: number,
-    @Query('patientId') patientId?: string,
+    @Query('patientId') patientId?: string
   ) {
     return this.consultationsService.findAll(ctx, { page, limit, patientId });
   }
@@ -30,14 +30,18 @@ export class ConsultationsController {
   @ApiOperation({ summary: 'Create a new consultation' })
   async create(
     @CurrentTenant() ctx: TenantContext,
-    @Body() data: {
+    @Body()
+    data: {
       patientId: string;
       templateId?: string;
       appointmentId?: string;
       clinicalData: Record<string, unknown>;
-    },
+    }
   ) {
-    return this.consultationsService.create(ctx, data as Parameters<typeof this.consultationsService.create>[1]);
+    return this.consultationsService.create(
+      ctx,
+      data as Parameters<typeof this.consultationsService.create>[1]
+    );
   }
 
   @Put(':id')
@@ -45,12 +49,17 @@ export class ConsultationsController {
   async update(
     @CurrentTenant() ctx: TenantContext,
     @Param('id') id: string,
-    @Body() data: {
+    @Body()
+    data: {
       clinicalData?: Record<string, unknown>;
       soapNotes?: Record<string, unknown>;
       status?: 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
-    },
+    }
   ) {
-    return this.consultationsService.update(ctx, id, data as Parameters<typeof this.consultationsService.update>[2]);
+    return this.consultationsService.update(
+      ctx,
+      id,
+      data as Parameters<typeof this.consultationsService.update>[2]
+    );
   }
 }

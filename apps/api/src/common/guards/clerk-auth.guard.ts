@@ -45,7 +45,7 @@ export class ClerkAuthGuard implements CanActivate {
 
   constructor(
     private reflector: Reflector,
-    private prisma: PrismaService,
+    private prisma: PrismaService
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -123,10 +123,7 @@ export class ClerkAuthGuard implements CanActivate {
 
       return true;
     } catch (error) {
-      if (
-        error instanceof UnauthorizedException ||
-        error instanceof ForbiddenException
-      ) {
+      if (error instanceof UnauthorizedException || error instanceof ForbiddenException) {
         throw error;
       }
       throw new UnauthorizedException('Invalid or expired token');
@@ -149,7 +146,10 @@ export class ClerkAuthGuard implements CanActivate {
       // Get tenant from Clerk metadata or create a default one
       const tenantSlug =
         (clerkUser.publicMetadata?.tenantSlug as string) ||
-        email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g, '-');
+        email
+          .split('@')[0]
+          .toLowerCase()
+          .replace(/[^a-z0-9]/g, '-');
 
       // Find or create tenant
       let tenant = await this.prisma.tenant.findUnique({

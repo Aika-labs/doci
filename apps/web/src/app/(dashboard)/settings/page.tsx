@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useAuth, useUser } from '@clerk/nextjs';
 import { Building2, User, Bell, Shield, Palette, Save, Loader2 } from 'lucide-react';
 import { useToast } from '@/components/ui';
+import { useTheme } from '@/components/ThemeProvider';
 import { settingsApi, UserProfile, TenantSettings } from '@/lib/api';
 
 type SettingsTab = 'profile' | 'clinic' | 'notifications' | 'security' | 'appearance';
@@ -102,21 +103,21 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="mx-auto max-w-4xl">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Configuración</h1>
         <p className="text-gray-600">Administra tu perfil y preferencias</p>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-6">
+      <div className="flex flex-col gap-6 md:flex-row">
         {/* Tabs sidebar */}
-        <div className="md:w-48 flex-shrink-0">
-          <nav className="flex md:flex-col gap-1">
+        <div className="flex-shrink-0 md:w-48">
+          <nav className="flex gap-1 md:flex-col">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                   activeTab === tab.id
                     ? 'bg-blue-50 text-blue-700'
                     : 'text-gray-600 hover:bg-gray-100'
@@ -130,7 +131,7 @@ export default function SettingsPage() {
         </div>
 
         {/* Content */}
-        <div className="flex-1 bg-white rounded-xl border border-gray-200 p-6">
+        <div className="flex-1 rounded-xl border border-gray-200 bg-white p-6">
           {activeTab === 'profile' && (
             <ProfileSettings
               user={user}
@@ -140,11 +141,7 @@ export default function SettingsPage() {
             />
           )}
           {activeTab === 'clinic' && (
-            <ClinicSettings
-              tenant={tenant}
-              onSave={handleSaveTenant}
-              isSaving={isSaving}
-            />
+            <ClinicSettings tenant={tenant} onSave={handleSaveTenant} isSaving={isSaving} />
           )}
           {activeTab === 'notifications' && (
             <NotificationSettings onSave={handleSaveLocal} isSaving={isSaving} />
@@ -183,37 +180,37 @@ function ProfileSettings({ user, profile, onSave, isSaving }: ProfileSettingsPro
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2 className="text-lg font-semibold text-gray-900 mb-4">Información del perfil</h2>
-      
+      <h2 className="mb-4 text-lg font-semibold text-gray-900">Información del perfil</h2>
+
       <div className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Nombre</label>
             <input
               type="text"
               value={formData.firstName}
               onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Apellido</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Apellido</label>
             <input
               type="text"
               value={formData.lastName}
               onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Especialidad</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Especialidad</label>
             <select
               value={formData.specialty}
               onChange={(e) => setFormData({ ...formData, specialty: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Seleccionar...</option>
               <option value="general">Medicina General</option>
@@ -229,36 +226,38 @@ function ProfileSettings({ user, profile, onSave, isSaving }: ProfileSettingsPro
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Cédula Profesional</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Cédula Profesional
+            </label>
             <input
               type="text"
               value={formData.licenseNumber}
               onChange={(e) => setFormData({ ...formData, licenseNumber: e.target.value })}
               placeholder="Ej: 12345678"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
+          <label className="mb-1 block text-sm font-medium text-gray-700">Teléfono</label>
           <input
             type="tel"
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
             placeholder="+52 55 1234 5678"
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Biografía</label>
+          <label className="mb-1 block text-sm font-medium text-gray-700">Biografía</label>
           <textarea
             value={formData.bio}
             onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
             rows={3}
             placeholder="Breve descripción profesional..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -266,7 +265,7 @@ function ProfileSettings({ user, profile, onSave, isSaving }: ProfileSettingsPro
           <button
             type="submit"
             disabled={isSaving}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
           >
             {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             Guardar cambios
@@ -323,88 +322,90 @@ function ClinicSettings({ tenant, onSave, isSaving }: ClinicSettingsProps) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2 className="text-lg font-semibold text-gray-900 mb-4">Información de la clínica</h2>
-      
+      <h2 className="mb-4 text-lg font-semibold text-gray-900">Información de la clínica</h2>
+
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Nombre de la clínica</label>
+          <label className="mb-1 block text-sm font-medium text-gray-700">
+            Nombre de la clínica
+          </label>
           <input
             type="text"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             placeholder="Ej: Clínica San Rafael"
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
+          <label className="mb-1 block text-sm font-medium text-gray-700">Dirección</label>
           <input
             type="text"
             value={formData.address}
             onChange={(e) => setFormData({ ...formData, address: e.target.value })}
             placeholder="Calle y número"
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         <div className="grid grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Ciudad</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Ciudad</label>
             <input
               type="text"
               value={formData.city}
               onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Estado</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Estado</label>
             <input
               type="text"
               value={formData.state}
               onChange={(e) => setFormData({ ...formData, state: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">C.P.</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">C.P.</label>
             <input
               type="text"
               value={formData.postalCode}
               onChange={(e) => setFormData({ ...formData, postalCode: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Teléfono</label>
             <input
               type="tel"
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Email</label>
             <input
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>
 
-        <div className="pt-4 border-t">
-          <h3 className="text-sm font-medium text-gray-900 mb-3">Horario de atención</h3>
+        <div className="border-t pt-4">
+          <h3 className="mb-3 text-sm font-medium text-gray-900">Horario de atención</h3>
           <div className="space-y-2">
             {days.map((day) => (
               <div key={day.key} className="flex items-center gap-4">
-                <label className="flex items-center gap-2 w-28">
+                <label className="flex w-28 items-center gap-2">
                   <input
                     type="checkbox"
                     checked={formData.schedule[day.key].enabled}
@@ -435,7 +436,7 @@ function ClinicSettings({ tenant, onSave, isSaving }: ClinicSettingsProps) {
                           },
                         })
                       }
-                      className="px-2 py-1 border border-gray-300 rounded text-sm"
+                      className="rounded border border-gray-300 px-2 py-1 text-sm"
                     />
                     <span className="text-gray-500">a</span>
                     <input
@@ -450,7 +451,7 @@ function ClinicSettings({ tenant, onSave, isSaving }: ClinicSettingsProps) {
                           },
                         })
                       }
-                      className="px-2 py-1 border border-gray-300 rounded text-sm"
+                      className="rounded border border-gray-300 px-2 py-1 text-sm"
                     />
                   </>
                 )}
@@ -463,7 +464,7 @@ function ClinicSettings({ tenant, onSave, isSaving }: ClinicSettingsProps) {
           <button
             type="submit"
             disabled={isSaving}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
           >
             {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             Guardar cambios
@@ -498,17 +499,19 @@ function NotificationSettings({ onSave, isSaving }: LocalSettingsProps) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2 className="text-lg font-semibold text-gray-900 mb-4">Preferencias de notificaciones</h2>
-      
+      <h2 className="mb-4 text-lg font-semibold text-gray-900">Preferencias de notificaciones</h2>
+
       <div className="space-y-6">
         <div>
-          <h3 className="text-sm font-medium text-gray-900 mb-3">Notificaciones por email</h3>
+          <h3 className="mb-3 text-sm font-medium text-gray-900">Notificaciones por email</h3>
           <div className="space-y-3">
             <label className="flex items-center gap-3">
               <input
                 type="checkbox"
                 checked={settings.emailAppointmentReminder}
-                onChange={(e) => setSettings({ ...settings, emailAppointmentReminder: e.target.checked })}
+                onChange={(e) =>
+                  setSettings({ ...settings, emailAppointmentReminder: e.target.checked })
+                }
                 className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
               <span className="text-sm text-gray-700">Recordatorios de citas</span>
@@ -535,13 +538,15 @@ function NotificationSettings({ onSave, isSaving }: LocalSettingsProps) {
         </div>
 
         <div className="border-t pt-4">
-          <h3 className="text-sm font-medium text-gray-900 mb-3">Notificaciones push</h3>
+          <h3 className="mb-3 text-sm font-medium text-gray-900">Notificaciones push</h3>
           <div className="space-y-3">
             <label className="flex items-center gap-3">
               <input
                 type="checkbox"
                 checked={settings.pushAppointmentReminder}
-                onChange={(e) => setSettings({ ...settings, pushAppointmentReminder: e.target.checked })}
+                onChange={(e) =>
+                  setSettings({ ...settings, pushAppointmentReminder: e.target.checked })
+                }
                 className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
               <span className="text-sm text-gray-700">Recordatorios de citas próximas</span>
@@ -559,11 +564,11 @@ function NotificationSettings({ onSave, isSaving }: LocalSettingsProps) {
         </div>
 
         <div className="border-t pt-4">
-          <h3 className="text-sm font-medium text-gray-900 mb-3">Tiempo de recordatorio</h3>
+          <h3 className="mb-3 text-sm font-medium text-gray-900">Tiempo de recordatorio</h3>
           <select
             value={settings.reminderTime}
             onChange={(e) => setSettings({ ...settings, reminderTime: e.target.value })}
-            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
           >
             <option value="1">1 hora antes</option>
             <option value="2">2 horas antes</option>
@@ -576,7 +581,7 @@ function NotificationSettings({ onSave, isSaving }: LocalSettingsProps) {
           <button
             type="submit"
             disabled={isSaving}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
           >
             {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             Guardar cambios
@@ -590,49 +595,49 @@ function NotificationSettings({ onSave, isSaving }: LocalSettingsProps) {
 function SecuritySettings() {
   return (
     <div>
-      <h2 className="text-lg font-semibold text-gray-900 mb-4">Seguridad</h2>
-      
+      <h2 className="mb-4 text-lg font-semibold text-gray-900">Seguridad</h2>
+
       <div className="space-y-6">
-        <div className="p-4 bg-gray-50 rounded-lg">
-          <h3 className="text-sm font-medium text-gray-900 mb-2">Cambiar contraseña</h3>
-          <p className="text-sm text-gray-600 mb-3">
+        <div className="rounded-lg bg-gray-50 p-4">
+          <h3 className="mb-2 text-sm font-medium text-gray-900">Cambiar contraseña</h3>
+          <p className="mb-3 text-sm text-gray-600">
             La gestión de contraseña se realiza a través de tu cuenta de Clerk.
           </p>
           <a
             href="https://accounts.clerk.dev/user"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
+            className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
           >
             Gestionar cuenta
           </a>
         </div>
 
-        <div className="p-4 bg-gray-50 rounded-lg">
-          <h3 className="text-sm font-medium text-gray-900 mb-2">Autenticación de dos factores</h3>
-          <p className="text-sm text-gray-600 mb-3">
+        <div className="rounded-lg bg-gray-50 p-4">
+          <h3 className="mb-2 text-sm font-medium text-gray-900">Autenticación de dos factores</h3>
+          <p className="mb-3 text-sm text-gray-600">
             Añade una capa extra de seguridad a tu cuenta.
           </p>
           <a
             href="https://accounts.clerk.dev/user/security"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
+            className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
           >
             Configurar 2FA
           </a>
         </div>
 
-        <div className="p-4 bg-gray-50 rounded-lg">
-          <h3 className="text-sm font-medium text-gray-900 mb-2">Sesiones activas</h3>
-          <p className="text-sm text-gray-600 mb-3">
+        <div className="rounded-lg bg-gray-50 p-4">
+          <h3 className="mb-2 text-sm font-medium text-gray-900">Sesiones activas</h3>
+          <p className="mb-3 text-sm text-gray-600">
             Revisa y gestiona los dispositivos donde has iniciado sesión.
           </p>
           <a
             href="https://accounts.clerk.dev/user/security"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
+            className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
           >
             Ver sesiones
           </a>
@@ -643,37 +648,36 @@ function SecuritySettings() {
 }
 
 function AppearanceSettings({ onSave, isSaving }: LocalSettingsProps) {
+  const { theme, setTheme } = useTheme();
   const [settings, setSettings] = useState({
-    theme: 'light',
     compactMode: false,
     language: 'es',
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Save to localStorage or backend
     onSave();
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2 className="text-lg font-semibold text-gray-900 mb-4">Apariencia</h2>
-      
+      <h2 className="mb-4 text-lg font-semibold text-gray-900">Apariencia</h2>
+
       <div className="space-y-6">
         <div>
-          <h3 className="text-sm font-medium text-gray-900 mb-3">Tema</h3>
+          <h3 className="mb-3 text-sm font-medium text-gray-900">Tema</h3>
           <div className="flex gap-3">
             {[
-              { value: 'light', label: 'Claro' },
-              { value: 'dark', label: 'Oscuro' },
-              { value: 'system', label: 'Sistema' },
+              { value: 'light' as const, label: 'Claro' },
+              { value: 'dark' as const, label: 'Oscuro' },
+              { value: 'system' as const, label: 'Sistema' },
             ].map((option) => (
               <button
                 key={option.value}
                 type="button"
-                onClick={() => setSettings({ ...settings, theme: option.value })}
-                className={`px-4 py-2 rounded-lg border text-sm font-medium transition-colors ${
-                  settings.theme === option.value
+                onClick={() => setTheme(option.value)}
+                className={`rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
+                  theme === option.value
                     ? 'border-blue-600 bg-blue-50 text-blue-700'
                     : 'border-gray-300 text-gray-700 hover:bg-gray-50'
                 }`}
@@ -685,11 +689,11 @@ function AppearanceSettings({ onSave, isSaving }: LocalSettingsProps) {
         </div>
 
         <div className="border-t pt-4">
-          <h3 className="text-sm font-medium text-gray-900 mb-3">Idioma</h3>
+          <h3 className="mb-3 text-sm font-medium text-gray-900">Idioma</h3>
           <select
             value={settings.language}
             onChange={(e) => setSettings({ ...settings, language: e.target.value })}
-            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
           >
             <option value="es">Español</option>
             <option value="en">English</option>
@@ -707,7 +711,9 @@ function AppearanceSettings({ onSave, isSaving }: LocalSettingsProps) {
             />
             <div>
               <span className="text-sm font-medium text-gray-900">Modo compacto</span>
-              <p className="text-xs text-gray-500">Reduce el espaciado para mostrar más información</p>
+              <p className="text-xs text-gray-500">
+                Reduce el espaciado para mostrar más información
+              </p>
             </div>
           </label>
         </div>
@@ -716,7 +722,7 @@ function AppearanceSettings({ onSave, isSaving }: LocalSettingsProps) {
           <button
             type="submit"
             disabled={isSaving}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
           >
             {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             Guardar cambios

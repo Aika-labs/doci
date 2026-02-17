@@ -22,7 +22,7 @@ export class NotificationsController {
       appointmentTime: string;
       clinicName: string;
       clinicAddress?: string;
-    },
+    }
   ) {
     const success = await this.notificationsService.sendAppointmentReminder(data);
     return { success };
@@ -32,7 +32,7 @@ export class NotificationsController {
   @ApiOperation({ summary: 'Send a text message via WhatsApp' })
   async sendText(
     @CurrentTenant() ctx: TenantContext,
-    @Body() data: { to: string; message: string },
+    @Body() data: { to: string; message: string }
   ) {
     const success = await this.notificationsService.sendTextMessage(data.to, data.message);
     return { success };
@@ -42,7 +42,7 @@ export class NotificationsController {
   @ApiOperation({ summary: 'Send bulk reminders for upcoming appointments' })
   async sendBulkReminders(
     @CurrentTenant() ctx: TenantContext,
-    @Query('hoursAhead') hoursAhead?: number,
+    @Query('hoursAhead') hoursAhead?: number
   ) {
     const result = await this.notificationsService.sendBulkReminders(hoursAhead || 24);
     return result;
