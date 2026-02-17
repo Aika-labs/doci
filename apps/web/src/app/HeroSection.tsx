@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -20,22 +20,72 @@ const HERO_IMAGE_URL =
 
 export default function HeroSection() {
   const trackRef = useRef<HTMLDivElement>(null);
-  const [progress, setProgress] = useState(0);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+
+  // Responsive config
+  const getConfig = useCallback(() => {
+    const w = typeof window !== 'undefined' ? window.innerWidth : 1200;
+    const isMobile = w < 768;
+    return {
+      finalWidth: isMobile ? w * 0.92 : Math.min(w * 0.95, 1600),
+      finalHeight: isMobile ? 400 : 600,
+      finalRadius: isMobile ? 24 : 40,
+      finalTopMargin: isMobile ? 180 : 350,
+    };
+  }, []);
+
+  // Store config in ref to avoid re-renders
+  const configRef = useRef(getConfig());
 
   useEffect(() => {
-    function onScroll() {
-      if (!trackRef.current) return;
-      const rect = trackRef.current.getBoundingClientRect();
-      const trackHeight = trackRef.current.offsetHeight - window.innerHeight;
-      if (trackHeight <= 0) return;
-      const raw = -rect.top / trackHeight;
-      setProgress(Math.min(1, Math.max(0, raw)));
+    function handleScroll() {
+      const track = trackRef.current;
+      const card = cardRef.current;
+      const content = contentRef.current;
+      const header = headerRef.current;
+      if (!track || !card) return;
+
+      const config = configRef.current;
+      const rect = track.getBoundingClientRect();
+      const endScroll = track.offsetHeight - window.innerHeight;
+      const scrolled = -rect.top;
+
+      // Progress 0→1 over first 60% of scroll track
+      const progress = Math.max(0, Math.min(scrolled / (endScroll * 0.6), 1));
+
+      // Card dimensions morph
+      const ww = window.innerWidth;
+      const wh = window.innerHeight;
+      const currentWidth = ww - progress * (ww - config.finalWidth);
+      const currentHeight = wh - progress * (wh - config.finalHeight);
+      const currentMargin = progress * config.finalTopMargin;
+      const currentRadius = progress * config.finalRadius;
+
+      card.style.width = `${currentWidth}px`;
+      card.style.height = `${currentHeight}px`;
+      card.style.borderRadius = `${currentRadius}px`;
+      card.style.marginTop = `${currentMargin}px`;
+
+      // Hero text fades out fast (first 30% of progress)
+      if (content) {
+        const textOpacity = Math.max(0, 1 - progress * 3);
+        content.style.opacity = String(textOpacity);
+        content.style.pointerEvents = progress > 0.3 ? 'none' : 'auto';
+      }
+
+      // "LA VISIÓN" header fades in after 50%
+      if (header) {
+        const headerOpacity = progress > 0.5 ? Math.min((progress - 0.5) * 2, 1) : 0;
+        header.style.opacity = String(headerOpacity);
+      }
     }
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+    function handleResize() {
+      configRef.current = getConfig();
+      handleScroll();
+    }
 
   // ── Derived animation values ──────────────────────────────────────
   // First 40% of scroll = morph (card shrinks)
@@ -49,8 +99,8 @@ export default function HeroSection() {
   const topPadding = morphProgress * 120;
   const borderRadius = morphProgress * 32;
 
-  // Overlay text fades out during morph
-  const textOpacity = 1 - morphProgress;
+  // After first scroll handler runs, card dimensions are set by JS.
+  // No extra mounted state needed — initial inline style is overwritten immediately.
 
   return (
     <div ref={trackRef} className="relative" style={{ height: '400vh' }}>
@@ -149,12 +199,23 @@ export default function HeroSection() {
             transition: 'padding 0.05s ease-out',
           }}
         >
+          <Image
+            src={HERO_IMAGE_URL}
+            alt="Valle con montañas — Doci hero"
+            fill
+            priority
+            className="object-cover opacity-80"
+            sizes="100vw"
+          />
+
+          {/* Dark overlay */}
+          <div className="absolute inset-0 bg-black/20" />
+
+          {/* ── Bottom-left hero content ───────────────────────────── */}
           <div
-            className="relative h-full w-full overflow-hidden"
-            style={{
-              borderRadius: `${borderRadius}px`,
-              transition: 'border-radius 0.05s ease-out',
-            }}
+            ref={contentRef}
+            className="absolute inset-0 flex flex-col justify-end pb-16 sm:pb-20 md:pb-[120px]"
+            style={{ opacity: 1, transition: 'opacity 0.15s ease-out' }}
           >
             {/* Background image */}
             <Image
@@ -184,6 +245,10 @@ export default function HeroSection() {
                 <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-300 bg-clip-text text-transparent">
                   reimaginado
                 </span>
+              </div>
+              <h1 className="mb-8 max-w-4xl text-3xl leading-tight tracking-tight text-white sm:text-4xl md:text-5xl lg:text-5xl">
+                Tu consultorio, reimaginado. El sistema de gestión clínica que usa inteligencia
+                artificial para que dediques más tiempo a tus pacientes y menos a la documentación.
               </h1>
               <p className="mt-4 max-w-md text-base leading-relaxed text-white/70 sm:mt-6 sm:max-w-xl sm:text-lg md:text-xl">
                 El sistema de gestión clínica que usa inteligencia artificial para que dediques más
@@ -193,6 +258,6 @@ export default function HeroSection() {
           </div>
         </div>
       </div>
-    </div>
+    </header>
   );
 }
