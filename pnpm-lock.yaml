@@ -11,6 +11,9 @@ importers:
       '@types/node':
         specifier: ^22.10.0
         version: 22.19.11
+      next:
+        specifier: 16.1.6
+        version: 16.1.6(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       prettier:
         specifier: ^3.4.0
         version: 3.8.1
