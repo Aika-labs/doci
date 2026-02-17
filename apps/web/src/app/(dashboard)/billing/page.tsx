@@ -24,6 +24,7 @@ import {
 import Link from 'next/link';
 import { billingApi, Invoice, Service, FinancialSummary } from '@/lib/api';
 import { useToast } from '@/components/ui';
+import { BillingSkeleton } from '@/components/Skeleton';
 
 type TabType = 'invoices' | 'services';
 type StatusFilter = 'ALL' | 'PENDING' | 'PAID' | 'PARTIAL' | 'OVERDUE' | 'CANCELLED';
@@ -301,9 +302,7 @@ export default function BillingPage() {
 
       {/* Content */}
       {isLoading ? (
-        <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-        </div>
+        <BillingSkeleton />
       ) : activeTab === 'invoices' ? (
         /* Invoices List */
         filteredInvoices.length === 0 ? (

@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+import { withSentryConfig } from '@sentry/nextjs';
 import withSerwistInit from '@serwist/next';
 
 const withSerwist = withSerwistInit({
@@ -49,4 +50,17 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withSerwist(nextConfig);
+export default withSentryConfig(withSerwist(nextConfig), {
+  // Sentry build options
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+
+  // Upload source maps for better stack traces
+  silent: !process.env.CI,
+  widenClientFileUpload: true,
+  disableLogger: true,
+
+  // Disable Sentry webpack plugin when no auth token is available (local dev)
+  ...(process.env.SENTRY_AUTH_TOKEN ? {} : { sourcemaps: { disable: true } }),
+});

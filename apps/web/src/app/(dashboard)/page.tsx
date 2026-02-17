@@ -5,7 +5,8 @@ import { useAuth, useUser } from '@clerk/nextjs';
 import Link from 'next/link';
 import { format, startOfDay, endOfDay } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { Calendar, Users, FileText, Clock, Mic, UserPlus, CalendarPlus, TrendingUp, TrendingDown, Loader2 } from 'lucide-react';
+import { Calendar, Users, FileText, Clock, Mic, UserPlus, CalendarPlus, TrendingUp, TrendingDown } from 'lucide-react';
+import { DashboardSkeleton } from '@/components/Skeleton';
 
 interface DashboardStats {
   todayAppointments: number;
@@ -150,11 +151,7 @@ export default function DashboardPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   return (

@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { ClerkProvider } from '@clerk/nextjs';
 import { esES } from '@clerk/localizations';
 import { ToastProvider } from '@/components/ui';
+import { ThemeProvider } from '@/components/ThemeProvider';
 import { OfflineIndicator, InstallPrompt } from '@/components/pwa';
 
 interface ProvidersProps {
@@ -49,7 +50,9 @@ export function Providers({ children }: ProvidersProps) {
       }}
     >
       <ToastProvider>
-        {children}
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
       </ToastProvider>
       <ServiceWorkerRegistration />
       <OfflineIndicator />
