@@ -4,10 +4,7 @@ interface FetchOptions extends RequestInit {
   token?: string;
 }
 
-export async function apiFetch<T>(
-  endpoint: string,
-  options: FetchOptions = {}
-): Promise<T> {
+export async function apiFetch<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
   const { token, ...fetchOptions } = options;
 
   const headers: HeadersInit = {
@@ -93,13 +90,12 @@ export const patientsApi = {
     if (params?.page) searchParams.set('page', params.page.toString());
     if (params?.limit) searchParams.set('limit', params.limit.toString());
     if (params?.search) searchParams.set('search', params.search);
-    
+
     const query = searchParams.toString();
     return apiFetch<PatientsResponse>(`/patients${query ? `?${query}` : ''}`, { token });
   },
 
-  getById: (token: string, id: string) =>
-    apiFetch<Patient>(`/patients/${id}`, { token }),
+  getById: (token: string, id: string) => apiFetch<Patient>(`/patients/${id}`, { token }),
 
   create: (token: string, data: Partial<Patient>) =>
     apiFetch<Patient>('/patients', {
@@ -129,13 +125,12 @@ export const appointmentsApi = {
     if (params?.start) searchParams.set('start', params.start);
     if (params?.end) searchParams.set('end', params.end);
     if (params?.patientId) searchParams.set('patientId', params.patientId);
-    
+
     const query = searchParams.toString();
     return apiFetch<AppointmentsResponse>(`/appointments${query ? `?${query}` : ''}`, { token });
   },
 
-  getById: (token: string, id: string) =>
-    apiFetch<Appointment>(`/appointments/${id}`, { token }),
+  getById: (token: string, id: string) => apiFetch<Appointment>(`/appointments/${id}`, { token }),
 
   create: (token: string, data: Partial<Appointment>) =>
     apiFetch<Appointment>('/appointments', {
@@ -213,21 +208,23 @@ export const prescriptionsApi = {
   getAll: (token: string, params?: { consultationId?: string }) => {
     const searchParams = new URLSearchParams();
     if (params?.consultationId) searchParams.set('consultationId', params.consultationId);
-    
+
     const query = searchParams.toString();
     return apiFetch<Prescription[]>(`/prescriptions${query ? `?${query}` : ''}`, { token });
   },
 
-  getById: (token: string, id: string) =>
-    apiFetch<Prescription>(`/prescriptions/${id}`, { token }),
+  getById: (token: string, id: string) => apiFetch<Prescription>(`/prescriptions/${id}`, { token }),
 
-  create: (token: string, data: {
-    consultationId: string;
-    medications: MedicationItem[];
-    diagnosis?: string;
-    instructions?: string;
-    expiresAt?: string;
-  }) =>
+  create: (
+    token: string,
+    data: {
+      consultationId: string;
+      medications: MedicationItem[];
+      diagnosis?: string;
+      instructions?: string;
+      expiresAt?: string;
+    }
+  ) =>
     apiFetch<Prescription>('/prescriptions', {
       method: 'POST',
       body: JSON.stringify(data),
@@ -245,8 +242,7 @@ export const prescriptionsApi = {
       token,
     }),
 
-  verify: (code: string) =>
-    apiFetch<PrescriptionVerification>(`/prescriptions/verify/${code}`),
+  verify: (code: string) => apiFetch<PrescriptionVerification>(`/prescriptions/verify/${code}`),
 };
 
 // Billing types
@@ -366,14 +362,17 @@ export const billingApi = {
     }),
 
   // Invoices
-  getInvoices: (token: string, params?: { 
-    status?: string; 
-    patientId?: string;
-    startDate?: string;
-    endDate?: string;
-    page?: number;
-    limit?: number;
-  }) => {
+  getInvoices: (
+    token: string,
+    params?: {
+      status?: string;
+      patientId?: string;
+      startDate?: string;
+      endDate?: string;
+      page?: number;
+      limit?: number;
+    }
+  ) => {
     const searchParams = new URLSearchParams();
     if (params?.status) searchParams.set('status', params.status);
     if (params?.patientId) searchParams.set('patientId', params.patientId);
@@ -388,18 +387,21 @@ export const billingApi = {
   getInvoice: (token: string, id: string) =>
     apiFetch<Invoice>(`/billing/invoices/${id}`, { token }),
 
-  createInvoice: (token: string, data: {
-    patientId: string;
-    dueDate?: string;
-    notes?: string;
-    items: Array<{
-      serviceId?: string;
-      description: string;
-      quantity: number;
-      unitPrice: number;
-      discount?: number;
-    }>;
-  }) =>
+  createInvoice: (
+    token: string,
+    data: {
+      patientId: string;
+      dueDate?: string;
+      notes?: string;
+      items: Array<{
+        serviceId?: string;
+        description: string;
+        quantity: number;
+        unitPrice: number;
+        discount?: number;
+      }>;
+    }
+  ) =>
     apiFetch<Invoice>('/billing/invoices', {
       method: 'POST',
       body: JSON.stringify(data),
@@ -420,12 +422,16 @@ export const billingApi = {
     }),
 
   // Payments
-  addPayment: (token: string, invoiceId: string, data: {
-    amount: number;
-    method: 'CASH' | 'CARD' | 'TRANSFER' | 'CHECK' | 'OTHER';
-    reference?: string;
-    notes?: string;
-  }) =>
+  addPayment: (
+    token: string,
+    invoiceId: string,
+    data: {
+      amount: number;
+      method: 'CASH' | 'CARD' | 'TRANSFER' | 'CHECK' | 'OTHER';
+      reference?: string;
+      notes?: string;
+    }
+  ) =>
     apiFetch<Payment>(`/billing/invoices/${invoiceId}/payments`, {
       method: 'POST',
       body: JSON.stringify(data),
@@ -438,7 +444,9 @@ export const billingApi = {
     if (params?.startDate) searchParams.set('startDate', params.startDate);
     if (params?.endDate) searchParams.set('endDate', params.endDate);
     const query = searchParams.toString();
-    return apiFetch<FinancialSummary>(`/billing/reports/summary${query ? `?${query}` : ''}`, { token });
+    return apiFetch<FinancialSummary>(`/billing/reports/summary${query ? `?${query}` : ''}`, {
+      token,
+    });
   },
 };
 
@@ -472,8 +480,7 @@ export interface TenantSettings {
 // Settings API functions
 export const settingsApi = {
   // User profile
-  getProfile: (token: string) =>
-    apiFetch<UserProfile>('/auth/me', { token }),
+  getProfile: (token: string) => apiFetch<UserProfile>('/auth/me', { token }),
 
   updateProfile: (token: string, data: Partial<UserProfile>) =>
     apiFetch<UserProfile>('/auth/me', {
@@ -483,8 +490,7 @@ export const settingsApi = {
     }),
 
   // Tenant settings
-  getTenant: (token: string) =>
-    apiFetch<TenantSettings>('/auth/tenant', { token }),
+  getTenant: (token: string) => apiFetch<TenantSettings>('/auth/tenant', { token }),
 
   updateTenant: (token: string, data: Partial<TenantSettings>) =>
     apiFetch<TenantSettings>('/auth/tenant', {

@@ -102,14 +102,17 @@ export default function AppointmentsPage() {
     }
   };
 
-  const handleStatusChange = async (appointmentId: string, status: 'SCHEDULED' | 'CONFIRMED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED' | 'NO_SHOW') => {
+  const handleStatusChange = async (
+    appointmentId: string,
+    status: 'SCHEDULED' | 'CONFIRMED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED' | 'NO_SHOW'
+  ) => {
     try {
       const token = await getToken();
       if (!token) return;
 
       await appointmentsApi.update(token, appointmentId, { status });
       await fetchAppointments();
-      
+
       const statusMessages: Record<string, string> = {
         COMPLETED: 'Cita marcada como completada',
         CANCELLED: 'Cita cancelada',
@@ -137,9 +140,7 @@ export default function AppointmentsPage() {
   };
 
   // Stats
-  const todayAppointments = appointments.filter((apt) =>
-    isSameDay(getStartTime(apt), new Date())
-  );
+  const todayAppointments = appointments.filter((apt) => isSameDay(getStartTime(apt), new Date()));
   const upcomingAppointments = appointments.filter(
     (apt) => getStartTime(apt) > new Date() && apt.status !== 'CANCELLED'
   );
@@ -199,31 +200,31 @@ export default function AppointmentsPage() {
   return (
     <div>
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+      <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Agenda</h1>
           <p className="text-gray-600">Gestiona las citas de tus pacientes</p>
         </div>
         <div className="flex items-center gap-2">
           {/* View Toggle */}
-          <div className="flex items-center bg-gray-100 rounded-lg p-1">
+          <div className="flex items-center rounded-lg bg-gray-100 p-1">
             <button
               onClick={() => setViewMode('calendar')}
-              className={`p-2 rounded ${viewMode === 'calendar' ? 'bg-white shadow-sm' : ''}`}
+              className={`rounded p-2 ${viewMode === 'calendar' ? 'bg-white shadow-sm' : ''}`}
               title="Vista calendario"
             >
               <Calendar className="h-4 w-4" />
             </button>
             <button
               onClick={() => setViewMode('day')}
-              className={`p-2 rounded ${viewMode === 'day' ? 'bg-white shadow-sm' : ''}`}
+              className={`rounded p-2 ${viewMode === 'day' ? 'bg-white shadow-sm' : ''}`}
               title="Vista día"
             >
               <Clock className="h-4 w-4" />
             </button>
             <button
               onClick={() => setViewMode('list')}
-              className={`p-2 rounded ${viewMode === 'list' ? 'bg-white shadow-sm' : ''}`}
+              className={`rounded p-2 ${viewMode === 'list' ? 'bg-white shadow-sm' : ''}`}
               title="Vista lista"
             >
               <List className="h-4 w-4" />
@@ -235,7 +236,7 @@ export default function AppointmentsPage() {
               setSelectedDate(new Date());
               setIsModalOpen(true);
             }}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
           >
             <Plus className="h-4 w-4" />
             Nueva Cita
@@ -244,17 +245,17 @@ export default function AppointmentsPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
+      <div className="mb-6 grid grid-cols-3 gap-4">
+        <div className="rounded-lg border border-gray-200 bg-white p-4">
           <p className="text-sm text-gray-500">Citas hoy</p>
           <p className="text-2xl font-bold text-gray-900">{todayAppointments.length}</p>
           <p className="text-xs text-gray-400">{completedToday} completadas</p>
         </div>
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
+        <div className="rounded-lg border border-gray-200 bg-white p-4">
           <p className="text-sm text-gray-500">Próximas</p>
           <p className="text-2xl font-bold text-blue-600">{upcomingAppointments.length}</p>
         </div>
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
+        <div className="rounded-lg border border-gray-200 bg-white p-4">
           <p className="text-sm text-gray-500">Este mes</p>
           <p className="text-2xl font-bold text-gray-900">{appointments.length}</p>
         </div>
@@ -272,12 +273,12 @@ export default function AppointmentsPage() {
 
       {/* Day View */}
       {viewMode === 'day' && (
-        <div className="bg-white rounded-lg border border-gray-200">
+        <div className="rounded-lg border border-gray-200 bg-white">
           {/* Day Navigation */}
-          <div className="flex items-center justify-between p-4 border-b">
+          <div className="flex items-center justify-between border-b p-4">
             <button
               onClick={() => setSelectedDay(addDays(selectedDay, -1))}
-              className="p-2 hover:bg-gray-100 rounded-lg"
+              className="rounded-lg p-2 hover:bg-gray-100"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
@@ -294,7 +295,7 @@ export default function AppointmentsPage() {
             </div>
             <button
               onClick={() => setSelectedDay(addDays(selectedDay, 1))}
-              className="p-2 hover:bg-gray-100 rounded-lg"
+              className="rounded-lg p-2 hover:bg-gray-100"
             >
               <ChevronRight className="h-5 w-5" />
             </button>
@@ -307,8 +308,8 @@ export default function AppointmentsPage() {
                 <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
               </div>
             ) : dayAppointments.length === 0 ? (
-              <div className="text-center py-12">
-                <Calendar className="h-12 w-12 mx-auto text-gray-300 mb-3" />
+              <div className="py-12 text-center">
+                <Calendar className="mx-auto mb-3 h-12 w-12 text-gray-300" />
                 <p className="text-gray-500">No hay citas para este día</p>
                 <button
                   onClick={() => {
@@ -325,16 +326,14 @@ export default function AppointmentsPage() {
                 {dayAppointments.map((apt) => (
                   <div
                     key={apt.id}
-                    className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow cursor-pointer"
+                    className="flex cursor-pointer items-center gap-4 rounded-lg border border-gray-200 p-4 transition-shadow hover:shadow-md"
                     onClick={() => handleEventClick(apt)}
                   >
-                    <div className="text-center w-16">
+                    <div className="w-16 text-center">
                       <p className="text-lg font-bold text-gray-900">
                         {format(getStartTime(apt), 'HH:mm')}
                       </p>
-                      <p className="text-xs text-gray-500">
-                        {format(getEndTime(apt), 'HH:mm')}
-                      </p>
+                      <p className="text-xs text-gray-500">{format(getEndTime(apt), 'HH:mm')}</p>
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
@@ -345,13 +344,15 @@ export default function AppointmentsPage() {
                         >
                           {apt.patient?.firstName} {apt.patient?.lastName}
                         </Link>
-                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${getStatusStyle(apt.status)}`}>
+                        <span
+                          className={`rounded-full px-2 py-0.5 text-xs font-medium ${getStatusStyle(apt.status)}`}
+                        >
                           {getStatusLabel(apt.status)}
                         </span>
                       </div>
                       <p className="text-sm text-gray-500">{getTypeLabel(apt.type)}</p>
                       {apt.patient?.phone && (
-                        <p className="text-xs text-gray-400 flex items-center gap-1 mt-1">
+                        <p className="mt-1 flex items-center gap-1 text-xs text-gray-400">
                           <Phone className="h-3 w-3" />
                           {apt.patient.phone}
                         </p>
@@ -365,7 +366,7 @@ export default function AppointmentsPage() {
                               e.stopPropagation();
                               handleStatusChange(apt.id, 'COMPLETED');
                             }}
-                            className="p-2 text-green-600 hover:bg-green-50 rounded-lg"
+                            className="rounded-lg p-2 text-green-600 hover:bg-green-50"
                             title="Marcar como completada"
                           >
                             <CheckCircle className="h-5 w-5" />
@@ -375,7 +376,7 @@ export default function AppointmentsPage() {
                               e.stopPropagation();
                               handleStatusChange(apt.id, 'NO_SHOW');
                             }}
-                            className="p-2 text-yellow-600 hover:bg-yellow-50 rounded-lg"
+                            className="rounded-lg p-2 text-yellow-600 hover:bg-yellow-50"
                             title="Marcar como no asistió"
                           >
                             <AlertCircle className="h-5 w-5" />
@@ -395,8 +396,8 @@ export default function AppointmentsPage() {
 
       {/* List View */}
       {viewMode === 'list' && (
-        <div className="bg-white rounded-lg border border-gray-200">
-          <div className="p-4 border-b">
+        <div className="rounded-lg border border-gray-200 bg-white">
+          <div className="border-b p-4">
             <h2 className="font-semibold text-gray-900">Próximas citas</h2>
           </div>
           {isLoading ? (
@@ -404,8 +405,8 @@ export default function AppointmentsPage() {
               <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
             </div>
           ) : upcomingAppointments.length === 0 ? (
-            <div className="text-center py-12">
-              <Calendar className="h-12 w-12 mx-auto text-gray-300 mb-3" />
+            <div className="py-12 text-center">
+              <Calendar className="mx-auto mb-3 h-12 w-12 text-gray-300" />
               <p className="text-gray-500">No hay citas próximas</p>
             </div>
           ) : (
@@ -416,29 +417,32 @@ export default function AppointmentsPage() {
                 .map((apt) => (
                   <div
                     key={apt.id}
-                    className="flex items-center gap-4 p-4 hover:bg-gray-50 cursor-pointer"
+                    className="flex cursor-pointer items-center gap-4 p-4 hover:bg-gray-50"
                     onClick={() => handleEventClick(apt)}
                   >
-                    <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
                       {apt.patient ? (
-                        <span className="text-blue-600 font-semibold">
-                          {apt.patient.firstName[0]}{apt.patient.lastName[0]}
+                        <span className="font-semibold text-blue-600">
+                          {apt.patient.firstName[0]}
+                          {apt.patient.lastName[0]}
                         </span>
                       ) : (
                         <User className="h-6 w-6 text-blue-600" />
                       )}
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-gray-900 truncate">
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate font-medium text-gray-900">
                         {apt.patient?.firstName} {apt.patient?.lastName}
                       </p>
                       <p className="text-sm text-gray-500">
-                        {format(getStartTime(apt), "EEE d MMM, HH:mm", { locale: es })}
+                        {format(getStartTime(apt), 'EEE d MMM, HH:mm', { locale: es })}
                         {' • '}
                         {getTypeLabel(apt.type)}
                       </p>
                     </div>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusStyle(apt.status)}`}>
+                    <span
+                      className={`rounded-full px-2 py-1 text-xs font-medium ${getStatusStyle(apt.status)}`}
+                    >
                       {getStatusLabel(apt.status)}
                     </span>
                   </div>

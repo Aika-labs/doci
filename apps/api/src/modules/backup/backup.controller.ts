@@ -33,10 +33,7 @@ export class BackupController {
 
   @Get('download/:filename')
   @ApiOperation({ summary: 'Get download URL for a backup' })
-  async getDownloadUrl(
-    @TenantId() tenantId: string,
-    @Param('filename') filename: string,
-  ) {
+  async getDownloadUrl(@TenantId() tenantId: string, @Param('filename') filename: string) {
     // Validate filename belongs to tenant
     if (!filename.includes(tenantId) && !filename.startsWith('full-')) {
       throw new BadRequestException('Access denied to this backup');
@@ -48,10 +45,7 @@ export class BackupController {
 
   @Post('restore/:filename')
   @ApiOperation({ summary: 'Restore from a tenant backup' })
-  async restoreBackup(
-    @TenantId() tenantId: string,
-    @Param('filename') filename: string,
-  ) {
+  async restoreBackup(@TenantId() tenantId: string, @Param('filename') filename: string) {
     // Validate filename belongs to tenant
     if (!filename.includes(tenantId)) {
       throw new BadRequestException('Access denied to this backup');

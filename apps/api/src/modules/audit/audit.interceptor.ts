@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  NestInterceptor,
-  ExecutionContext,
-  CallHandler,
-} from '@nestjs/common';
+import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { AuditService, AuditAction } from './audit.service';
@@ -32,7 +27,7 @@ export function Audit(options: AuditOptions) {
 export class AuditInterceptor implements NestInterceptor {
   constructor(
     private auditService: AuditService,
-    private reflector: Reflector,
+    private reflector: Reflector
   ) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
@@ -60,7 +55,7 @@ export class AuditInterceptor implements NestInterceptor {
           ipAddress: request.ip,
           userAgent: request.headers?.['user-agent'],
         });
-      }),
+      })
     );
   }
 }

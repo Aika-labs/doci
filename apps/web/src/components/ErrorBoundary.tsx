@@ -30,12 +30,12 @@ export class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     this.setState({ errorInfo });
-    
+
     // Log error to console in development
     if (process.env.NODE_ENV === 'development') {
       console.error('ErrorBoundary caught an error:', error, errorInfo);
     }
-    
+
     // TODO: Send to error tracking service (e.g., Sentry)
     // if (typeof window !== 'undefined' && window.Sentry) {
     //   window.Sentry.captureException(error, { extra: errorInfo });
@@ -65,45 +65,44 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="min-h-[400px] flex items-center justify-center p-6">
-          <div className="max-w-md w-full text-center">
-            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <div className="flex min-h-[400px] items-center justify-center p-6">
+          <div className="w-full max-w-md text-center">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
               <AlertTriangle className="h-8 w-8 text-red-600" />
             </div>
-            
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
-              Algo salió mal
-            </h2>
-            
-            <p className="text-gray-600 mb-6">
-              Ha ocurrido un error inesperado. Por favor, intenta recargar la página o vuelve al inicio.
+
+            <h2 className="mb-2 text-xl font-semibold text-gray-900">Algo salió mal</h2>
+
+            <p className="mb-6 text-gray-600">
+              Ha ocurrido un error inesperado. Por favor, intenta recargar la página o vuelve al
+              inicio.
             </p>
 
             {process.env.NODE_ENV === 'development' && this.state.error && (
-              <div className="mb-6 p-4 bg-gray-100 rounded-lg text-left overflow-auto max-h-40">
-                <p className="text-sm font-mono text-red-600 break-all">
+              <div className="mb-6 max-h-40 overflow-auto rounded-lg bg-gray-100 p-4 text-left">
+                <p className="font-mono text-sm break-all text-red-600">
                   {this.state.error.toString()}
                 </p>
                 {this.state.errorInfo?.componentStack && (
-                  <pre className="text-xs text-gray-500 mt-2 whitespace-pre-wrap">
+                  <pre className="mt-2 text-xs whitespace-pre-wrap text-gray-500">
                     {this.state.errorInfo.componentStack}
                   </pre>
                 )}
               </div>
             )}
 
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <div className="flex flex-col justify-center gap-3 sm:flex-row">
               <button
                 onClick={this.handleReset}
-                className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
               >
                 <RefreshCw className="h-4 w-4" />
                 Intentar de nuevo
               </button>
-              
+
               <button
                 onClick={this.handleGoHome}
-                className="inline-flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-gray-700 transition-colors hover:bg-gray-50"
               >
                 <Home className="h-4 w-4" />
                 Ir al inicio
@@ -128,8 +127,8 @@ export function withErrorBoundary<P extends object>(
       <WrappedComponent {...props} />
     </ErrorBoundary>
   );
-  
+
   WithErrorBoundary.displayName = `WithErrorBoundary(${WrappedComponent.displayName || WrappedComponent.name || 'Component'})`;
-  
+
   return WithErrorBoundary;
 }
