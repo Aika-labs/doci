@@ -8,12 +8,13 @@ import Link from 'next/link';
    HeroSection — Scroll-morph animation (ESG-now reference)
    ─────────────────────────────────────────────────────────
    Morphing card: starts full-viewport, shrinks to a centered rounded card
-   via width / height / marginTop (not padding). Text overlay fades out fast,
-   "La Visión" heading fades in at ~50% scroll above the card.
+   via width / height / marginTop. Text overlay fades out fast,
+   "La Visión" heading fades in above the card.
+   Scroll is fully reversible — scrolling back up restores the full card.
    ========================================================================== */
 
 const HERO_IMAGE_URL =
-  'https://images.unsplash.com/photo-1668890115686-55c8625735e8?fm=jpg&q=80&w=2560&auto=format&fit=crop';
+  'https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/e92d24ed-c56e-42fe-ae8a-5317467d8eaa_3840w.webp';
 
 export default function HeroSection() {
   const trackRef = useRef<HTMLDivElement>(null);
@@ -46,7 +47,8 @@ export default function HeroSection() {
       const rect = track.getBoundingClientRect();
       const endScroll = track.offsetHeight - window.innerHeight;
       const scrolled = -rect.top;
-      const progress = Math.max(0, Math.min(scrolled / (endScroll * 0.6), 1));
+      /* Use the full scroll range so the morph reverses smoothly on scroll-up */
+      const progress = Math.max(0, Math.min(scrolled / endScroll, 1));
 
       const ww = window.innerWidth;
       const wh = window.innerHeight;
@@ -61,12 +63,14 @@ export default function HeroSection() {
       card.style.marginTop = `${currentMargin}px`;
 
       if (content) {
-        const textOpacity = Math.max(0, 1 - progress * 3);
+        /* Fade out text in the first 30% of scroll */
+        const textOpacity = Math.max(0, 1 - progress * 3.3);
         content.style.opacity = String(textOpacity);
         content.style.pointerEvents = progress > 0.3 ? 'none' : 'auto';
       }
 
       if (header) {
+        /* "La Visión" fades in during the last 50% of scroll */
         const headerOpacity = progress > 0.5 ? Math.min((progress - 0.5) * 2, 1) : 0;
         header.style.opacity = String(headerOpacity);
       }
@@ -125,19 +129,19 @@ export default function HeroSection() {
               </a>
               <div className="h-4 w-px bg-white/20" />
               <Link
-                href="#cta"
+                href="/dashboard"
                 className="text-sm font-semibold text-white transition-colors hover:text-blue-400"
               >
-                Comenzar
+                Dashboard
               </Link>
             </div>
           </div>
           <div className="pointer-events-auto fixed top-6 right-6 z-50 md:hidden">
             <Link
-              href="#cta"
+              href="/dashboard"
               className="flex items-center rounded-full border border-white/10 bg-black/20 px-4 py-2.5 text-sm font-semibold text-white backdrop-blur-sm"
             >
-              Comenzar
+              Dashboard
             </Link>
           </div>
         </nav>
@@ -165,7 +169,7 @@ export default function HeroSection() {
         >
           <Image
             src={HERO_IMAGE_URL}
-            alt="Valle con montañas — Doci hero"
+            alt="Doci — inteligencia clínica"
             fill
             priority
             className="object-cover opacity-80"
@@ -185,10 +189,15 @@ export default function HeroSection() {
                   INTELIGENCIA CLÍNICA
                 </span>
               </div>
-              <h1 className="mb-8 max-w-4xl text-3xl leading-tight tracking-tight text-white sm:text-4xl md:text-5xl lg:text-5xl">
-                Tu consultorio, reimaginado. El sistema de gestión clínica que usa inteligencia
-                artificial para que dediques más tiempo a tus pacientes y menos a la documentación.
+              <h1 className="mb-8 max-w-3xl text-4xl leading-[1.05] font-medium tracking-tight text-blue-400 sm:text-5xl md:text-7xl lg:text-8xl">
+                Tu consultorio,
+                <br />
+                reimaginado.
               </h1>
+              <p className="max-w-2xl text-lg leading-relaxed text-white/80 md:text-xl">
+                El sistema de gestión clínica que usa inteligencia artificial para que dediques más
+                tiempo a tus pacientes y menos a la documentación.
+              </p>
             </div>
           </div>
         </div>
