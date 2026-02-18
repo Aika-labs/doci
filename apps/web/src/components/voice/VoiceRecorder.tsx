@@ -246,11 +246,10 @@ export function VoiceRecorder({
         disabled={disabled || state === 'processing'}
         className={cn(
           'relative flex h-16 w-16 items-center justify-center rounded-full transition-all',
-          state === 'idle' &&
-            'bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600',
+          state === 'idle' && 'bg-[#a8d944] text-[#0F1E29] hover:bg-[#a8d944]/90',
           state === 'recording' && 'bg-red-500 text-white hover:bg-red-600',
-          state === 'processing' && 'cursor-wait bg-slate-300 text-white/40',
-          state === 'error' && 'bg-red-500/15 text-red-400 hover:bg-red-200',
+          state === 'processing' && 'cursor-wait bg-white/10 text-white/40',
+          state === 'error' && 'bg-red-500/15 text-red-400 hover:bg-red-500/20',
           disabled && 'cursor-not-allowed opacity-50'
         )}
         aria-label={state === 'recording' ? 'Detener grabación' : 'Iniciar grabación'}

@@ -81,7 +81,7 @@ const getFileTypeIcon = (type: FileType) => {
 
 const fileTypeColors: Record<FileType, string> = {
   IMAGE: 'bg-violet-500/15 text-violet-400',
-  DOCUMENT: 'bg-blue-500/15 text-blue-400',
+  DOCUMENT: 'bg-[#a8d944]/10 text-[#a8d944]',
   LAB_RESULT: 'bg-emerald-500/15 text-emerald-400',
   IMAGING: 'bg-orange-500/15 text-orange-600',
   PRESCRIPTION: 'bg-red-500/15 text-red-400',
@@ -190,7 +190,7 @@ export default function StoragePage() {
         </div>
         <Link
           href="/dashboard/patients"
-          className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600"
+          className="flex items-center gap-2 rounded-2xl bg-[#a8d944] px-4 py-2 font-medium text-[#0F1E29] hover:bg-[#a8d944]/90"
         >
           <Upload className="h-4 w-4" />
           Subir desde paciente
@@ -201,8 +201,8 @@ export default function StoragePage() {
       <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
         <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-500/15">
-              <HardDrive className="h-5 w-5 text-blue-400" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#a8d944]/10">
+              <HardDrive className="h-5 w-5 text-[#a8d944]" />
             </div>
             <div>
               <p className="text-sm text-white/40">Total archivos</p>
@@ -258,20 +258,20 @@ export default function StoragePage() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Buscar por nombre de archivo o paciente..."
-            className="w-full rounded-2xl border border-white/[0.08] py-2 pr-4 pl-10 focus:ring-2 focus:ring-blue-500/20"
+            className="w-full rounded-2xl border border-white/[0.08] bg-white/[0.03] py-2 pr-4 pl-10 text-white placeholder:text-white/30 focus:border-[#a8d944]/40 focus:ring-2 focus:ring-[#a8d944]/20 focus:outline-none"
           />
         </div>
         <button
           onClick={() => setShowFilters(!showFilters)}
           className={`flex items-center gap-2 rounded-2xl border px-4 py-2 transition-colors ${
             showFilters || filterType !== 'ALL'
-              ? 'border-blue-500 bg-blue-50 text-blue-300'
+              ? 'border-[#a8d944]/30 bg-[#a8d944]/10 text-[#a8d944]'
               : 'border-white/[0.08] text-white/70 hover:bg-white/[0.02]'
           }`}
         >
           <Filter className="h-4 w-4" />
           Filtros
-          {filterType !== 'ALL' && <span className="h-2 w-2 rounded-full bg-blue-600" />}
+          {filterType !== 'ALL' && <span className="h-2 w-2 rounded-full bg-[#a8d944]" />}
         </button>
       </div>
 
@@ -284,7 +284,7 @@ export default function StoragePage() {
               onClick={() => setFilterType('ALL')}
               className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
                 filterType === 'ALL'
-                  ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white'
+                  ? 'bg-[#a8d944] text-[#0F1E29]'
                   : 'bg-white/[0.06] text-white/70 hover:bg-white/10'
               }`}
             >
@@ -296,7 +296,7 @@ export default function StoragePage() {
                 onClick={() => setFilterType(value as FileType)}
                 className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
                   filterType === value
-                    ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white'
+                    ? 'bg-[#a8d944] text-[#0F1E29]'
                     : 'bg-white/[0.06] text-white/70 hover:bg-white/10'
                 }`}
               >
@@ -310,7 +310,7 @@ export default function StoragePage() {
       {/* Files Grid */}
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-blue-400" />
+          <Loader2 className="h-8 w-8 animate-spin text-[#a8d944]" />
         </div>
       ) : filteredFiles.length === 0 ? (
         <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] py-12 text-center">
@@ -354,7 +354,7 @@ export default function StoragePage() {
                   <Link
                     href={`/patients/${file.patient.id}`}
                     onClick={(e) => e.stopPropagation()}
-                    className="text-sm text-blue-400 hover:text-blue-300"
+                    className="text-sm text-[#a8d944] hover:text-[#a8d944]/80"
                   >
                     {file.patient.firstName} {file.patient.lastName}
                   </Link>
@@ -368,8 +368,8 @@ export default function StoragePage() {
       {/* File Detail Modal */}
       {selectedFile && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="m-4 w-full max-w-lg rounded-xl bg-white shadow-xl">
-            <div className="flex items-center justify-between border-b p-4">
+          <div className="m-4 w-full max-w-lg rounded-2xl border border-white/[0.06] bg-[#0F1E29] shadow-xl">
+            <div className="flex items-center justify-between border-b border-white/[0.06] p-4">
               <h2 className="text-lg font-semibold text-white">Detalles del archivo</h2>
               <button
                 onClick={() => setSelectedFile(null)}
@@ -412,7 +412,7 @@ export default function StoragePage() {
                     <span className="text-white/40">Paciente:</span>
                     <Link
                       href={`/patients/${selectedFile.patient.id}`}
-                      className="text-blue-400 hover:text-blue-300"
+                      className="text-[#a8d944] hover:text-[#a8d944]/80"
                     >
                       {selectedFile.patient.firstName} {selectedFile.patient.lastName}
                     </Link>
@@ -445,7 +445,7 @@ export default function StoragePage() {
                       href={selectedFile.storageUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600"
+                      className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-[#a8d944] px-4 py-2 font-medium text-[#0F1E29] hover:bg-[#a8d944]/90"
                     >
                       <Eye className="h-4 w-4" />
                       Ver archivo
@@ -461,7 +461,7 @@ export default function StoragePage() {
                 )}
                 <button
                   onClick={() => handleDelete(selectedFile.id)}
-                  className="flex items-center justify-center gap-2 rounded-2xl border border-red-300 px-4 py-2 text-red-400 hover:bg-red-50"
+                  className="flex items-center justify-center gap-2 rounded-2xl border border-red-500/30 px-4 py-2 text-red-400 hover:bg-red-500/10"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
