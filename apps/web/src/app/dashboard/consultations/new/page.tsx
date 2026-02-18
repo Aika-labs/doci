@@ -91,8 +91,7 @@ function NewConsultationContent() {
   const loadPatient = useCallback(
     async (patientId: string) => {
       try {
-        const token = await getToken();
-        if (!token) return;
+        const token = (await getToken()) || 'demo-token';
         const patient = await patientsApi.getById(token, patientId);
         setSelectedPatient(patient);
         setStep('recording');
@@ -120,8 +119,7 @@ function NewConsultationContent() {
 
       try {
         setIsSearching(true);
-        const token = await getToken();
-        if (!token) return;
+        const token = (await getToken()) || 'demo-token';
         const response = await patientsApi.getAll(token, { search, limit: 10 });
         setPatients(response.data);
       } catch (error) {

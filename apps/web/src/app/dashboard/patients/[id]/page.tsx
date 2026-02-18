@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { useAuthCompat as useAuth } from '@/hooks/useAuthCompat';
 import { PatientForm } from '@/components/patients';
 import { patientsApi, Patient } from '@/lib/api';
+import { mockFetch } from '@/lib/mock-data';
 import { PatientFormData } from '@/lib/validations/patient';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -100,8 +101,7 @@ export default function PatientDetailPage() {
   const fetchPatient = useCallback(async () => {
     try {
       setIsLoading(true);
-      const token = await getToken();
-      if (!token) return;
+      const token = (await getToken()) || 'demo-token';
 
       const data = await patientsApi.getById(token, patientId);
       setPatient(data);
@@ -118,14 +118,13 @@ export default function PatientDetailPage() {
 
       try {
         setTabLoading(true);
-        const token = await getToken();
-        if (!token) return;
+        const token = (await getToken()) || 'demo-token';
 
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
         switch (tab) {
           case 'consultations': {
-            const res = await fetch(`${apiUrl}/consultations?patientId=${patientId}`, {
+            const res = await mockFetch(`${apiUrl}/consultations?patientId=${patientId}`, {
               headers: { Authorization: `Bearer ${token}` },
             });
             if (res.ok) {
@@ -135,7 +134,7 @@ export default function PatientDetailPage() {
             break;
           }
           case 'prescriptions': {
-            const res = await fetch(`${apiUrl}/prescriptions?patientId=${patientId}`, {
+            const res = await mockFetch(`${apiUrl}/prescriptions?patientId=${patientId}`, {
               headers: { Authorization: `Bearer ${token}` },
             });
             if (res.ok) {
@@ -145,7 +144,7 @@ export default function PatientDetailPage() {
             break;
           }
           case 'files': {
-            const res = await fetch(`${apiUrl}/storage/patient/${patientId}`, {
+            const res = await mockFetch(`${apiUrl}/storage/patient/${patientId}`, {
               headers: { Authorization: `Bearer ${token}` },
             });
             if (res.ok) {
@@ -155,7 +154,7 @@ export default function PatientDetailPage() {
             break;
           }
           case 'appointments': {
-            const res = await fetch(`${apiUrl}/appointments?patientId=${patientId}`, {
+            const res = await mockFetch(`${apiUrl}/appointments?patientId=${patientId}`, {
               headers: { Authorization: `Bearer ${token}` },
             });
             if (res.ok) {

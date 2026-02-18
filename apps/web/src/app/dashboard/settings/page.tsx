@@ -33,8 +33,7 @@ export default function SettingsPage() {
   const fetchData = useCallback(async () => {
     try {
       setIsLoading(true);
-      const token = await getToken();
-      if (!token) return;
+      const token = (await getToken()) || 'demo-token';
 
       const [profileRes, tenantRes] = await Promise.allSettled([
         settingsApi.getProfile(token),
@@ -70,8 +69,7 @@ export default function SettingsPage() {
   const handleSaveProfile = async (data: Partial<UserProfile>) => {
     setIsSaving(true);
     try {
-      const token = await getToken();
-      if (!token) return;
+      const token = (await getToken()) || 'demo-token';
 
       const updated = await settingsApi.updateProfile(token, data);
       setProfile(updated);
@@ -86,8 +84,7 @@ export default function SettingsPage() {
   const handleSaveTenant = async (data: Partial<TenantSettings>) => {
     setIsSaving(true);
     try {
-      const token = await getToken();
-      if (!token) return;
+      const token = (await getToken()) || 'demo-token';
 
       const updated = await settingsApi.updateTenant(token, data);
       setTenant(updated);

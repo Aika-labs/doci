@@ -5,6 +5,7 @@ import { useAuthCompat as useAuth } from '@/hooks/useAuthCompat';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import Link from 'next/link';
+import { mockFetch } from '@/lib/mock-data';
 import {
   HardDrive,
   Search,
@@ -96,11 +97,10 @@ export default function StoragePage() {
   const fetchFiles = useCallback(async () => {
     try {
       setIsLoading(true);
-      const token = await getToken();
-      if (!token) return;
+      const token = (await getToken()) || 'demo-token';
 
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
-      const res = await fetch(`${apiUrl}/storage`, {
+      const res = await mockFetch(`${apiUrl}/storage`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

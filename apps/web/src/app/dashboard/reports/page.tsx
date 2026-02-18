@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useAuthCompat as useAuth } from '@/hooks/useAuthCompat';
 import { format, subDays, startOfMonth, endOfMonth, eachDayOfInterval } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { mockFetch } from '@/lib/mock-data';
 import {
   BarChart3,
   TrendingUp,
@@ -69,31 +70,30 @@ export default function ReportsPage() {
   const fetchReportData = useCallback(async () => {
     try {
       setIsLoading(true);
-      const token = await getToken();
-      if (!token) return;
+      const token = (await getToken()) || 'demo-token';
 
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
       const { start, end } = getDateRange();
 
       // Fetch consultations
-      const consultationsRes = await fetch(
+      const consultationsRes = await mockFetch(
         `${apiUrl}/consultations?startDate=${start.toISOString()}&endDate=${end.toISOString()}&limit=1000`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
       // Fetch patients
-      const patientsRes = await fetch(`${apiUrl}/patients?limit=1000`, {
+      const patientsRes = await mockFetch(`${apiUrl}/patients?limit=1000`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       // Fetch appointments
-      const appointmentsRes = await fetch(
+      const appointmentsRes = await mockFetch(
         `${apiUrl}/appointments?startDate=${start.toISOString()}&endDate=${end.toISOString()}&limit=1000`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
       // Fetch prescriptions
-      const prescriptionsRes = await fetch(`${apiUrl}/prescriptions`, {
+      const prescriptionsRes = await mockFetch(`${apiUrl}/prescriptions`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
