@@ -30,7 +30,7 @@ import {
   Download,
   Plus,
 } from 'lucide-react';
-import { FileUpload } from '@/components/files';
+import { FileUpload, DocumentAnalysis } from '@/components/files';
 
 type TabType = 'overview' | 'consultations' | 'prescriptions' | 'files' | 'appointments';
 
@@ -64,6 +64,11 @@ interface PatientFile {
   createdAt: string;
   sizeMb: number;
   storageUrl?: string;
+  aiAnalysis?: {
+    summary: string;
+    findings: string[];
+    confidence: number;
+  } | null;
 }
 
 interface Appointment {
@@ -751,6 +756,10 @@ function FilesTab({
 }) {
   const [showUpload, setShowUpload] = useState(false);
 
+  const isAnalyzableType = (type: string) => {
+    return ['IMAGE', 'DOCUMENT', 'LAB_RESULT', 'IMAGING'].includes(type);
+  };
+
   const getFileIcon = (type: string) => {
     if (type === 'IMAGE') return '🖼️';
     if (type === 'LAB_RESULT') return '🧪';
@@ -791,25 +800,36 @@ function FilesTab({
           {files.map((file) => (
             <div
               key={file.id}
-              className="flex items-center gap-4 rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4"
+              className="space-y-3 rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4"
             >
-              <span className="text-2xl">{getFileIcon(file.type)}</span>
-              <div className="min-w-0 flex-1">
-                <p className="truncate font-medium text-white">{file.name}</p>
-                <p className="text-sm text-white/40">
-                  {format(new Date(file.createdAt), 'd MMM yyyy', { locale: es })} •{' '}
-                  {file.sizeMb.toFixed(2)} MB
-                </p>
+              <div className="flex items-center gap-4">
+                <span className="text-2xl">{getFileIcon(file.type)}</span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate font-medium text-white">{file.name}</p>
+                  <p className="text-sm text-white/40">
+                    {format(new Date(file.createdAt), 'd MMM yyyy', { locale: es })} •{' '}
+                    {file.sizeMb.toFixed(2)} MB
+                  </p>
+                </div>
+                {file.storageUrl && (
+                  <a
+                    href={file.storageUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-2xl p-2 text-[#a8d944] hover:bg-[#a8d944]/10"
+                  >
+                    <Download className="h-4 w-4" />
+                  </a>
+                )}
               </div>
-              {file.storageUrl && (
-                <a
-                  href={file.storageUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-2xl p-2 text-blue-400 hover:bg-blue-50"
-                >
-                  <Download className="h-4 w-4" />
-                </a>
+              {/* AI Document Analysis */}
+              {isAnalyzableType(file.type) && (
+                <DocumentAnalysis
+                  fileId={file.id}
+                  patientId={patientId}
+                  existingAnalysis={file.aiAnalysis}
+                  onAnalysisComplete={() => onUploadComplete()}
+                />
               )}
             </div>
           ))}
