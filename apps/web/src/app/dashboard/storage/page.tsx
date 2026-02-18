@@ -23,8 +23,11 @@ import {
   X,
   Image as ImageIcon,
 } from 'lucide-react';
+import { DocumentAnalysis } from '@/components/files';
 
 type FileType = 'IMAGE' | 'DOCUMENT' | 'LAB_RESULT' | 'IMAGING' | 'PRESCRIPTION' | 'OTHER';
+
+const ANALYZABLE_TYPES: FileType[] = ['IMAGE', 'DOCUMENT', 'LAB_RESULT', 'IMAGING'];
 
 interface PatientFile {
   id: string;
@@ -42,6 +45,11 @@ interface PatientFile {
   description?: string;
   createdAt: string;
   updatedAt: string;
+  aiAnalysis?: {
+    summary: string;
+    findings: string[];
+    confidence: number;
+  } | null;
 }
 
 interface StorageStats {
@@ -417,6 +425,18 @@ export default function StoragePage() {
                   </div>
                 )}
               </div>
+
+              {/* AI Document Analysis */}
+              {ANALYZABLE_TYPES.includes(selectedFile.type) && (
+                <div className="mt-4">
+                  <DocumentAnalysis
+                    fileId={selectedFile.id}
+                    patientId={selectedFile.patientId}
+                    existingAnalysis={selectedFile.aiAnalysis}
+                    onAnalysisComplete={() => fetchFiles()}
+                  />
+                </div>
+              )}
 
               <div className="mt-6 flex gap-3 border-t pt-4">
                 {selectedFile.storageUrl && (
