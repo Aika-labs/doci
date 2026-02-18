@@ -102,6 +102,7 @@ export function AppointmentCalendar({
         slotMaxTime="21:00:00"
         allDaySlot={false}
         slotDuration="00:30:00"
+        nowIndicator={true}
         height="auto"
         eventContent={(eventInfo) => (
           <div className="overflow-hidden p-1">

@@ -160,7 +160,7 @@ export default function AppointmentsPage() {
       case 'NO_SHOW':
         return <AlertCircle className="h-4 w-4 text-amber-400" />;
       default:
-        return <Clock className="h-4 w-4 text-blue-400" />;
+        return <Clock className="h-4 w-4 text-white/40" />;
     }
   };
 
@@ -210,21 +210,21 @@ export default function AppointmentsPage() {
           <div className="flex items-center rounded-2xl bg-white/[0.06] p-1">
             <button
               onClick={() => setViewMode('calendar')}
-              className={`rounded p-2 ${viewMode === 'calendar' ? 'bg-white shadow-sm' : ''}`}
+              className={`rounded-xl p-2 transition-colors ${viewMode === 'calendar' ? 'bg-white/10 text-[#a8d944] shadow-sm' : 'text-white/50 hover:text-white'}`}
               title="Vista calendario"
             >
               <Calendar className="h-4 w-4" />
             </button>
             <button
               onClick={() => setViewMode('day')}
-              className={`rounded p-2 ${viewMode === 'day' ? 'bg-white shadow-sm' : ''}`}
+              className={`rounded-xl p-2 transition-colors ${viewMode === 'day' ? 'bg-white/10 text-[#a8d944] shadow-sm' : 'text-white/50 hover:text-white'}`}
               title="Vista día"
             >
               <Clock className="h-4 w-4" />
             </button>
             <button
               onClick={() => setViewMode('list')}
-              className={`rounded p-2 ${viewMode === 'list' ? 'bg-white shadow-sm' : ''}`}
+              className={`rounded-xl p-2 transition-colors ${viewMode === 'list' ? 'bg-white/10 text-[#a8d944] shadow-sm' : 'text-white/50 hover:text-white'}`}
               title="Vista lista"
             >
               <List className="h-4 w-4" />
@@ -236,7 +236,7 @@ export default function AppointmentsPage() {
               setSelectedDate(new Date());
               setIsModalOpen(true);
             }}
-            className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white transition-colors hover:from-blue-600 hover:to-cyan-600"
+            className="flex items-center gap-2 rounded-2xl bg-[#a8d944] px-4 py-2 font-medium text-[#0F1E29] transition-colors hover:bg-[#a8d944]/90"
           >
             <Plus className="h-4 w-4" />
             Nueva Cita
@@ -246,16 +246,16 @@ export default function AppointmentsPage() {
 
       {/* Stats */}
       <div className="mb-6 grid grid-cols-3 gap-4">
-        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
+        <div className="glass-card rounded-2xl p-4">
           <p className="text-sm text-white/40">Citas hoy</p>
           <p className="text-2xl font-bold text-white">{todayAppointments.length}</p>
           <p className="text-xs text-white/30">{completedToday} completadas</p>
         </div>
-        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
+        <div className="glass-card rounded-2xl p-4">
           <p className="text-sm text-white/40">Próximas</p>
-          <p className="text-2xl font-bold text-blue-400">{upcomingAppointments.length}</p>
+          <p className="text-2xl font-bold text-[#a8d944]">{upcomingAppointments.length}</p>
         </div>
-        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
+        <div className="glass-card rounded-2xl p-4">
           <p className="text-sm text-white/40">Este mes</p>
           <p className="text-2xl font-bold text-white">{appointments.length}</p>
         </div>
@@ -273,9 +273,9 @@ export default function AppointmentsPage() {
 
       {/* Day View */}
       {viewMode === 'day' && (
-        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03]">
+        <div className="glass-card rounded-2xl">
           {/* Day Navigation */}
-          <div className="flex items-center justify-between border-b p-4">
+          <div className="flex items-center justify-between border-b border-white/[0.08] p-4">
             <button
               onClick={() => setSelectedDay(addDays(selectedDay, -1))}
               className="rounded-2xl p-2 hover:bg-white/[0.06]"
@@ -288,7 +288,7 @@ export default function AppointmentsPage() {
               </h2>
               <button
                 onClick={() => setSelectedDay(new Date())}
-                className="text-sm text-blue-400 hover:text-blue-300"
+                className="text-sm text-[#a8d944] hover:text-[#a8d944]/80"
               >
                 Ir a hoy
               </button>
@@ -305,7 +305,7 @@ export default function AppointmentsPage() {
           <div className="p-4">
             {isLoading ? (
               <div className="flex items-center justify-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-blue-400" />
+                <Loader2 className="h-8 w-8 animate-spin text-[#a8d944]" />
               </div>
             ) : dayAppointments.length === 0 ? (
               <div className="py-12 text-center">
@@ -316,7 +316,7 @@ export default function AppointmentsPage() {
                     setSelectedDate(selectedDay);
                     setIsModalOpen(true);
                   }}
-                  className="mt-4 text-blue-400 hover:text-blue-300"
+                  className="mt-4 text-[#a8d944] hover:text-[#a8d944]/80"
                 >
                   Agendar una cita
                 </button>
@@ -340,7 +340,7 @@ export default function AppointmentsPage() {
                         <Link
                           href={`/patients/${apt.patient?.id}`}
                           onClick={(e) => e.stopPropagation()}
-                          className="font-medium text-white hover:text-blue-400"
+                          className="font-medium text-white hover:text-[#a8d944]"
                         >
                           {apt.patient?.firstName} {apt.patient?.lastName}
                         </Link>
@@ -366,7 +366,7 @@ export default function AppointmentsPage() {
                               e.stopPropagation();
                               handleStatusChange(apt.id, 'COMPLETED');
                             }}
-                            className="rounded-2xl p-2 text-emerald-400 hover:bg-green-50"
+                            className="rounded-2xl p-2 text-emerald-400 hover:bg-emerald-500/10"
                             title="Marcar como completada"
                           >
                             <CheckCircle className="h-5 w-5" />
@@ -376,7 +376,7 @@ export default function AppointmentsPage() {
                               e.stopPropagation();
                               handleStatusChange(apt.id, 'NO_SHOW');
                             }}
-                            className="rounded-2xl p-2 text-amber-400 hover:bg-yellow-50"
+                            className="rounded-2xl p-2 text-amber-400 hover:bg-amber-500/10"
                             title="Marcar como no asistió"
                           >
                             <AlertCircle className="h-5 w-5" />
@@ -396,13 +396,13 @@ export default function AppointmentsPage() {
 
       {/* List View */}
       {viewMode === 'list' && (
-        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03]">
-          <div className="border-b p-4">
+        <div className="glass-card rounded-2xl">
+          <div className="border-b border-white/[0.08] p-4">
             <h2 className="font-semibold text-white">Próximas citas</h2>
           </div>
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-blue-400" />
+              <Loader2 className="h-8 w-8 animate-spin text-[#a8d944]" />
             </div>
           ) : upcomingAppointments.length === 0 ? (
             <div className="py-12 text-center">
@@ -410,7 +410,7 @@ export default function AppointmentsPage() {
               <p className="text-white/40">No hay citas próximas</p>
             </div>
           ) : (
-            <div className="divide-y">
+            <div className="divide-y divide-white/[0.06]">
               {upcomingAppointments
                 .sort((a, b) => getStartTime(a).getTime() - getStartTime(b).getTime())
                 .slice(0, 20)
@@ -420,14 +420,14 @@ export default function AppointmentsPage() {
                     className="flex cursor-pointer items-center gap-4 p-4 hover:bg-white/[0.02]"
                     onClick={() => handleEventClick(apt)}
                   >
-                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-500/15">
+                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-[#a8d944]/15">
                       {apt.patient ? (
-                        <span className="font-semibold text-blue-400">
+                        <span className="font-semibold text-[#a8d944]">
                           {apt.patient.firstName[0]}
                           {apt.patient.lastName[0]}
                         </span>
                       ) : (
-                        <User className="h-6 w-6 text-blue-400" />
+                        <User className="h-6 w-6 text-[#a8d944]" />
                       )}
                     </div>
                     <div className="min-w-0 flex-1">

@@ -276,7 +276,7 @@ export default function BillingPage() {
           onClick={() => setActiveTab('invoices')}
           className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
             activeTab === 'invoices'
-              ? 'bg-white text-white shadow-sm'
+              ? 'bg-white/10 text-white shadow-sm'
               : 'text-white/50 hover:text-white'
           }`}
         >
@@ -287,7 +287,7 @@ export default function BillingPage() {
           onClick={() => setActiveTab('services')}
           className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
             activeTab === 'services'
-              ? 'bg-white text-white shadow-sm'
+              ? 'bg-white/10 text-white shadow-sm'
               : 'text-white/50 hover:text-white'
           }`}
         >
@@ -589,7 +589,7 @@ function PaymentModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-md rounded-xl bg-white/[0.03] p-6">
+      <div className="w-full max-w-md rounded-xl border border-white/10 bg-[#162633] p-6">
         <h2 className="mb-4 text-lg font-semibold text-white">Registrar Pago</h2>
 
         <div className="mb-4 rounded-2xl bg-white/[0.02] p-4">
@@ -613,7 +613,7 @@ function PaymentModal({
               max={pendingAmount}
               value={amount}
               onChange={(e) => setAmount(parseFloat(e.target.value))}
-              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:ring-2 focus:ring-blue-500/20"
+              className="w-full rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-white focus:ring-2 focus:ring-[#a8d944]/20"
               required
             />
           </div>
@@ -623,7 +623,7 @@ function PaymentModal({
             <select
               value={method}
               onChange={(e) => setMethod(e.target.value as typeof method)}
-              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:ring-2 focus:ring-blue-500/20"
+              className="w-full rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-white focus:ring-2 focus:ring-[#a8d944]/20"
             >
               <option value="CASH">Efectivo</option>
               <option value="CARD">Tarjeta</option>
@@ -637,14 +637,14 @@ function PaymentModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 rounded-2xl border border-white/[0.08] px-4 py-2 text-white/70 hover:bg-white/[0.02]"
+              className="flex-1 rounded-2xl border border-white/10 px-4 py-2 text-white/70 hover:bg-white/[0.06]"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600 disabled:opacity-50"
+              className="flex-1 rounded-2xl bg-[#a8d944] px-4 py-2 font-medium text-[#0F1E29] hover:bg-[#a8d944]/90 disabled:opacity-50"
             >
               {isSubmitting ? <Loader2 className="mx-auto h-4 w-4 animate-spin" /> : 'Registrar'}
             </button>
@@ -697,7 +697,7 @@ function ServiceModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-md rounded-xl bg-white/[0.03] p-6">
+      <div className="w-full max-w-md rounded-xl border border-white/10 bg-[#162633] p-6">
         <h2 className="mb-4 text-lg font-semibold text-white">Nuevo Servicio</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -707,7 +707,7 @@ function ServiceModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:ring-2 focus:ring-blue-500/20"
+              className="w-full rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-white focus:ring-2 focus:ring-[#a8d944]/20"
               required
             />
           </div>
@@ -718,7 +718,7 @@ function ServiceModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               rows={2}
-              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:ring-2 focus:ring-blue-500/20"
+              className="w-full rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-white focus:ring-2 focus:ring-[#a8d944]/20"
             />
           </div>
 
@@ -729,7 +729,7 @@ function ServiceModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
                 type="text"
                 value={formData.code}
                 onChange={(e) => setFormData({ ...formData, code: e.target.value })}
-                className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:ring-2 focus:ring-blue-500/20"
+                className="w-full rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-white focus:ring-2 focus:ring-[#a8d944]/20"
               />
             </div>
             <div>
@@ -740,7 +740,7 @@ function ServiceModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
                 min="0"
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:ring-2 focus:ring-blue-500/20"
+                className="w-full rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-white focus:ring-2 focus:ring-[#a8d944]/20"
                 required
               />
             </div>
@@ -754,7 +754,7 @@ function ServiceModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
                 min="0"
                 value={formData.duration}
                 onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:ring-2 focus:ring-blue-500/20"
+                className="w-full rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-white focus:ring-2 focus:ring-[#a8d944]/20"
               />
             </div>
             <div>
@@ -763,7 +763,7 @@ function ServiceModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
                 type="text"
                 value={formData.category}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:ring-2 focus:ring-blue-500/20"
+                className="w-full rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-white focus:ring-2 focus:ring-[#a8d944]/20"
               />
             </div>
           </div>
@@ -772,14 +772,14 @@ function ServiceModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 rounded-2xl border border-white/[0.08] px-4 py-2 text-white/70 hover:bg-white/[0.02]"
+              className="flex-1 rounded-2xl border border-white/10 px-4 py-2 text-white/70 hover:bg-white/[0.06]"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600 disabled:opacity-50"
+              className="flex-1 rounded-2xl bg-[#a8d944] px-4 py-2 font-medium text-[#0F1E29] hover:bg-[#a8d944]/90 disabled:opacity-50"
             >
               {isSubmitting ? <Loader2 className="mx-auto h-4 w-4 animate-spin" /> : 'Crear'}
             </button>

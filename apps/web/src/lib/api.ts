@@ -461,6 +461,8 @@ export interface UserProfile {
   licenseNumber: string | null;
   phone: string | null;
   bio: string | null;
+  signatureUrl: string | null;
+  logoUrl: string | null;
 }
 
 export interface TenantSettings {

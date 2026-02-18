@@ -64,12 +64,14 @@ export function PrescriptionCard({ prescription, token, onInvalidate }: Prescrip
 
   return (
     <div
-      className={`rounded-[2rem] border bg-white ${
-        !prescription.isValid || isExpired ? 'border-red-200 bg-red-50/50' : 'border-white/[0.06]'
+      className={`rounded-[2rem] border ${
+        !prescription.isValid || isExpired
+          ? 'border-red-500/30 bg-red-500/5'
+          : 'border-white/[0.06] bg-white/[0.03]'
       } overflow-hidden`}
     >
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-gray-100 p-4">
+      <div className="flex items-center justify-between border-b border-white/10 p-4">
         <div className="flex items-center gap-3">
           <div
             className={`flex h-10 w-10 items-center justify-center rounded-lg ${
