@@ -272,6 +272,35 @@ export class StorageService {
   }
 
   /**
+   * Download a file's raw content from Supabase Storage.
+   * Returns the file buffer along with its metadata.
+   */
+  async downloadFile(
+    ctx: TenantContext,
+    fileId: string
+  ): Promise<{ buffer: Buffer; mimeType: string; name: string }> {
+    this.ensureSupabase();
+
+    const file = await this.getFile(ctx, fileId);
+
+    const { data, error } = await this.supabase.storage
+      .from(this.bucketName)
+      .download(file.storagePath);
+
+    if (error || !data) {
+      throw new BadRequestException('Error al descargar el archivo');
+    }
+
+    const arrayBuffer = await data.arrayBuffer();
+
+    return {
+      buffer: Buffer.from(arrayBuffer),
+      mimeType: file.mimeType,
+      name: file.name,
+    };
+  }
+
+  /**
    * Get storage usage for tenant
    */
   async getStorageUsage(ctx: TenantContext) {

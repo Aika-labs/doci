@@ -9,13 +9,19 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiConsumes } from '@nestjs/swagger';
 import { AIService } from './ai.service';
+import { StorageService } from '../storage/storage.service';
+import { PrismaService } from '../../prisma/prisma.service';
 import { CurrentTenant, TenantContext } from '../../common/decorators';
 
 @ApiTags('AI')
 @ApiBearerAuth()
 @Controller('ai')
 export class AIController {
-  constructor(private readonly aiService: AIService) {}
+  constructor(
+    private readonly aiService: AIService,
+    private readonly storageService: StorageService,
+    private readonly prisma: PrismaService
+  ) {}
 
   @Post('transcribe')
   @ApiOperation({ summary: 'Transcribe audio to text using Whisper' })
@@ -108,6 +114,59 @@ export class AIController {
       transcription: transcription.text,
       soapNotes: structuredNotes.soapNotes,
       suggestions: structuredNotes.suggestions,
+    };
+  }
+
+  @Post('analyze-document')
+  @ApiOperation({
+    summary: 'Analyze a medical document (PDF or image) with AI',
+    description:
+      'Downloads an already-uploaded file by its ID, sends it to GPT-4o for ' +
+      'medical analysis, persists the result in PatientFile.aiAnalysis, and returns it.',
+  })
+  async analyzeDocument(
+    @CurrentTenant() ctx: TenantContext,
+    @Body()
+    body: {
+      /** ID of an existing PatientFile record. */
+      fileId: string;
+      /** Optional patient ID to enrich analysis with clinical context. */
+      patientId?: string;
+    }
+  ) {
+    if (!body.fileId) {
+      throw new BadRequestException('fileId is required');
+    }
+
+    // 1. Download the file from Supabase Storage
+    const { buffer, mimeType, name } = await this.storageService.downloadFile(ctx, body.fileId);
+
+    // 2. Optionally build patient context
+    let patientContext: string | undefined;
+    if (body.patientId) {
+      try {
+        const summary = await this.aiService.generatePatientSummary(ctx, body.patientId);
+        patientContext = summary;
+      } catch {
+        // Non-critical: proceed without patient context
+      }
+    }
+
+    // 3. Run AI analysis
+    const analysis = await this.aiService.analyzeDocument(buffer, mimeType, {
+      patientContext,
+      fileName: name,
+    });
+
+    // 4. Persist analysis result on the PatientFile record
+    await this.prisma.patientFile.update({
+      where: { id: body.fileId },
+      data: { aiAnalysis: analysis },
+    });
+
+    return {
+      success: true,
+      data: analysis,
     };
   }
 }
