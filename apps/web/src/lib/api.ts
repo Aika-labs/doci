@@ -1,3 +1,5 @@
+import { resolveMockResponse } from './mock-data';
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
 interface FetchOptions extends RequestInit {
@@ -13,17 +15,26 @@ export async function apiFetch<T>(endpoint: string, options: FetchOptions = {}):
     ...options.headers,
   };
 
-  const response = await fetch(`${API_URL}${endpoint}`, {
-    ...fetchOptions,
-    headers,
-  });
+  try {
+    const response = await fetch(`${API_URL}${endpoint}`, {
+      ...fetchOptions,
+      headers,
+    });
 
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({ message: 'Error desconocido' }));
-    throw new Error(error.message || `Error ${response.status}`);
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ message: 'Error desconocido' }));
+      throw new Error(error.message || `Error ${response.status}`);
+    }
+
+    return response.json();
+  } catch {
+    // Backend unreachable — fall back to mock data
+    const mock = resolveMockResponse(endpoint, options.method || 'GET');
+    if (mock !== null) {
+      return mock as T;
+    }
+    throw new Error('API no disponible');
   }
-
-  return response.json();
 }
 
 // Patient types

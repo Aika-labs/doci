@@ -5,6 +5,7 @@ import { useAuthCompat as useAuth } from '@/hooks/useAuthCompat';
 import Link from 'next/link';
 import { format, subDays, startOfDay, endOfDay } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { mockFetch } from '@/lib/mock-data';
 import {
   Plus,
   FileText,
@@ -56,8 +57,7 @@ export default function ConsultationsPage() {
   const fetchConsultations = useCallback(async () => {
     try {
       setIsLoading(true);
-      const token = await getToken();
-      if (!token) return;
+      const token = (await getToken()) || 'demo-token';
 
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
@@ -82,7 +82,7 @@ export default function ConsultationsPage() {
         params.append('endDate', endOfDay(now).toISOString());
       }
 
-      const response = await fetch(`${apiUrl}/consultations?${params.toString()}`, {
+      const response = await mockFetch(`${apiUrl}/consultations?${params.toString()}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useAuthCompat as useAuth } from '@/hooks/useAuthCompat';
+import { mockFetch } from '@/lib/mock-data';
 import {
   FileStack,
   Plus,
@@ -81,11 +82,10 @@ export default function TemplatesPage() {
   const fetchTemplates = useCallback(async () => {
     try {
       setIsLoading(true);
-      const token = await getToken();
-      if (!token) return;
+      const token = (await getToken()) || 'demo-token';
 
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
-      const res = await fetch(`${apiUrl}/templates`, {
+      const res = await mockFetch(`${apiUrl}/templates`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -117,7 +117,7 @@ export default function TemplatesPage() {
         ? `${apiUrl}/templates/${editingTemplate.id}`
         : `${apiUrl}/templates`;
 
-      const res = await fetch(url, {
+      const res = await mockFetch(url, {
         method: editingTemplate ? 'PATCH' : 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -153,7 +153,7 @@ export default function TemplatesPage() {
       if (!token) return;
 
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
-      const res = await fetch(`${apiUrl}/templates/${deleteConfirm.template.id}`, {
+      const res = await mockFetch(`${apiUrl}/templates/${deleteConfirm.template.id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -178,7 +178,7 @@ export default function TemplatesPage() {
       if (!token) return;
 
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
-      const res = await fetch(`${apiUrl}/templates`, {
+      const res = await mockFetch(`${apiUrl}/templates`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -260,7 +260,7 @@ export default function TemplatesPage() {
 
       for (const template of imported) {
         if (template.name && template.type && template.content) {
-          const res = await fetch(`${apiUrl}/templates`, {
+          const res = await mockFetch(`${apiUrl}/templates`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

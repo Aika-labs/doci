@@ -41,8 +41,7 @@ export default function PatientsPage() {
   const fetchPatients = useCallback(async () => {
     try {
       setIsLoading(true);
-      const token = await getToken();
-      if (!token) return;
+      const token = (await getToken()) || 'demo-token';
 
       const response = await patientsApi.getAll(token, { page, limit, search });
       let filteredData = response.data;

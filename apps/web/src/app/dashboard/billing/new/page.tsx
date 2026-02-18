@@ -40,8 +40,7 @@ export default function NewInvoicePage() {
   const fetchData = useCallback(async () => {
     try {
       setIsLoading(true);
-      const token = await getToken();
-      if (!token) return;
+      const token = (await getToken()) || 'demo-token';
 
       const [patientsRes, servicesRes] = await Promise.all([
         patientsApi.getAll(token, { limit: 100 }),
@@ -137,8 +136,7 @@ export default function NewInvoicePage() {
     setIsSubmitting(true);
 
     try {
-      const token = await getToken();
-      if (!token) return;
+      const token = (await getToken()) || 'demo-token';
 
       await billingApi.createInvoice(token, {
         patientId: selectedPatient.id,
