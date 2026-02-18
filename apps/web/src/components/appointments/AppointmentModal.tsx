@@ -153,9 +153,9 @@ export function AppointmentModal({
       <div className="flex min-h-full items-center justify-center p-4">
         <div className="fixed inset-0 bg-black/50" onClick={onClose} />
 
-        <div className="relative w-full max-w-lg rounded-xl bg-white shadow-xl">
+        <div className="relative w-full max-w-lg rounded-xl border border-white/10 bg-[#162633] shadow-xl">
           {/* Header */}
-          <div className="flex items-center justify-between border-b p-4">
+          <div className="flex items-center justify-between border-b border-white/10 p-4">
             <h2 className="text-lg font-semibold text-white">
               {appointment ? 'Editar Cita' : 'Nueva Cita'}
             </h2>
@@ -173,7 +173,7 @@ export function AppointmentModal({
             <div>
               <label className="mb-1 block text-sm font-medium text-white/70">Paciente *</label>
               {selectedPatient ? (
-                <div className="flex items-center justify-between rounded-2xl border border-blue-200 bg-blue-50 p-3">
+                <div className="flex items-center justify-between rounded-2xl border border-[#a8d944]/20 bg-[#a8d944]/10 p-3">
                   <div>
                     <p className="font-medium text-white">
                       {selectedPatient.firstName} {selectedPatient.lastName}
@@ -206,17 +206,17 @@ export function AppointmentModal({
                       }}
                       onFocus={() => setShowPatientSearch(true)}
                       placeholder="Buscar paciente..."
-                      className="w-full rounded-2xl border border-white/[0.08] py-2 pr-4 pl-10 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+                      className="w-full rounded-2xl border border-white/10 bg-[#0F1E29] py-2 pr-4 pl-10 text-white placeholder:text-white/30 focus:border-[#a8d944]/40 focus:ring-2 focus:ring-[#a8d944]/20"
                     />
                   </div>
                   {showPatientSearch && patients.length > 0 && (
-                    <div className="absolute z-10 mt-1 max-h-48 w-full overflow-y-auto rounded-2xl border border-white/[0.06] bg-white shadow-lg">
+                    <div className="absolute z-10 mt-1 max-h-48 w-full overflow-y-auto rounded-2xl border border-white/10 bg-[#0F1E29] shadow-lg">
                       {patients.map((patient) => (
                         <button
                           key={patient.id}
                           type="button"
                           onClick={() => selectPatient(patient)}
-                          className="w-full border-b px-4 py-2 text-left last:border-b-0 hover:bg-white/[0.02]"
+                          className="w-full border-b border-white/5 px-4 py-2 text-left last:border-b-0 hover:bg-white/[0.06]"
                         >
                           <p className="font-medium text-white">
                             {patient.firstName} {patient.lastName}
@@ -243,7 +243,7 @@ export function AppointmentModal({
                 <input
                   type="datetime-local"
                   {...register('scheduledAt')}
-                  className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-white focus:border-[#a8d944]/40 focus:ring-2 focus:ring-[#a8d944]/20"
                 />
                 {errors.scheduledAt && (
                   <p className="mt-1 text-sm text-red-400">{errors.scheduledAt.message}</p>
@@ -256,7 +256,7 @@ export function AppointmentModal({
                 </label>
                 <select
                   {...register('duration', { valueAsNumber: true })}
-                  className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-white focus:border-[#a8d944]/40 focus:ring-2 focus:ring-[#a8d944]/20"
                 >
                   <option value={15}>15 min</option>
                   <option value={30}>30 min</option>
@@ -273,7 +273,7 @@ export function AppointmentModal({
               <label className="mb-1 block text-sm font-medium text-white/70">Tipo de Cita *</label>
               <select
                 {...register('type')}
-                className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+                className="w-full rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-white focus:border-[#a8d944]/40 focus:ring-2 focus:ring-[#a8d944]/20"
               >
                 <option value="FIRST_VISIT">Primera Visita</option>
                 <option value="FOLLOW_UP">Seguimiento</option>
@@ -292,7 +292,7 @@ export function AppointmentModal({
                 type="text"
                 {...register('reason')}
                 placeholder="Ej: Dolor de cabeza, revisión anual..."
-                className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+                className="w-full rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-white focus:border-[#a8d944]/40 focus:ring-2 focus:ring-[#a8d944]/20"
               />
             </div>
 
@@ -303,23 +303,23 @@ export function AppointmentModal({
                 {...register('notes')}
                 rows={2}
                 placeholder="Notas adicionales..."
-                className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+                className="w-full rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-white focus:border-[#a8d944]/40 focus:ring-2 focus:ring-[#a8d944]/20"
               />
             </div>
 
             {/* Actions */}
-            <div className="flex justify-end gap-3 border-t pt-4">
+            <div className="flex justify-end gap-3 border-t border-white/10 pt-4">
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-2xl border border-white/[0.08] bg-white px-4 py-2 text-white/70 hover:bg-white/[0.02]"
+                className="rounded-2xl border border-white/10 px-4 py-2 text-white/70 hover:bg-white/[0.06]"
               >
                 Cancelar
               </button>
               <button
                 type="submit"
                 disabled={isLoading}
-                className="rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600 disabled:opacity-50"
+                className="rounded-2xl bg-[#a8d944] px-4 py-2 font-medium text-[#0F1E29] hover:bg-[#a8d944]/90 disabled:opacity-50"
               >
                 {isLoading ? 'Guardando...' : appointment ? 'Actualizar' : 'Crear Cita'}
               </button>

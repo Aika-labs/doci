@@ -272,7 +272,7 @@ export function CommandPalette() {
       >
         <Search className="h-4 w-4" />
         <span>Buscar...</span>
-        <kbd className="hidden items-center gap-0.5 rounded border border-white/[0.08] bg-white px-1.5 py-0.5 text-xs lg:inline-flex">
+        <kbd className="hidden items-center gap-0.5 rounded border border-white/10 bg-white/10 px-1.5 py-0.5 text-xs text-white/50 lg:inline-flex">
           <Command className="h-3 w-3" />K
         </kbd>
       </button>
@@ -289,9 +289,9 @@ export function CommandPalette() {
 
       {/* Dialog */}
       <div className="relative flex items-start justify-center pt-[15vh]">
-        <div className="mx-4 w-full max-w-xl overflow-hidden rounded-xl bg-white shadow-2xl">
+        <div className="mx-4 w-full max-w-xl overflow-hidden rounded-xl border border-white/10 bg-[#162633] shadow-2xl">
           {/* Search Input */}
-          <div className="flex items-center gap-3 border-b px-4 py-3">
+          <div className="flex items-center gap-3 border-b border-white/10 px-4 py-3">
             <Search className="h-5 w-5 text-white/30" />
             <input
               ref={inputRef}
@@ -299,7 +299,7 @@ export function CommandPalette() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Buscar pacientes, páginas, acciones..."
-              className="flex-1 text-lg outline-none placeholder:text-white/30"
+              className="flex-1 bg-transparent text-lg text-white outline-none placeholder:text-white/30"
             />
             {isSearching && <Loader2 className="h-5 w-5 animate-spin text-white/30" />}
             <button
@@ -389,18 +389,18 @@ export function CommandPalette() {
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-between border-t bg-white/[0.02] px-4 py-2 text-xs text-white/40">
+          <div className="flex items-center justify-between border-t border-white/10 bg-[#0F1E29]/60 px-4 py-2 text-xs text-white/40">
             <div className="flex items-center gap-4">
               <span className="flex items-center gap-1">
-                <kbd className="rounded border bg-white px-1.5 py-0.5">↑↓</kbd>
+                <kbd className="rounded border border-white/10 bg-white/10 px-1.5 py-0.5">↑↓</kbd>
                 navegar
               </span>
               <span className="flex items-center gap-1">
-                <kbd className="rounded border bg-white px-1.5 py-0.5">↵</kbd>
+                <kbd className="rounded border border-white/10 bg-white/10 px-1.5 py-0.5">↵</kbd>
                 seleccionar
               </span>
               <span className="flex items-center gap-1">
-                <kbd className="rounded border bg-white px-1.5 py-0.5">esc</kbd>
+                <kbd className="rounded border border-white/10 bg-white/10 px-1.5 py-0.5">esc</kbd>
                 cerrar
               </span>
             </div>
@@ -427,23 +427,23 @@ function ResultItem({
       onClick={onSelect}
       onMouseEnter={onHover}
       className={`flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors ${
-        isSelected ? 'bg-blue-50 text-blue-900' : 'hover:bg-white/[0.02]'
+        isSelected ? 'bg-[#a8d944]/15 text-white' : 'hover:bg-white/[0.04]'
       }`}
     >
       <div
-        className={`rounded-2xl p-2 ${isSelected ? 'bg-blue-500/15 text-blue-400' : 'bg-white/[0.06] text-white/40'}`}
+        className={`rounded-2xl p-2 ${isSelected ? 'bg-[#a8d944]/20 text-[#a8d944]' : 'bg-white/[0.06] text-white/40'}`}
       >
         {result.icon}
       </div>
       <div className="min-w-0 flex-1">
         <p className="truncate font-medium">{result.title}</p>
         {result.subtitle && (
-          <p className={`truncate text-sm ${isSelected ? 'text-blue-300' : 'text-white/40'}`}>
+          <p className={`truncate text-sm ${isSelected ? 'text-[#a8d944]/70' : 'text-white/40'}`}>
             {result.subtitle}
           </p>
         )}
       </div>
-      {isSelected && <ArrowRight className="h-4 w-4 text-blue-500" />}
+      {isSelected && <ArrowRight className="h-4 w-4 text-[#a8d944]" />}
     </button>
   );
 }

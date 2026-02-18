@@ -426,8 +426,8 @@ Este certificado se expide a solicitud del interesado para los fines que estime 
       {/* Form Modal */}
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="m-4 max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white shadow-xl">
-            <div className="flex items-center justify-between border-b p-4">
+          <div className="m-4 max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl border border-white/10 bg-[#162633] shadow-xl">
+            <div className="flex items-center justify-between border-b border-white/10 p-4">
               <h2 className="text-lg font-semibold text-white">
                 {editingTemplate ? 'Editar Plantilla' : 'Nueva Plantilla'}
               </h2>
@@ -445,7 +445,7 @@ Este certificado se expide a solicitud del interesado para los fines que estime 
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
-                  className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-white placeholder:text-white/30 focus:ring-2 focus:ring-[#a8d944]/20"
                   placeholder="Ej: Consulta general"
                 />
               </div>
@@ -464,7 +464,7 @@ Este certificado se expide a solicitud del interesado para los fines que estime 
                       content: formData.content || getDefaultContent(newType),
                     });
                   }}
-                  className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-white focus:ring-2 focus:ring-[#a8d944]/20"
                 >
                   {Object.entries(templateTypeLabels).map(([value, label]) => (
                     <option key={value} value={value}>
@@ -483,7 +483,7 @@ Este certificado se expide a solicitud del interesado para los fines que estime 
                       onClick={() =>
                         setFormData({ ...formData, content: getDefaultContent(formData.type) })
                       }
-                      className="text-xs text-blue-400 hover:text-blue-300"
+                      className="text-xs text-[#a8d944] hover:text-[#a8d944]/80"
                     >
                       Usar plantilla predeterminada
                     </button>
@@ -494,7 +494,7 @@ Este certificado se expide a solicitud del interesado para los fines que estime 
                   onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                   required
                   rows={12}
-                  className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 font-mono text-sm focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 font-mono text-sm text-white placeholder:text-white/30 focus:ring-2 focus:ring-[#a8d944]/20"
                   placeholder="Escribe el contenido de la plantilla..."
                 />
                 <p className="mt-1 text-xs text-white/40">
@@ -508,25 +508,25 @@ Este certificado se expide a solicitud del interesado para los fines que estime 
                   id="isDefault"
                   checked={formData.isDefault}
                   onChange={(e) => setFormData({ ...formData, isDefault: e.target.checked })}
-                  className="rounded border-white/[0.08] text-blue-400 focus:ring-blue-500/20"
+                  className="rounded border-white/10 text-[#a8d944] focus:ring-[#a8d944]/20"
                 />
                 <label htmlFor="isDefault" className="text-sm text-white/70">
                   Usar como plantilla predeterminada para este tipo
                 </label>
               </div>
 
-              <div className="flex justify-end gap-3 border-t pt-4">
+              <div className="flex justify-end gap-3 border-t border-white/10 pt-4">
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="rounded-2xl border border-white/[0.08] px-4 py-2 text-white/70 hover:bg-white/[0.02]"
+                  className="rounded-2xl border border-white/10 px-4 py-2 text-white/70 hover:bg-white/[0.06]"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600 disabled:opacity-50"
+                  className="flex items-center gap-2 rounded-2xl bg-[#a8d944] px-4 py-2 font-medium text-[#0F1E29] hover:bg-[#a8d944]/90 disabled:opacity-50"
                 >
                   {isSaving ? (
                     <>
@@ -636,10 +636,10 @@ Este certificado se expide a solicitud del interesado para los fines que estime 
       {/* Preview Modal */}
       {previewTemplate && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="m-4 max-h-[90vh] w-full max-w-2xl overflow-hidden rounded-xl bg-white shadow-xl">
-            <div className="flex items-center justify-between border-b p-4">
+          <div className="m-4 max-h-[90vh] w-full max-w-2xl overflow-hidden rounded-xl border border-white/10 bg-[#162633] shadow-xl">
+            <div className="flex items-center justify-between border-b border-white/10 p-4">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-500/15 text-blue-400">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#a8d944]/15 text-[#a8d944]">
                   {templateTypeIcons[previewTemplate.type]}
                 </div>
                 <div>
@@ -661,20 +661,20 @@ Este certificado se expide a solicitud del interesado para los fines que estime 
                 {previewTemplate.content}
               </pre>
             </div>
-            <div className="flex justify-end gap-3 border-t bg-white/[0.02] p-4">
+            <div className="flex justify-end gap-3 border-t border-white/10 bg-[#0F1E29]/60 p-4">
               <button
                 onClick={() => {
                   handleEdit(previewTemplate);
                   setPreviewTemplate(null);
                 }}
-                className="flex items-center gap-2 rounded-2xl border border-blue-600 px-4 py-2 text-blue-400 hover:bg-blue-50"
+                className="flex items-center gap-2 rounded-2xl border border-[#a8d944]/30 px-4 py-2 text-[#a8d944] hover:bg-[#a8d944]/10"
               >
                 <Edit2 className="h-4 w-4" />
                 Editar
               </button>
               <button
                 onClick={() => setPreviewTemplate(null)}
-                className="rounded-2xl bg-white/10 px-4 py-2 text-white/70 hover:bg-gray-300"
+                className="rounded-2xl border border-white/10 px-4 py-2 text-white/70 hover:bg-white/[0.06]"
               >
                 Cerrar
               </button>

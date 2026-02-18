@@ -17,6 +17,9 @@ import {
   Plus,
   X,
   Download,
+  Mail,
+  MessageCircle,
+  Send,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/components/ui';
@@ -78,6 +81,12 @@ function NewConsultationContent() {
   const [prescriptionNotes, setPrescriptionNotes] = useState('');
   const [isCreatingPrescription, setIsCreatingPrescription] = useState(false);
   const [createdPrescription, setCreatedPrescription] = useState<CreatedPrescription | null>(null);
+
+  // Send consultation state
+  const [sendEmail, setSendEmail] = useState('');
+  const [sendPhone, setSendPhone] = useState('');
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
+  const [isSendingWhatsApp, setIsSendingWhatsApp] = useState(false);
 
   const loadPatient = useCallback(
     async (patientId: string) => {
@@ -316,6 +325,62 @@ function NewConsultationContent() {
       setShowPrescriptionForm(false);
     } finally {
       setIsCreatingPrescription(false);
+    }
+  };
+
+  const handleSendEmail = async () => {
+    if (!sendEmail || !consultationId) return;
+    setIsSendingEmail(true);
+    try {
+      const token = await getToken();
+      if (!token) return;
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/notifications/send`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify({
+            channel: 'email',
+            recipient: sendEmail,
+            consultationId,
+            prescriptionId: createdPrescription?.id,
+          }),
+        }
+      );
+      if (!response.ok) throw new Error('Error sending email');
+      success('Email enviado', `Consulta enviada a ${sendEmail}`);
+    } catch {
+      showError('Error', 'No se pudo enviar el email. Verifica la configuración del servidor.');
+    } finally {
+      setIsSendingEmail(false);
+    }
+  };
+
+  const handleSendWhatsApp = async () => {
+    if (!sendPhone || !consultationId) return;
+    setIsSendingWhatsApp(true);
+    try {
+      const token = await getToken();
+      if (!token) return;
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/notifications/send`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify({
+            channel: 'whatsapp',
+            recipient: sendPhone,
+            consultationId,
+            prescriptionId: createdPrescription?.id,
+          }),
+        }
+      );
+      if (!response.ok) throw new Error('Error sending WhatsApp');
+      success('WhatsApp enviado', `Consulta enviada a ${sendPhone}`);
+    } catch {
+      showError('Error', 'No se pudo enviar por WhatsApp. Verifica la configuración de Twilio.');
+    } finally {
+      setIsSendingWhatsApp(false);
     }
   };
 
@@ -849,13 +914,13 @@ function NewConsultationContent() {
 
             {/* Created Prescription */}
             {createdPrescription && (
-              <div className="mb-6 rounded-2xl border border-green-200 bg-green-50 p-6">
+              <div className="mb-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-6">
                 <div className="mb-4 flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/15">
                     <CheckCircle className="h-5 w-5 text-emerald-400" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-green-900">Receta creada exitosamente</h3>
+                    <h3 className="font-semibold text-white">Receta creada exitosamente</h3>
                     <p className="text-sm text-emerald-300">
                       Código de verificación: {createdPrescription.securityCode}
                     </p>
@@ -865,7 +930,7 @@ function NewConsultationContent() {
                   href={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/prescriptions/${createdPrescription.id}/pdf`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-2xl bg-green-600 px-4 py-2 text-white hover:bg-green-700"
+                  className="inline-flex items-center gap-2 rounded-2xl bg-emerald-600 px-4 py-2 text-white hover:bg-emerald-700"
                 >
                   <Download className="h-4 w-4" />
                   Descargar PDF
@@ -873,18 +938,91 @@ function NewConsultationContent() {
               </div>
             )}
 
+            {/* Send Consultation */}
+            <div className="mb-6 rounded-2xl border border-white/[0.06] bg-white/[0.03] p-6">
+              <h3 className="mb-4 flex items-center gap-2 font-semibold text-white">
+                <Send className="h-5 w-5 text-[#a8d944]" />
+                Enviar consulta al paciente
+              </h3>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                {/* Email */}
+                <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
+                  <div className="mb-3 flex items-center gap-2">
+                    <Mail className="h-4 w-4 text-white/50" />
+                    <span className="text-sm font-medium text-white/70">Correo electrónico</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <input
+                      type="email"
+                      value={sendEmail}
+                      onChange={(e) => setSendEmail(e.target.value)}
+                      placeholder={selectedPatient?.email || 'correo@ejemplo.com'}
+                      className="flex-1 rounded-xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-[#a8d944]/40 focus:ring-1 focus:ring-[#a8d944]/20"
+                    />
+                    <button
+                      onClick={handleSendEmail}
+                      disabled={!sendEmail || !consultationId || isSendingEmail}
+                      className="flex items-center gap-1.5 rounded-xl bg-[#a8d944] px-3 py-2 text-sm font-medium text-[#0F1E29] hover:bg-[#a8d944]/90 disabled:opacity-40"
+                    >
+                      {isSendingEmail ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Mail className="h-4 w-4" />
+                      )}
+                      Enviar
+                    </button>
+                  </div>
+                </div>
+
+                {/* WhatsApp */}
+                <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
+                  <div className="mb-3 flex items-center gap-2">
+                    <MessageCircle className="h-4 w-4 text-emerald-400" />
+                    <span className="text-sm font-medium text-white/70">WhatsApp</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <input
+                      type="tel"
+                      value={sendPhone}
+                      onChange={(e) => setSendPhone(e.target.value)}
+                      placeholder={selectedPatient?.phone || '+58 412 1234567'}
+                      className="flex-1 rounded-xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-emerald-500/40 focus:ring-1 focus:ring-emerald-500/20"
+                    />
+                    <button
+                      onClick={handleSendWhatsApp}
+                      disabled={!sendPhone || !consultationId || isSendingWhatsApp}
+                      className="flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-40"
+                    >
+                      {isSendingWhatsApp ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <MessageCircle className="h-4 w-4" />
+                      )}
+                      Enviar
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <p className="mt-3 text-xs text-white/30">
+                Se enviará un resumen de la consulta
+                {createdPrescription ? ' y la receta médica' : ''} al paciente.
+              </p>
+            </div>
+
             {/* Navigation */}
             <div className="flex justify-center gap-4">
               <Link
                 href={`/patients/${selectedPatient?.id}`}
-                className="rounded-2xl border border-blue-600 px-4 py-2 text-blue-400 hover:bg-blue-50"
+                className="rounded-2xl border border-[#a8d944]/30 px-4 py-2 text-[#a8d944] hover:bg-[#a8d944]/10"
               >
                 Ver expediente
               </Link>
               {consultationId && (
                 <Link
                   href={`/consultations/${consultationId}`}
-                  className="rounded-2xl border border-white/[0.08] px-4 py-2 text-white/70 hover:bg-white/[0.02]"
+                  className="rounded-2xl border border-white/10 px-4 py-2 text-white/70 hover:bg-white/[0.06]"
                 >
                   Ver consulta
                 </Link>
@@ -900,8 +1038,10 @@ function NewConsultationContent() {
                   setMedications([]);
                   setCreatedPrescription(null);
                   setShowPrescriptionForm(false);
+                  setSendEmail('');
+                  setSendPhone('');
                 }}
-                className="rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600"
+                className="rounded-2xl bg-[#a8d944] px-4 py-2 font-medium text-[#0F1E29] hover:bg-[#a8d944]/90"
               >
                 Nueva consulta
               </button>

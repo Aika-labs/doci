@@ -2,12 +2,23 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useAuthCompat as useAuth, useUserCompat as useUser } from '@/hooks/useAuthCompat';
-import { Building2, User, Bell, Shield, Palette, Save, Loader2 } from 'lucide-react';
+import {
+  Building2,
+  User,
+  Bell,
+  Shield,
+  Palette,
+  Save,
+  Loader2,
+  PenTool,
+  Upload,
+  Trash2,
+} from 'lucide-react';
 import { useToast } from '@/components/ui';
 import { useTheme } from '@/components/ThemeProvider';
 import { settingsApi, UserProfile, TenantSettings } from '@/lib/api';
 
-type SettingsTab = 'profile' | 'clinic' | 'notifications' | 'security' | 'appearance';
+type SettingsTab = 'profile' | 'clinic' | 'signature' | 'notifications' | 'security' | 'appearance';
 
 export default function SettingsPage() {
   const { getToken } = useAuth();
@@ -50,6 +61,7 @@ export default function SettingsPage() {
   const tabs = [
     { id: 'profile' as const, label: 'Perfil', icon: User },
     { id: 'clinic' as const, label: 'Clínica', icon: Building2 },
+    { id: 'signature' as const, label: 'Firma y Sello', icon: PenTool },
     { id: 'notifications' as const, label: 'Notificaciones', icon: Bell },
     { id: 'security' as const, label: 'Seguridad', icon: Shield },
     { id: 'appearance' as const, label: 'Apariencia', icon: Palette },
@@ -97,7 +109,7 @@ export default function SettingsPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-400" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#a8d944]" />
       </div>
     );
   }
@@ -119,7 +131,7 @@ export default function SettingsPage() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                   activeTab === tab.id
-                    ? 'bg-blue-50 text-blue-300'
+                    ? 'bg-[#a8d944]/15 text-[#a8d944]'
                     : 'text-white/50 hover:bg-white/[0.06]'
                 }`}
               >
@@ -142,6 +154,13 @@ export default function SettingsPage() {
           )}
           {activeTab === 'clinic' && (
             <ClinicSettings tenant={tenant} onSave={handleSaveTenant} isSaving={isSaving} />
+          )}
+          {activeTab === 'signature' && (
+            <SignatureStampSettings
+              profile={profile}
+              onSave={handleSaveProfile}
+              isSaving={isSaving}
+            />
           )}
           {activeTab === 'notifications' && (
             <NotificationSettings onSave={handleSaveLocal} isSaving={isSaving} />
@@ -190,7 +209,7 @@ function ProfileSettings({ user, profile, onSave, isSaving }: ProfileSettingsPro
               type="text"
               value={formData.firstName}
               onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+              className="w-full rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-white focus:border-[#a8d944]/40 focus:ring-2 focus:ring-[#a8d944]/20"
             />
           </div>
           <div>
@@ -199,7 +218,7 @@ function ProfileSettings({ user, profile, onSave, isSaving }: ProfileSettingsPro
               type="text"
               value={formData.lastName}
               onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+              className="w-full rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-white focus:border-[#a8d944]/40 focus:ring-2 focus:ring-[#a8d944]/20"
             />
           </div>
         </div>
@@ -210,7 +229,7 @@ function ProfileSettings({ user, profile, onSave, isSaving }: ProfileSettingsPro
             <select
               value={formData.specialty}
               onChange={(e) => setFormData({ ...formData, specialty: e.target.value })}
-              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+              className="w-full rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-white focus:border-[#a8d944]/40 focus:ring-2 focus:ring-[#a8d944]/20"
             >
               <option value="">Seleccionar...</option>
               <option value="general">Medicina General</option>
@@ -234,7 +253,7 @@ function ProfileSettings({ user, profile, onSave, isSaving }: ProfileSettingsPro
               value={formData.licenseNumber}
               onChange={(e) => setFormData({ ...formData, licenseNumber: e.target.value })}
               placeholder="Ej: 12345678"
-              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+              className="w-full rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-white focus:border-[#a8d944]/40 focus:ring-2 focus:ring-[#a8d944]/20"
             />
           </div>
         </div>
@@ -246,7 +265,7 @@ function ProfileSettings({ user, profile, onSave, isSaving }: ProfileSettingsPro
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
             placeholder="+52 55 1234 5678"
-            className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+            className="w-full rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-white focus:border-[#a8d944]/40 focus:ring-2 focus:ring-[#a8d944]/20"
           />
         </div>
 
@@ -257,7 +276,7 @@ function ProfileSettings({ user, profile, onSave, isSaving }: ProfileSettingsPro
             onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
             rows={3}
             placeholder="Breve descripción profesional..."
-            className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+            className="w-full rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-white focus:border-[#a8d944]/40 focus:ring-2 focus:ring-[#a8d944]/20"
           />
         </div>
 
@@ -265,7 +284,7 @@ function ProfileSettings({ user, profile, onSave, isSaving }: ProfileSettingsPro
           <button
             type="submit"
             disabled={isSaving}
-            className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600 disabled:opacity-50"
+            className="flex items-center gap-2 rounded-2xl bg-[#a8d944] px-4 py-2 font-medium text-[#0F1E29] hover:bg-[#a8d944]/90 disabled:opacity-50"
           >
             {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             Guardar cambios
@@ -334,7 +353,7 @@ function ClinicSettings({ tenant, onSave, isSaving }: ClinicSettingsProps) {
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             placeholder="Ej: Clínica San Rafael"
-            className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+            className="w-full rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-white focus:border-[#a8d944]/40 focus:ring-2 focus:ring-[#a8d944]/20"
           />
         </div>
 
@@ -345,7 +364,7 @@ function ClinicSettings({ tenant, onSave, isSaving }: ClinicSettingsProps) {
             value={formData.address}
             onChange={(e) => setFormData({ ...formData, address: e.target.value })}
             placeholder="Calle y número"
-            className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+            className="w-full rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-white focus:border-[#a8d944]/40 focus:ring-2 focus:ring-[#a8d944]/20"
           />
         </div>
 
@@ -356,7 +375,7 @@ function ClinicSettings({ tenant, onSave, isSaving }: ClinicSettingsProps) {
               type="text"
               value={formData.city}
               onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+              className="w-full rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-white focus:border-[#a8d944]/40 focus:ring-2 focus:ring-[#a8d944]/20"
             />
           </div>
           <div>
@@ -365,7 +384,7 @@ function ClinicSettings({ tenant, onSave, isSaving }: ClinicSettingsProps) {
               type="text"
               value={formData.state}
               onChange={(e) => setFormData({ ...formData, state: e.target.value })}
-              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+              className="w-full rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-white focus:border-[#a8d944]/40 focus:ring-2 focus:ring-[#a8d944]/20"
             />
           </div>
           <div>
@@ -374,7 +393,7 @@ function ClinicSettings({ tenant, onSave, isSaving }: ClinicSettingsProps) {
               type="text"
               value={formData.postalCode}
               onChange={(e) => setFormData({ ...formData, postalCode: e.target.value })}
-              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+              className="w-full rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-white focus:border-[#a8d944]/40 focus:ring-2 focus:ring-[#a8d944]/20"
             />
           </div>
         </div>
@@ -386,7 +405,7 @@ function ClinicSettings({ tenant, onSave, isSaving }: ClinicSettingsProps) {
               type="tel"
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+              className="w-full rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-white focus:border-[#a8d944]/40 focus:ring-2 focus:ring-[#a8d944]/20"
             />
           </div>
           <div>
@@ -395,7 +414,7 @@ function ClinicSettings({ tenant, onSave, isSaving }: ClinicSettingsProps) {
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+              className="w-full rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-white focus:border-[#a8d944]/40 focus:ring-2 focus:ring-[#a8d944]/20"
             />
           </div>
         </div>
@@ -418,7 +437,7 @@ function ClinicSettings({ tenant, onSave, isSaving }: ClinicSettingsProps) {
                         },
                       })
                     }
-                    className="rounded border-white/[0.08] text-blue-400 focus:ring-blue-500/20"
+                    className="rounded border-white/10 text-[#a8d944] focus:ring-[#a8d944]/20"
                   />
                   <span className="text-sm text-white/70">{day.label}</span>
                 </label>
@@ -436,7 +455,7 @@ function ClinicSettings({ tenant, onSave, isSaving }: ClinicSettingsProps) {
                           },
                         })
                       }
-                      className="rounded border border-white/[0.08] px-2 py-1 text-sm"
+                      className="rounded border border-white/10 bg-[#0F1E29] px-2 py-1 text-sm text-white"
                     />
                     <span className="text-white/40">a</span>
                     <input
@@ -451,7 +470,7 @@ function ClinicSettings({ tenant, onSave, isSaving }: ClinicSettingsProps) {
                           },
                         })
                       }
-                      className="rounded border border-white/[0.08] px-2 py-1 text-sm"
+                      className="rounded border border-white/10 bg-[#0F1E29] px-2 py-1 text-sm text-white"
                     />
                   </>
                 )}
@@ -464,7 +483,7 @@ function ClinicSettings({ tenant, onSave, isSaving }: ClinicSettingsProps) {
           <button
             type="submit"
             disabled={isSaving}
-            className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600 disabled:opacity-50"
+            className="flex items-center gap-2 rounded-2xl bg-[#a8d944] px-4 py-2 font-medium text-[#0F1E29] hover:bg-[#a8d944]/90 disabled:opacity-50"
           >
             {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             Guardar cambios
@@ -512,7 +531,7 @@ function NotificationSettings({ onSave, isSaving }: LocalSettingsProps) {
                 onChange={(e) =>
                   setSettings({ ...settings, emailAppointmentReminder: e.target.checked })
                 }
-                className="rounded border-white/[0.08] text-blue-400 focus:ring-blue-500/20"
+                className="rounded border-white/10 text-[#a8d944] focus:ring-[#a8d944]/20"
               />
               <span className="text-sm text-white/70">Recordatorios de citas</span>
             </label>
@@ -521,7 +540,7 @@ function NotificationSettings({ onSave, isSaving }: LocalSettingsProps) {
                 type="checkbox"
                 checked={settings.emailNewPatient}
                 onChange={(e) => setSettings({ ...settings, emailNewPatient: e.target.checked })}
-                className="rounded border-white/[0.08] text-blue-400 focus:ring-blue-500/20"
+                className="rounded border-white/10 text-[#a8d944] focus:ring-[#a8d944]/20"
               />
               <span className="text-sm text-white/70">Nuevos pacientes registrados</span>
             </label>
@@ -530,7 +549,7 @@ function NotificationSettings({ onSave, isSaving }: LocalSettingsProps) {
                 type="checkbox"
                 checked={settings.emailWeeklySummary}
                 onChange={(e) => setSettings({ ...settings, emailWeeklySummary: e.target.checked })}
-                className="rounded border-white/[0.08] text-blue-400 focus:ring-blue-500/20"
+                className="rounded border-white/10 text-[#a8d944] focus:ring-[#a8d944]/20"
               />
               <span className="text-sm text-white/70">Resumen semanal de actividad</span>
             </label>
@@ -547,7 +566,7 @@ function NotificationSettings({ onSave, isSaving }: LocalSettingsProps) {
                 onChange={(e) =>
                   setSettings({ ...settings, pushAppointmentReminder: e.target.checked })
                 }
-                className="rounded border-white/[0.08] text-blue-400 focus:ring-blue-500/20"
+                className="rounded border-white/10 text-[#a8d944] focus:ring-[#a8d944]/20"
               />
               <span className="text-sm text-white/70">Recordatorios de citas próximas</span>
             </label>
@@ -556,7 +575,7 @@ function NotificationSettings({ onSave, isSaving }: LocalSettingsProps) {
                 type="checkbox"
                 checked={settings.pushNewMessage}
                 onChange={(e) => setSettings({ ...settings, pushNewMessage: e.target.checked })}
-                className="rounded border-white/[0.08] text-blue-400 focus:ring-blue-500/20"
+                className="rounded border-white/10 text-[#a8d944] focus:ring-[#a8d944]/20"
               />
               <span className="text-sm text-white/70">Nuevos mensajes</span>
             </label>
@@ -568,7 +587,7 @@ function NotificationSettings({ onSave, isSaving }: LocalSettingsProps) {
           <select
             value={settings.reminderTime}
             onChange={(e) => setSettings({ ...settings, reminderTime: e.target.value })}
-            className="rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+            className="rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-white focus:border-[#a8d944]/40 focus:ring-2 focus:ring-[#a8d944]/20"
           >
             <option value="1">1 hora antes</option>
             <option value="2">2 horas antes</option>
@@ -581,7 +600,7 @@ function NotificationSettings({ onSave, isSaving }: LocalSettingsProps) {
           <button
             type="submit"
             disabled={isSaving}
-            className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600 disabled:opacity-50"
+            className="flex items-center gap-2 rounded-2xl bg-[#a8d944] px-4 py-2 font-medium text-[#0F1E29] hover:bg-[#a8d944]/90 disabled:opacity-50"
           >
             {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             Guardar cambios
@@ -607,7 +626,7 @@ function SecuritySettings() {
             href="https://accounts.clerk.dev/user"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-2xl border border-white/[0.08] bg-white px-4 py-2 text-sm font-medium text-white/70 hover:bg-white/[0.02]"
+            className="inline-flex items-center gap-2 rounded-2xl border border-white/10 px-4 py-2 text-sm font-medium text-white/70 hover:bg-white/[0.06]"
           >
             Gestionar cuenta
           </a>
@@ -622,7 +641,7 @@ function SecuritySettings() {
             href="https://accounts.clerk.dev/user/security"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-2xl border border-white/[0.08] bg-white px-4 py-2 text-sm font-medium text-white/70 hover:bg-white/[0.02]"
+            className="inline-flex items-center gap-2 rounded-2xl border border-white/10 px-4 py-2 text-sm font-medium text-white/70 hover:bg-white/[0.06]"
           >
             Configurar 2FA
           </a>
@@ -637,10 +656,212 @@ function SecuritySettings() {
             href="https://accounts.clerk.dev/user/security"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-2xl border border-white/[0.08] bg-white px-4 py-2 text-sm font-medium text-white/70 hover:bg-white/[0.02]"
+            className="inline-flex items-center gap-2 rounded-2xl border border-white/10 px-4 py-2 text-sm font-medium text-white/70 hover:bg-white/[0.06]"
           >
             Ver sesiones
           </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+interface SignatureStampSettingsProps {
+  profile: UserProfile | null;
+  onSave: (data: Partial<UserProfile>) => Promise<void>;
+  isSaving: boolean;
+}
+
+function SignatureStampSettings({ profile, onSave, isSaving }: SignatureStampSettingsProps) {
+  const [signaturePreview, setSignaturePreview] = useState<string | null>(
+    profile?.signatureUrl || null
+  );
+  const [stampPreview, setStampPreview] = useState<string | null>(profile?.logoUrl || null);
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const convertToBlackAndWhite = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) return reject(new Error('Canvas not supported'));
+
+          ctx.drawImage(img, 0, 0);
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const data = imageData.data;
+
+          // Convert to grayscale with threshold for B&W
+          for (let i = 0; i < data.length; i += 4) {
+            const gray = data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114;
+            const bw = gray > 128 ? 255 : 0;
+            data[i] = bw;
+            data[i + 1] = bw;
+            data[i + 2] = bw;
+            // Keep alpha channel
+          }
+
+          ctx.putImageData(imageData, 0, 0);
+          resolve(canvas.toDataURL('image/png'));
+        };
+        img.onerror = reject;
+        img.src = reader.result as string;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const handleFileUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: 'signature' | 'stamp'
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsProcessing(true);
+    try {
+      const bwDataUrl = await convertToBlackAndWhite(file);
+      if (type === 'signature') {
+        setSignaturePreview(bwDataUrl);
+      } else {
+        setStampPreview(bwDataUrl);
+      }
+    } catch {
+      console.error('Error processing image');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handleSave = () => {
+    const data: Partial<UserProfile> = {};
+    if (signaturePreview) data.signatureUrl = signaturePreview;
+    if (stampPreview) data.logoUrl = stampPreview;
+    onSave(data);
+  };
+
+  return (
+    <div>
+      <h2 className="mb-2 text-lg font-semibold text-white">Firma y Sello Digital</h2>
+      <p className="mb-6 text-sm text-white/40">
+        Sube tu firma y sello para incluirlos en recetas y documentos. Las imágenes se convierten
+        automáticamente a blanco y negro.
+      </p>
+
+      <div className="space-y-6">
+        {/* Signature */}
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-5">
+          <h3 className="mb-3 flex items-center gap-2 text-sm font-medium text-white">
+            <PenTool className="h-4 w-4 text-[#a8d944]" />
+            Firma del Doctor
+          </h3>
+
+          {signaturePreview ? (
+            <div className="mb-3">
+              <div className="inline-block rounded-xl border border-white/10 bg-white p-4">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={signaturePreview}
+                  alt="Firma"
+                  className="max-h-24 max-w-[200px] object-contain"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => setSignaturePreview(null)}
+                className="ml-3 inline-flex items-center gap-1 text-sm text-red-400 hover:text-red-300"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+                Eliminar
+              </button>
+            </div>
+          ) : (
+            <div className="mb-3 rounded-xl border-2 border-dashed border-white/10 p-8 text-center">
+              <PenTool className="mx-auto mb-2 h-8 w-8 text-white/20" />
+              <p className="text-sm text-white/30">No hay firma cargada</p>
+            </div>
+          )}
+
+          <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-white/10 px-3 py-2 text-sm text-white/70 transition-colors hover:bg-white/[0.06]">
+            <Upload className="h-4 w-4" />
+            {signaturePreview ? 'Cambiar firma' : 'Subir firma'}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleFileUpload(e, 'signature')}
+              className="hidden"
+            />
+          </label>
+        </div>
+
+        {/* Stamp */}
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-5">
+          <h3 className="mb-3 flex items-center gap-2 text-sm font-medium text-white">
+            <Shield className="h-4 w-4 text-[#a8d944]" />
+            Sello Profesional
+          </h3>
+
+          {stampPreview ? (
+            <div className="mb-3">
+              <div className="inline-block rounded-xl border border-white/10 bg-white p-4">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={stampPreview}
+                  alt="Sello"
+                  className="max-h-32 max-w-[200px] object-contain"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => setStampPreview(null)}
+                className="ml-3 inline-flex items-center gap-1 text-sm text-red-400 hover:text-red-300"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+                Eliminar
+              </button>
+            </div>
+          ) : (
+            <div className="mb-3 rounded-xl border-2 border-dashed border-white/10 p-8 text-center">
+              <Shield className="mx-auto mb-2 h-8 w-8 text-white/20" />
+              <p className="text-sm text-white/30">No hay sello cargado</p>
+            </div>
+          )}
+
+          <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-white/10 px-3 py-2 text-sm text-white/70 transition-colors hover:bg-white/[0.06]">
+            <Upload className="h-4 w-4" />
+            {stampPreview ? 'Cambiar sello' : 'Subir sello'}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleFileUpload(e, 'stamp')}
+              className="hidden"
+            />
+          </label>
+        </div>
+
+        {isProcessing && (
+          <div className="flex items-center gap-2 text-sm text-white/50">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            Procesando imagen...
+          </div>
+        )}
+
+        <div className="pt-2">
+          <button
+            type="button"
+            onClick={handleSave}
+            disabled={isSaving || (!signaturePreview && !stampPreview)}
+            className="flex items-center gap-2 rounded-2xl bg-[#a8d944] px-4 py-2 font-medium text-[#0F1E29] hover:bg-[#a8d944]/90 disabled:opacity-50"
+          >
+            {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+            Guardar firma y sello
+          </button>
         </div>
       </div>
     </div>
@@ -678,8 +899,8 @@ function AppearanceSettings({ onSave, isSaving }: LocalSettingsProps) {
                 onClick={() => setTheme(option.value)}
                 className={`rounded-2xl border px-4 py-2 text-sm font-medium transition-colors ${
                   theme === option.value
-                    ? 'border-blue-600 bg-blue-50 text-blue-300'
-                    : 'border-white/[0.08] text-white/70 hover:bg-white/[0.02]'
+                    ? 'border-[#a8d944]/30 bg-[#a8d944]/15 text-[#a8d944]'
+                    : 'border-white/10 text-white/70 hover:bg-white/[0.06]'
                 }`}
               >
                 {option.label}
@@ -693,7 +914,7 @@ function AppearanceSettings({ onSave, isSaving }: LocalSettingsProps) {
           <select
             value={settings.language}
             onChange={(e) => setSettings({ ...settings, language: e.target.value })}
-            className="rounded-2xl border border-white/[0.08] px-3 py-2 focus:border-blue-500/40 focus:ring-2 focus:ring-blue-500/20"
+            className="rounded-2xl border border-white/10 bg-[#0F1E29] px-3 py-2 text-white focus:border-[#a8d944]/40 focus:ring-2 focus:ring-[#a8d944]/20"
           >
             <option value="es">Español</option>
             <option value="en">English</option>
@@ -707,7 +928,7 @@ function AppearanceSettings({ onSave, isSaving }: LocalSettingsProps) {
               type="checkbox"
               checked={settings.compactMode}
               onChange={(e) => setSettings({ ...settings, compactMode: e.target.checked })}
-              className="rounded border-white/[0.08] text-blue-400 focus:ring-blue-500/20"
+              className="rounded border-white/10 text-[#a8d944] focus:ring-[#a8d944]/20"
             />
             <div>
               <span className="text-sm font-medium text-white">Modo compacto</span>
@@ -722,7 +943,7 @@ function AppearanceSettings({ onSave, isSaving }: LocalSettingsProps) {
           <button
             type="submit"
             disabled={isSaving}
-            className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-2 text-white hover:from-blue-600 hover:to-cyan-600 disabled:opacity-50"
+            className="flex items-center gap-2 rounded-2xl bg-[#a8d944] px-4 py-2 font-medium text-[#0F1E29] hover:bg-[#a8d944]/90 disabled:opacity-50"
           >
             {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             Guardar cambios

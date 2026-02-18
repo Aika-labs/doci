@@ -50,7 +50,7 @@ export function ConfirmDialog({
       <div className="absolute inset-0 bg-black/50" onClick={onCancel} />
 
       {/* Dialog */}
-      <div className="relative mx-4 w-full max-w-md overflow-hidden rounded-xl bg-white shadow-xl">
+      <div className="relative mx-4 w-full max-w-md overflow-hidden rounded-xl border border-white/10 bg-[#162633] shadow-xl">
         <div className="p-6">
           <div className="flex items-start gap-4">
             <div
@@ -68,7 +68,7 @@ export function ConfirmDialog({
           </div>
         </div>
 
-        <div className="flex justify-end gap-3 bg-white/[0.02] px-6 py-4">
+        <div className="flex justify-end gap-3 border-t border-white/10 bg-[#0F1E29]/60 px-6 py-4">
           <button
             onClick={onCancel}
             disabled={isLoading}

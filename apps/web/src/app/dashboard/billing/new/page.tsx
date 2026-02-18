@@ -216,13 +216,13 @@ export default function NewInvoicePage() {
             </div>
 
             {showPatientDropdown && filteredPatients.length > 0 && (
-              <div className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-2xl border border-white/[0.06] bg-white shadow-lg">
+              <div className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-2xl border border-white/10 bg-[#0F1E29] shadow-lg">
                 {filteredPatients.slice(0, 10).map((patient) => (
                   <button
                     key={patient.id}
                     type="button"
                     onClick={() => handleSelectPatient(patient)}
-                    className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-white/[0.02]"
+                    className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-white/[0.06]"
                   >
                     <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-500/15">
                       <span className="text-sm font-semibold text-blue-400">

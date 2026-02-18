@@ -329,7 +329,7 @@ export function PatientForm({ patient, onSubmit, onCancel, isLoading }: PatientF
         <button
           type="button"
           onClick={onCancel}
-          className="rounded-2xl border border-white/[0.08] bg-white px-4 py-2 text-white/70 transition-colors hover:bg-white/[0.02]"
+          className="rounded-2xl border border-white/10 px-4 py-2 text-white/70 transition-colors hover:bg-white/[0.06]"
         >
           Cancelar
         </button>
